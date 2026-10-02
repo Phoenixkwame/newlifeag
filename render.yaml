@@ -1,0 +1,37 @@
+# Render Blueprint - in the Render dashboard choose New > Blueprint, pick this
+# GitHub repository, and Render creates the website and its database from
+# this file. Secrets marked "sync: false" are asked for during setup.
+databases:
+  - name: newlifeag-db
+    databaseName: newlifeag
+    user: newlifeag
+    plan: free  # free databases expire after 30 days - upgrade to "basic-256mb" before real use
+
+services:
+  - type: web
+    name: newlifeag
+    runtime: python
+    plan: free  # upgrade to "starter" to stay awake and to attach a disk for uploads
+    buildCommand: ./build.sh
+    startCommand: gunicorn churchapp.wsgi --log-file -
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: DATABASE_URL
+        fromDatabase:
+          name: newlifeag-db
+          property: connectionString
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        sync: false
+      - key: SERVE_MEDIA
+        value: "True"
+      - key: GIVING_ONLINE_PAYMENTS
+        value: "False"
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false

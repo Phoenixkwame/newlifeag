@@ -2,7 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import include, path, reverse_lazy
+from django.urls import include, path, re_path, reverse_lazy
+from django.views.static import serve
 
 from . import views
 from .two_factor import StaffTwoFactorLoginView, verify_login_code
@@ -82,3 +83,9 @@ if settings.DEBUG:
     # off, so it's safe to leave in. See settings.py's MEDIA_ROOT comment
     # for what to use for uploads in production.
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+elif settings.SERVE_MEDIA:
+    # Production without separate file storage (e.g. a Render disk) - the
+    # app serves uploads itself. static() above refuses to when DEBUG is off.
+    urlpatterns += [
+        re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
+    ]

@@ -24,6 +24,11 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-REPLACE-ME-BEF
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = [h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()]
+# Render sets this to the site's own *.onrender.com address automatically,
+# so the default URL works without having to set DJANGO_ALLOWED_HOSTS by hand.
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 if not DEBUG:
     if len(SECRET_KEY) < 50 or len(set(SECRET_KEY)) < 5 or SECRET_KEY.startswith("django-insecure-"):
         raise ImproperlyConfigured("Set DJANGO_SECRET_KEY to a strong random secret before disabling DEBUG.")
@@ -177,7 +182,13 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # production, switch to real object storage (e.g. an S3-compatible bucket
 # via django-storages) instead of this local-disk default.
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# Override with MEDIA_ROOT to point at a persistent disk in production (e.g.
+# a Render disk mounted at /var/data, with MEDIA_ROOT=/var/data/media).
+MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
+# With DEBUG off, uploaded files are only served by the app itself when this
+# is True - fine for a small church site; switch to object storage if
+# traffic ever grows enough to need a CDN.
+SERVE_MEDIA = os.environ.get("SERVE_MEDIA", "False") == "True"
 
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
@@ -195,6 +206,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CSRF_TRUSTED_ORIGINS = [
     o.strip() for o in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
 ]
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 
 if not DEBUG:
     # Most hosts (Render, Railway, etc.) terminate HTTPS at a proxy in front
