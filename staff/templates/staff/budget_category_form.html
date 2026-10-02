@@ -1,0 +1,13 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}New Budget Category{% else %}Edit Category{% endif %}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_budget_category_list' %}">&larr; Back to budget categories</a></p>
+    <h2>{% if is_new %}New Budget Category{% else %}Edit {{ category.name }}{% endif %}</h2>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Create Category{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

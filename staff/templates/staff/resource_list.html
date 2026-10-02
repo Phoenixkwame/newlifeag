@@ -1,0 +1,30 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Resources{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Rooms, Vehicles &amp; Equipment</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_resource_create' %}">+ Add Resource</a>{% endif %}
+    </div>
+    <div class="button-row">
+        <a class="button outline" href="{% url 'staff_booking_list' %}">View Bookings</a>
+    </div>
+
+    {% if resources %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for resource in resources %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <strong>{{ resource.name }}</strong>
+                        <span class="badge muted">{{ resource.get_resource_type_display }}</span>
+                        {% if not resource.is_active %}<span class="badge muted">Retired</span>{% endif %}
+                    </span>
+                    <a href="{% url 'staff_resource_edit' resource.id %}">Edit</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No resources yet - add a room, vehicle, or piece of equipment to start booking it.</p>
+    {% endif %}
+{% endblock %}

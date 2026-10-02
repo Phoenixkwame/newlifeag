@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Member Directory{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <div class="section-title">
+        <h1 style="margin:0;">Member Directory</h1>
+    </div>
+    <p class="muted">Only members who've chosen to be listed appear here. <a href="{% url 'edit_profile' %}">Update your own listing &rarr;</a></p>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>Search by name</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="e.g. Ama">
+        </div>
+        <div style="min-width:180px;">
+            <label>Group/Ministry</label>
+            <select name="group">
+                <option value="">— Any group —</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}" {% if selected_group_id == group.id|stringformat:"s" %}selected{% endif %}>{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="min-width:180px;">
+            <label>Skill</label>
+            <select name="skill">
+                <option value="">— Any skill —</option>
+                {% for skill in skills %}
+                    <option value="{{ skill.id }}" {% if selected_skill_id == skill.id|stringformat:"s" %}selected{% endif %}>{{ skill.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if campuses %}
+            <div style="min-width:160px;">
+                <label>Campus</label>
+                <select name="campus">
+                    <option value="">— Any campus —</option>
+                    {% for campus in campuses %}
+                        <option value="{{ campus.id }}" {% if selected_campus_id == campus.id|stringformat:"s" %}selected{% endif %}>{{ campus.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        <div><button type="submit">Search</button></div>
+    </form>
+
+    {% if members %}
+        <div class="grid">
+            {% for member in members %}
+                <div class="card">
+                    <div class="row">
+                        {% if member.photo %}
+                            <img src="{{ member.photo.url }}" class="avatar" alt="{{ member }}">
+                        {% else %}
+                            <span class="avatar">{{ member.initials }}</span>
+                        {% endif %}
+                        <div>
+                            <strong>{{ member }}</strong>
+                            {% if member.share_phone_in_directory and member.phone %}
+                                <div class="muted">{{ member.phone }}</div>
+                            {% endif %}
+                            {% if member.share_email_in_directory and member.email %}
+                                <div class="muted">{{ member.email }}</div>
+                            {% endif %}
+                            {% if member.skills.all %}
+                                <div style="margin-top:0.3rem;">
+                                    {% for skill in member.skills.all %}<span class="badge muted">{{ skill.name }}</span> {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">{% if query %}No one matches that search.{% else %}No members have opted into the directory yet.{% endif %}</p>
+    {% endif %}
+{% endblock %}

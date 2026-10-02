@@ -1,0 +1,59 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Birthdays & Anniversaries{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Birthdays &amp; Anniversaries - {{ month_name }}</h2>
+    </div>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div>
+            <label>Month</label>
+            <select name="month" onchange="this.form.submit()">
+                {% for value, name in available_months %}
+                    <option value="{{ value }}" {% if value == month %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <noscript><div><button type="submit">Go</button></div></noscript>
+    </form>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Birthdays</h2>
+            {% if birthdays %}
+                <ul class="plain">
+                {% for member in birthdays %}
+                    <li>
+                        <a href="{% url 'staff_member_detail' member.id %}">{{ member }}</a>
+                        <span class="muted"> &middot; {{ member.date_of_birth|date:"F j" }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No birthdays on file for {{ month_name }}.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Anniversaries</h2>
+            {% if anniversaries %}
+                <ul class="plain">
+                {% for member in anniversaries %}
+                    <li>
+                        <a href="{% url 'staff_member_detail' member.id %}">{{ member }}</a>
+                        <span class="muted"> &middot; {{ member.anniversary_date|date:"F j" }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No anniversaries on file for {{ month_name }}.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <p class="muted">
+        Set a member's birthday or anniversary from their edit page in the Members tab, or a member can add their
+        own from their dashboard. Run <code>python manage.py send_birthday_greetings</code> daily (see the README)
+        to send an automatic greeting on the day itself.
+    </p>
+{% endblock %}

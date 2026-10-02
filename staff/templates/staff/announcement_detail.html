@@ -1,0 +1,44 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ announcement.subject }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_announcement_list' %}">&larr; Back to announcements</a></p>
+
+    <div class="section-title">
+        <h2>{{ announcement.subject }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_announcement_edit' announcement.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Message</h2>
+            <p style="white-space:pre-wrap;">{{ announcement.body }}</p>
+            {% if announcement.sms_body %}
+                <p class="muted"><strong>SMS version:</strong> {{ announcement.sms_body }}</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Audience</h2>
+            <ul class="plain">
+                <li><strong>Targeting:</strong> {{ announcement.get_audience_display }}</li>
+                {% if announcement.audience == "campus" %}<li><strong>Campus:</strong> {{ announcement.campus|default:"—" }}</li>{% endif %}
+                {% if announcement.audience == "group" %}<li><strong>Group:</strong> {{ announcement.group|default:"—" }}</li>{% endif %}
+                {% if announcement.is_sent %}
+                    <li><strong>Sent:</strong> {{ announcement.sent_at|date:"M j, Y g:i A" }}</li>
+                    <li><strong>Delivered to:</strong> {{ announcement.email_sent_count }} email address(es), {{ announcement.sms_sent_count }} phone number(s)</li>
+                    <li><a href="{% url 'staff_announcement_delivery_report' announcement.id %}">View full delivery report &rarr;</a></li>
+                {% else %}
+                    <li><strong>Would reach:</strong> {{ recipient_count }} active member(s) right now</li>
+                {% endif %}
+            </ul>
+            {% if can_send %}
+                <form method="post" action="{% url 'staff_announcement_send' announcement.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Send Now</button>
+                </form>
+            {% elif announcement.is_sent %}
+                <p class="badge accent">Sent</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

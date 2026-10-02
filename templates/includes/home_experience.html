@@ -1,0 +1,37 @@
+{% load i18n %}
+<section class="home-experience home-section" id="experience" aria-labelledby="experience-title">
+    <div class="home-experience-intro">
+        <p class="home-eyebrow">{% trans "This Is Your Invitation" %}</p>
+        <h2 id="experience-title">{% trans "Come as you are." %}<br><em>{% trans "Grow with us." %}</em></h2>
+        <p>{% trans "Whether you're exploring faith or looking for a church family, there's a next step for you at Newlife AG." %}</p>
+        <a class="home-text-link" href="{% url 'connect_card' %}">{% trans "Let's get to know you" %} <span aria-hidden="true">&nearr;</span></a>
+    </div>
+    <div class="home-experience-card" data-experience>
+        <div class="home-tabs" role="tablist" aria-label="{% trans 'Choose how to join us' %}" hidden>
+            <button type="button" id="visit-tab" role="tab" aria-selected="true" aria-controls="visit-panel">{% trans "In Person" %}</button>
+            <button type="button" id="online-tab" role="tab" aria-selected="false" aria-controls="online-panel" tabindex="-1">{% trans "Online" %}</button>
+        </div>
+        <div id="visit-panel" class="home-experience-panel">
+            <span class="home-icon" aria-hidden="true">{% include "includes/home_icon.html" with icon="location" %}</span>
+            <h3>{% trans "There's a seat for you." %}</h3>
+            {% if visitor_info.service_times or visitor_info.address %}<p class="home-eyebrow">{% trans "Planning a Visit?" %}</p>{% endif %}
+            {% if visitor_info.service_times %}<p class="home-service-times">{{ visitor_info.service_times|linebreaksbr }}</p>{% else %}<p>{% trans "Plan a visit and get to know our church family in Tema." %}</p>{% endif %}
+            {% if visitor_info.address %}<p class="muted">{{ visitor_info.address }}</p>{% endif %}
+            <div class="home-actions"><a class="button" href="{% url 'visitor_info' %}">{% trans "Plan Your Visit" %} <span aria-hidden="true">&nearr;</span></a>
+                {% if visitor_info.address %}<a class="home-text-link" href="https://www.google.com/maps/search/?api=1&amp;query={{ visitor_info.address|urlencode }}" target="_blank" rel="noopener">{% trans "Get Directions" %} <span aria-hidden="true">&nearr;</span></a>{% endif %}
+            </div>
+        </div>
+        <div id="online-panel" class="home-experience-panel">
+            <span class="home-icon" aria-hidden="true">{% include "includes/home_icon.html" with icon="play" %}</span>
+            <h3>{% trans "Church, wherever you are." %}</h3>
+            <p>{% trans "Join an online service or catch up on a message during your week." %}</p>
+            {% if homepage_video %}<p class="home-online-feature">{{ homepage_video.title }}</p>{% endif %}
+            <div class="home-actions"><a class="button" href="{% url 'watch_online' %}">{% trans "Watch Online" %} <span aria-hidden="true">&nearr;</span></a><a class="home-text-link" href="{% url 'sermon_list' %}">{% trans "Explore Sermons" %} <span aria-hidden="true">&rarr;</span></a></div>
+        </div>
+    </div>
+</section>
+<div class="home-pathways">
+    <a href="{% url 'public_group_finder' %}"><span class="home-path-number" aria-hidden="true">01</span><span><strong>{% trans "Find your people" %}</strong><small>{% trans "Explore Small Groups" %}</small></span><span aria-hidden="true">&nearr;</span></a>
+    <a href="{% url 'devotional_list' %}"><span class="home-path-number" aria-hidden="true">02</span><span><strong>{% trans "Make room for faith" %}</strong><small>{% trans "Read Devotionals" %}</small></span><span aria-hidden="true">&nearr;</span></a>
+    <a href="{% url 'prayer_wall' %}"><span class="home-path-number" aria-hidden="true">03</span><span><strong>{% trans "You don't walk alone" %}</strong><small>{% trans "Share a Prayer" %}</small></span><span aria-hidden="true">&nearr;</span></a>
+</div>

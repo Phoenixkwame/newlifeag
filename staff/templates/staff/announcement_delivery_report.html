@@ -1,0 +1,57 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Delivery Report - {{ announcement.subject }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_announcement_detail' announcement.id %}">&larr; Back to {{ announcement.subject }}</a></p>
+
+    <div class="section-title">
+        <h2>Delivery Report</h2>
+    </div>
+
+    <div class="card">
+        <p class="muted">
+            {{ announcement.email_sent_count }} email(s) and {{ announcement.sms_sent_count }} text(s) sent on
+            {{ announcement.sent_at|date:"M j, Y g:i A" }}. Every member the announcement's audience included is
+            listed below, once per channel, with exactly what happened.
+        </p>
+        <form method="get" style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;">
+            <div style="min-width:220px;">
+                <label>Status</label>
+                <select name="status" onchange="this.form.submit()">
+                    <option value="">All statuses ({{ total_deliveries }})</option>
+                    {% for option in status_options %}
+                        <option value="{{ option.value }}" {% if option.value == status_filter %}selected{% endif %}>
+                            {{ option.label }} ({{ option.count }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+
+    {% if deliveries %}
+        <div class="card" style="padding:0;">
+            <table style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <th style="text-align:left; padding:0.5rem 1rem;">Member</th>
+                    <th style="text-align:left; padding:0.5rem 1rem;">Channel</th>
+                    <th style="text-align:left; padding:0.5rem 1rem;">Status</th>
+                </tr>
+                {% for delivery in deliveries %}
+                    <tr>
+                        <td style="padding:0.5rem 1rem; border-top:1px solid var(--border);">
+                            <a href="{% url 'staff_member_detail' delivery.member.id %}">{{ delivery.member }}</a>
+                        </td>
+                        <td style="padding:0.5rem 1rem; border-top:1px solid var(--border);">{{ delivery.get_channel_display }}</td>
+                        <td style="padding:0.5rem 1rem; border-top:1px solid var(--border);">
+                            <span class="badge {% if delivery.status == 'sent' %}accent{% elif delivery.status == 'failed' %}muted{% endif %}">
+                                {{ delivery.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No deliveries match that filter.</p>
+    {% endif %}
+{% endblock %}

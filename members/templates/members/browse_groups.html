@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Groups{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to your dashboard</a></p>
+    <h1>Ministries &amp; Small Groups</h1>
+    {% if not member %}
+        <div class="card">
+            <p>No member profile is linked to your login yet, so you can't join a group from here.</p>
+        </div>
+    {% endif %}
+    <div class="grid">
+        {% for group in groups %}
+            <div class="card">
+                <h2>{{ group }}</h2>
+                <span class="badge muted">{{ group.get_group_type_display }}</span>
+                {% if group.max_members and group.member_count >= group.max_members and group.id not in my_group_ids %}
+                    <span class="badge">Full</span>
+                {% endif %}
+                <ul class="plain" style="margin-top:0.75rem;">
+                    <li style="display:flex; align-items:center; gap:0.4rem;">
+                        <strong>Leader:</strong>
+                        {% if group.leader %}
+                            {% if group.leader.photo %}
+                                <img src="{{ group.leader.photo.url }}" class="avatar" alt="{{ group.leader }}">
+                            {% else %}
+                                <span class="avatar">{{ group.leader.initials }}</span>
+                            {% endif %}
+                            {{ group.leader }}
+                        {% else %}—{% endif %}
+                    </li>
+                    <li><strong>Members:</strong> {{ group.member_count }}{% if group.max_members %} of {{ group.max_members }}{% endif %}</li>
+                    {% if group.meeting_day or group.meeting_time or group.meeting_location %}
+                        <li>
+                            <strong>Meets:</strong>
+                            {{ group.get_meeting_day_display|default:"" }}{% if group.meeting_time %} {{ group.meeting_time|time:"g:i A" }}{% endif %}{% if group.meeting_location %} &middot; {{ group.meeting_location }}{% endif %}
+                        </li>
+                    {% endif %}
+                    {% if group.description %}<li>{{ group.description }}</li>{% endif %}
+                </ul>
+                {% if member %}
+                    {% if group.id in my_group_ids %}
+                        <form method="post" action="{% url 'leave_group' group.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" class="outline">Leave Group</button>
+                        </form>
+                    {% elif group.max_members and group.member_count >= group.max_members %}
+                        <button type="button" disabled title="This group is full">Full</button>
+                    {% else %}
+                        <form method="post" action="{% url 'join_group' group.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit">Join Group</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% empty %}
+            <p class="empty-state">No groups have been set up yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

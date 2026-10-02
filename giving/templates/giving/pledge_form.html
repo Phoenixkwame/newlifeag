@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Pledge to {{ campaign.name }}{% endblock %}
+{% block content %}
+    <p><a href="{% url 'campaign_detail' campaign.id %}">&larr; Back to {{ campaign.name }}</a></p>
+    <h1>{% if pledge %}Update your pledge{% else %}Make a pledge{% endif %}</h1>
+    <p class="muted">to {{ campaign.name }}</p>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if pledge %}Update Pledge{% else %}Submit Pledge{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

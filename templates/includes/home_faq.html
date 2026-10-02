@@ -1,0 +1,11 @@
+{% load i18n %}
+<section class="home-faq home-section" aria-labelledby="faq-title">
+    <div><p class="home-eyebrow">{% trans "Before You Visit" %}</p><h2 id="faq-title">{% trans "A little more familiar." %}<br><em>{% trans "Before you arrive." %}</em></h2><p>{% trans "A few helpful answers as you take your first step." %}</p><a class="home-text-link" href="{% url 'connect_card' %}">{% trans "Connect with us" %} <span aria-hidden="true">&nearr;</span></a></div>
+    <div class="home-faq-list">
+        {% if visitor_info.service_times %}<details><summary>{% trans "When do you meet?" %}</summary><div>{{ visitor_info.service_times|linebreaksbr }}</div></details>{% endif %}
+        {% if visitor_info.address %}<details><summary>{% trans "Where can I find the church?" %}</summary><div><p>{{ visitor_info.address }}</p><a href="https://www.google.com/maps/search/?api=1&amp;query={{ visitor_info.address|urlencode }}" target="_blank" rel="noopener">{% trans "Get Directions" %} &nearr;</a></div></details>{% endif %}
+        <details><summary>{% trans "What can I expect on my first visit?" %}</summary><div>{% if visitor_info.what_to_expect %}{{ visitor_info.what_to_expect|linebreaksbr }}{% else %}<p>{% trans "Our visitor page is the place to start. You can also fill in a connect card to introduce yourself and ask any questions." %}</p>{% endif %}<a class="home-text-link" href="{% url 'visitor_info' %}">{% trans "What to Expect" %} <span aria-hidden="true">&rarr;</span></a></div></details>
+        <details><summary>{% trans "Can I watch online?" %}</summary><div><p>{% trans "Yes. Visit Watch Online for services, or explore the sermon library to find a message." %}</p><a class="home-text-link" href="{% url 'watch_online' %}">{% trans "Watch Online" %} <span aria-hidden="true">&rarr;</span></a></div></details>
+        <details><summary>{% trans "How do I get connected?" %}</summary><div><p>{% trans "Introduce yourself with a connect card, find a small group, or share a prayer request. We'd love to take the next step with you." %}</p><a class="home-text-link" href="{% url 'connect_card' %}">{% trans "I'm New Here" %} <span aria-hidden="true">&rarr;</span></a></div></details>
+    </div>
+</section>

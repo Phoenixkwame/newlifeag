@@ -1,0 +1,38 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Giving Campaigns{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Giving Campaigns</h2>
+        <div class="button-row" style="margin:0;">
+            {% if perms.giving.view_recurringgiving %}
+                <a class="button outline" href="{% url 'staff_recurring_giving_list' %}">Recurring Giving</a>
+            {% endif %}
+            {% if can_add %}<a class="button accent" href="{% url 'staff_campaign_create' %}">+ New Campaign</a>{% endif %}
+        </div>
+    </div>
+
+    {% if campaigns %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for campaign in campaigns %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_campaign_detail' campaign.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ campaign.name }}</strong>
+                            <span class="muted">
+                                &middot; {{ campaign.start_date|date:"M j, Y" }}{% if campaign.end_date %} &ndash; {{ campaign.end_date|date:"M j, Y" }}{% endif %}
+                                {% if not campaign.is_active %} &middot; inactive{% endif %}
+                            </span>
+                        </span>
+                        <span class="badge {% if campaign.is_active %}accent{% else %}muted{% endif %}">
+                            GH&#8373;{{ campaign.given_total|floatformat:2 }}{% if campaign.goal_amount %} / GH&#8373;{{ campaign.goal_amount|floatformat:2 }}{% endif %}
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No giving campaigns yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Altar Call Decisions{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Altar Call Decisions</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_decision_create' %}">+ Record a Decision</a>{% endif %}
+    </div>
+    <p class="muted">A dated record of what happened at the altar during a service - salvation, rededication,
+        or interest in baptism. A first-time salvation decision automatically starts a
+        <a href="{% url 'staff_followup_list' %}">follow-up</a> for that person.</p>
+
+    <div class="button-row">
+        <a class="button {% if not decision_type %}accent{% else %}outline{% endif %}" href="?type=">All</a>
+        {% for value, label in decision_types %}
+            <a class="button {% if decision_type == value %}accent{% else %}outline{% endif %}" href="?type={{ value }}">{{ label }}</a>
+        {% endfor %}
+    </div>
+
+    {% if decisions %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for decision in decisions %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                    <span>
+                        <strong>{{ decision.member }}</strong>
+                        <span class="badge accent">{{ decision.get_decision_type_display }}</span>
+                        <span class="muted">
+                            &middot; {{ decision.date|date:"M j, Y" }}
+                            {% if decision.event %} &middot; {{ decision.event }}{% endif %}
+                        </span>
+                    </span>
+                    <a class="button outline" href="{% url 'staff_decision_edit' decision.id %}">Edit</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No decisions recorded yet.</p>
+    {% endif %}
+{% endblock %}

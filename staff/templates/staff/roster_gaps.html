@@ -1,0 +1,29 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Roster Gaps{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Roster Gaps</h2>
+        <a href="{% url 'staff_event_list' %}">&larr; All events</a>
+    </div>
+    <p class="muted">Upcoming volunteer slots that still need people, soonest first.</p>
+
+    {% if gaps %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for slot in gaps %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_event_detail' slot.event.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ slot.role_needed }}</strong>
+                            <span class="muted"> &middot; {{ slot.event.title }} &middot; {{ slot.event.start_datetime|date:"M j, Y g:i A" }}</span>
+                        </span>
+                        <span class="badge accent">{{ slot.spots_remaining }} of {{ slot.capacity }} open</span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No gaps right now - every upcoming volunteer slot is fully staffed.</p>
+    {% endif %}
+{% endblock %}

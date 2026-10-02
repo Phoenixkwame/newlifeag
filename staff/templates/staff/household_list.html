@@ -1,0 +1,37 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Households{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Households</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_household_create' %}">+ Add Household</a>{% endif %}
+    </div>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>Search by name</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="e.g. Mensah">
+        </div>
+        <div><button type="submit">Filter</button></div>
+    </form>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for household in page_obj %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_household_detail' household.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ household }}</strong>
+                            {% if household.address %}<span class="muted"> &middot; {{ household.address }}</span>{% endif %}
+                        </span>
+                        <span class="badge muted">{{ household.member_count }} member{{ household.member_count|pluralize }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No households match that search.</p>
+    {% endif %}
+{% endblock %}

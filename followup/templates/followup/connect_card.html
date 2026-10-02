@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}I'm New Here{% endblock %}
+{% block content %}
+    <div class="hero">
+        <h1>We're glad you're here</h1>
+        <p>Tell us a little about yourself so we can follow up and help you get connected at Newlife AG.</p>
+    </div>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Equipment{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Equipment &amp; Asset Inventory</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_equipment_create' %}">+ Add Equipment</a>{% endif %}
+    </div>
+    <p class="muted">Sound, video, instruments and other gear the church owns and lends out - see
+        <a href="{% url 'staff_resource_list' %}">Rooms, Vehicles &amp; Resources</a> for bookable spaces instead.</p>
+
+    {% if items %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for item in items %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <strong><a href="{% url 'staff_equipment_detail' item.id %}">{{ item.name }}</a></strong>
+                        <span class="badge muted">{{ item.get_category_display }}</span>
+                        <span class="badge {% if item.condition == 'needs_repair' %}accent{% else %}muted{% endif %}">
+                            {{ item.get_condition_display }}
+                        </span>
+                        {% if item.is_checked_out %}
+                            <span class="badge accent">Checked out</span>
+                        {% endif %}
+                        {% if item.campus %}<span class="muted">&middot; {{ item.campus }}</span>{% endif %}
+                    </span>
+                    <a href="{% url 'staff_equipment_detail' item.id %}">View</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No equipment tracked yet - add a mic, keyboard, projector or other item to start tracking checkouts and condition.</p>
+    {% endif %}
+{% endblock %}

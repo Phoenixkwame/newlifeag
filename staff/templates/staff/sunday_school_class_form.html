@@ -1,0 +1,17 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}New Sunday School Class{% else %}Edit Class{% endif %}{% endblock %}
+{% block staff_content %}
+    {% if is_new %}
+        <h2>New Sunday School Class</h2>
+    {% else %}
+        <p><a href="{% url 'staff_sunday_school_class_detail' sunday_school_class.id %}">&larr; Back to {{ sunday_school_class }}</a></p>
+        <h2>Edit {{ sunday_school_class }}</h2>
+    {% endif %}
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Create Class{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

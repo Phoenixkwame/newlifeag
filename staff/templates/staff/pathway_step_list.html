@@ -1,0 +1,27 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Pathway Steps{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_member_list' %}">&larr; Back to members</a></p>
+    <div class="section-title">
+        <h2>Discipleship Pathway Steps</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_pathway_step_create' %}">+ New Step</a>{% endif %}
+    </div>
+    <p class="muted">The steps every member progresses through - mark a specific member's progress from their own detail page.</p>
+
+    {% if steps %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for step in steps %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <strong>{{ step.order }}.</strong> {{ step.name }}
+                    </span>
+                    <a href="{% url 'staff_pathway_step_edit' step.id %}">Edit</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No pathway steps yet.</p>
+    {% endif %}
+{% endblock %}

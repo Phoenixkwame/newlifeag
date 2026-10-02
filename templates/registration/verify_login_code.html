@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Enter your login code{% endblock %}
+{% block content %}
+    <h1>Enter your login code</h1>
+    <p>We've emailed a 6-digit code to your staff account's email address. Enter it below to finish logging in.</p>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+    <p><a href="{% url 'login' %}">Cancel and go back to login</a></p>
+{% endblock %}

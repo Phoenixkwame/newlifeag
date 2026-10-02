@@ -1,0 +1,33 @@
+{% load i18n %}
+<a href="{% url 'upcoming_events' %}">{% trans "Events" %}</a>
+<a href="{% url 'sermon_list' %}">{% trans "Sermons" %}</a>
+<a href="{% url 'give' %}">{% trans "Give" %}</a>
+<a href="{% url 'watch_online' %}">{% trans "Watch Online" %}</a>
+<details class="nav-more">
+    <summary>{% trans "More" %}</summary>
+    <div class="nav-more-panel">
+        <a href="{% url 'home' %}#lead-pastor">{% trans "Our Lead Pastor" %}</a>
+        <a href="{% url 'devotional_list' %}">{% trans "Devotionals" %}</a>
+        <a href="{% url 'campaign_list' %}">{% trans "Campaigns" %}</a>
+        <a href="{% url 'public_group_finder' %}">{% trans "Small Groups" %}</a>
+        <a href="{% url 'prayer_wall' %}">{% trans "Prayer Wall" %}</a>
+        <a href="{% url 'testimony_wall' %}">{% trans "Testimonies" %}</a>
+        <a href="{% url 'connect_card' %}">{% trans "Contact Us" %}</a>
+        <a href="{% url 'submit_suggestion' %}">{% trans "Suggestion Box" %}</a>
+    </div>
+</details>
+{% if user.is_authenticated %}
+    <details class="nav-more"><summary>{% trans "My Account" %}</summary><div class="nav-more-panel">
+        {% if user.is_staff %}<a href="{% url 'staff_home' %}">{% trans "Staff Area" %}</a>{% endif %}
+        <a href="{% url 'dashboard' %}">{% trans "My Dashboard" %}</a>
+        <a href="{% url 'member_directory' %}">{% trans "Directory" %}</a>
+        {% include "includes/logout_form.html" %}
+    </div></details>
+{% else %}<a href="{% url 'login' %}">{% trans "Member Login" %}</a>{% endif %}
+<form class="home-language" action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}<input name="next" type="hidden" value="{{ request.path }}">
+    {% get_current_language as CURRENT_LANGUAGE %}
+    <button type="submit" name="language" value="en" class="{% if CURRENT_LANGUAGE == 'en' %}accent{% else %}secondary{% endif %}" aria-label="English" lang="en">EN</button>
+    <button type="submit" name="language" value="tw" class="{% if CURRENT_LANGUAGE == 'tw' %}accent{% else %}secondary{% endif %}" aria-label="Twi" lang="tw">TW</button>
+</form>
+<a class="button accent" href="{% url 'visitor_info' %}">{% trans "Plan Your Visit" %} <span aria-hidden="true">&nearr;</span></a>

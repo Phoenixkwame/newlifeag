@@ -1,0 +1,62 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Badge &ndash; {{ check_in.child }}{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; }
+        }
+        .tag {
+            border: 2px dashed var(--primary);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+        .tag + .tag { margin-top: 1rem; }
+        .tag .code {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: 0.4rem;
+            color: var(--primary-dark);
+            margin: 0.5rem 0;
+        }
+        .tag .church-name { font-weight: 700; margin: 0; }
+        .tag .child-name { font-size: 1.4rem; font-weight: 700; margin: 0.5rem 0 0.25rem; }
+    </style>
+{% endblock %}
+{% block staff_content %}
+    <p class="no-print"><a href="{% url 'staff_checkin_dashboard' %}">&larr; Back to check-in dashboard</a></p>
+    <div class="section-title no-print">
+        <h2>Badge / Claim Ticket</h2>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+    <p class="muted no-print">
+        Cut the two tags apart: the top one goes on the child (clip it to a bag or clothing), the bottom
+        one goes to the guardian. Both carry the same pickup code, which is required to check the child back out.
+    </p>
+
+    <div class="card tag">
+        <p class="church-name">Newlife AG &middot; Child Tag</p>
+        <div class="child-name">{{ check_in.child }}</div>
+        {% if check_in.child.age is not None %}<p class="muted" style="margin:0;">Age {{ check_in.child.age }}</p>{% endif %}
+        {% if check_in.event %}<p class="muted" style="margin:0;">{{ check_in.event.title }}</p>{% endif %}
+        <p class="muted" style="margin:0.25rem 0 0;">{{ check_in.checked_in_at|date:"M d, Y g:i A" }}</p>
+        <div class="code">{{ check_in.pickup_code }}</div>
+        {% if check_in.child.allergies_or_medical_notes %}
+            <p style="font-weight:700; color:#b00; margin:0.5rem 0 0;">
+                &#9888; {{ check_in.child.allergies_or_medical_notes }}
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="card tag">
+        <p class="church-name">Newlife AG &middot; Guardian Claim Ticket</p>
+        <p class="muted" style="margin:0;">For {{ check_in.child }}</p>
+        <p class="muted" style="margin:0;">Dropped off by {{ check_in.guardian_name }}</p>
+        <p style="margin:0.5rem 0 0;">Present this code at pickup:</p>
+        <div class="code">{{ check_in.pickup_code }}</div>
+    </div>
+{% endblock %}

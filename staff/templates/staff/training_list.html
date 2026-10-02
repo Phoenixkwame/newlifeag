@@ -1,0 +1,38 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Volunteer Trainings{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Volunteer Training / Certifications</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_training_create' %}">+ Add Training</a>{% endif %}
+    </div>
+    <p class="muted">Children's Ministry can see status here to confirm a volunteer's training before assigning them to serve with kids, but only Pastors can log a completion.</p>
+
+    <div class="button-row">
+        <a class="button {% if not show %}accent{% else %}outline{% endif %}" href="?show=">All</a>
+        <a class="button {% if show == 'in_progress' %}accent{% else %}outline{% endif %}" href="?show=in_progress">In Progress</a>
+        <a class="button {% if show == 'completed' %}accent{% else %}outline{% endif %}" href="?show=completed">Completed</a>
+        <a class="button {% if show == 'expiring' %}accent{% else %}outline{% endif %}" href="?show=expiring">Expiring Soon</a>
+    </div>
+
+    {% if trainings %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for training in trainings %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <strong>{{ training.member }}</strong> &middot; {{ training.training_name }}
+                        <span class="badge {% if training.status == 'completed' %}accent{% else %}muted{% endif %}">{{ training.get_status_display }}</span>
+                        {% if training.is_expired %}<span class="badge muted">Expired</span>{% elif training.is_expiring_soon %}<span class="badge muted">Expiring soon</span>{% endif %}
+                        {% if training.expiry_date %}<span class="muted"> &middot; expires {{ training.expiry_date|date:"M j, Y" }}</span>{% endif %}
+                    </span>
+                    {% if perms.screening.change_volunteertraining %}
+                        <a href="{% url 'staff_training_edit' training.id %}">Edit</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No trainings match that filter.</p>
+    {% endif %}
+{% endblock %}

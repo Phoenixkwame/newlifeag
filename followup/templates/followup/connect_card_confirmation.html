@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Thank You{% endblock %}
+{% block content %}
+    <div class="hero">
+        <h1>Thank you!</h1>
+        <p>We've got your information and someone from our team will be in touch soon. We're so glad you connected with us.</p>
+        <div class="actions">
+            <a class="button accent" href="{% url 'upcoming_events' %}">See Upcoming Events</a>
+            <a class="button secondary" href="{% url 'home' %}">Back to Home</a>
+        </div>
+    </div>
+{% endblock %}

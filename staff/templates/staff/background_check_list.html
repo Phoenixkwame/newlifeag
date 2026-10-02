@@ -1,0 +1,39 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Background Checks{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Volunteer Background Checks</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_background_check_create' %}">+ Add Background Check</a>{% endif %}
+    </div>
+    <p class="muted">Children's Ministry can see status here to confirm clearance before assigning someone to serve with kids, but only Pastors can change a check's status.</p>
+
+    <div class="button-row">
+        <a class="button {% if not show %}accent{% else %}outline{% endif %}" href="?show=">All</a>
+        <a class="button {% if show == 'pending' %}accent{% else %}outline{% endif %}" href="?show=pending">Pending</a>
+        <a class="button {% if show == 'cleared' %}accent{% else %}outline{% endif %}" href="?show=cleared">Cleared</a>
+        <a class="button {% if show == 'flagged' %}accent{% else %}outline{% endif %}" href="?show=flagged">Flagged</a>
+        <a class="button {% if show == 'expiring' %}accent{% else %}outline{% endif %}" href="?show=expiring">Expiring Soon</a>
+    </div>
+
+    {% if checks %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for check in checks %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <strong>{{ check.member }}</strong>
+                        <span class="badge {% if check.status == 'cleared' %}accent{% else %}muted{% endif %}">{{ check.get_status_display }}</span>
+                        {% if check.is_expired %}<span class="badge muted">Expired</span>{% elif check.is_expiring_soon %}<span class="badge muted">Expiring soon</span>{% endif %}
+                        {% if check.expiry_date %}<span class="muted"> &middot; expires {{ check.expiry_date|date:"M j, Y" }}</span>{% endif %}
+                    </span>
+                    {% if perms.screening.change_backgroundcheck %}
+                        <a href="{% url 'staff_background_check_edit' check.id %}">Edit</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No background checks match that filter.</p>
+    {% endif %}
+{% endblock %}

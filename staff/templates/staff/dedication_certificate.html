@@ -1,0 +1,34 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Dedication Certificate &ndash; {{ dedication.child_name }}{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; border: none; }
+        }
+        .certificate { text-align: center; padding: 3rem 2rem; border: 3px double var(--primary); }
+        .certificate h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+        .certificate .child-name { font-size: 2rem; font-weight: 800; color: var(--primary-dark); margin: 1.2rem 0; }
+    </style>
+{% endblock %}
+{% block staff_content %}
+    <p class="no-print"><a href="{% url 'staff_dedication_list' %}">&larr; Back to dedications</a></p>
+    <div class="section-title no-print">
+        <h2>Dedication Certificate</h2>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card certificate">
+        <h1>Newlife AG (Assemblies of God)</h1>
+        <p class="muted" style="margin-top:-0.5rem;">Tema, Ghana</p>
+        <p style="margin-top:2rem;">This certifies that</p>
+        <div class="child-name">{{ dedication.child_name }}</div>
+        <p>was dedicated to the Lord on <strong>{{ dedication.dedication_date|date:"F j, Y" }}</strong></p>
+        {% if dedication.parents.all %}
+            <p>Parent(s): {% for parent in dedication.parents.all %}{{ parent }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        {% endif %}
+        {% if dedication.officiated_by %}<p>Officiated by {{ dedication.officiated_by }}</p>{% endif %}
+    </div>
+{% endblock %}

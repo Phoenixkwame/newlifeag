@@ -1,0 +1,57 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ campaign.name }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_campaign_list' %}">&larr; Back to campaigns</a></p>
+
+    <div class="section-title">
+        <h2>{{ campaign.name }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_campaign_edit' campaign.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Details</h2>
+            <ul class="plain">
+                <li><strong>Status:</strong> {% if campaign.is_active %}<span class="badge accent">Active</span>{% else %}<span class="badge muted">Inactive</span>{% endif %}</li>
+                <li><strong>Dates:</strong> {{ campaign.start_date|date:"M j, Y" }}{% if campaign.end_date %} &ndash; {{ campaign.end_date|date:"M j, Y" }}{% endif %}</li>
+                {% if campaign.campus %}<li><strong>Campus:</strong> {{ campaign.campus }}</li>{% endif %}
+                <li><strong>Goal:</strong> {% if campaign.goal_amount %}GH&#8373;{{ campaign.goal_amount|floatformat:2 }}{% else %}No fixed goal{% endif %}</li>
+                <li><strong>Given so far:</strong> GH&#8373;{{ campaign.given_total|floatformat:2 }}{% if campaign.percent_of_goal is not None %} ({{ campaign.percent_of_goal }}% of goal){% endif %}</li>
+                <li><strong>Pledged so far:</strong> GH&#8373;{{ campaign.pledged_total|floatformat:2 }}</li>
+                <li><strong>Description:</strong> {{ campaign.description|default:"—" }}</li>
+            </ul>
+            {% if campaign.goal_amount %}
+                <div class="progress">
+                    <div class="progress-bar {% if campaign.percent_of_goal >= 100 %}full{% endif %}" style="width:{{ campaign.percent_of_goal }}%;"></div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <div class="section-title" style="margin-top:0;">
+                <h2>Pledges ({{ pledges.count }})</h2>
+                {% if pledges %}
+                    <form method="post" action="{% url 'staff_campaign_send_reminders' campaign.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" class="outline">Send Reminders</button>
+                    </form>
+                {% endif %}
+            </div>
+            {% if pledges %}
+                <ul class="plain">
+                {% for pledge in pledges %}
+                    <li>
+                        <a href="{% url 'staff_member_detail' pledge.member.id %}">{{ pledge.member }}</a>
+                        <div class="muted">
+                            Pledged GH&#8373;{{ pledge.amount|floatformat:2 }} &middot; given GH&#8373;{{ pledge.given_toward_pledge|floatformat:2 }} so far
+                            {% if pledge.given_toward_pledge >= pledge.amount %} &middot; <span class="badge accent">Fulfilled</span>{% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No pledges recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Maintenance Requests{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Facility Maintenance</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_maintenance_create' %}">+ Log Issue</a>{% endif %}
+    </div>
+    {% if not can_change %}
+        <p class="muted">You can report issues here - only a Pastor can start work on a ticket or mark it resolved.</p>
+    {% endif %}
+
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
+        <div style="flex:1; min-width:260px;">
+            <h3>Open</h3>
+            {% if open_requests %}
+                {% for maintenance_request in open_requests %}
+                    <div class="card">
+                        <strong>{{ maintenance_request.title }}</strong>
+                        {% if maintenance_request.location %}<div class="muted">{{ maintenance_request.location }}</div>{% endif %}
+                        {% if maintenance_request.description %}<p>{{ maintenance_request.description }}</p>{% endif %}
+                        <div class="muted">
+                            {% if maintenance_request.reported_by %}Reported by {{ maintenance_request.reported_by }} &middot; {% endif %}
+                            {{ maintenance_request.created_at|date:"M j, Y" }}
+                        </div>
+                        {% if can_change %}
+                            <form method="post" action="{% url 'staff_maintenance_update_status' maintenance_request.id %}" style="margin-top:0.5rem;">
+                                {% csrf_token %}
+                                <input type="hidden" name="status" value="in_progress">
+                                <button type="submit" class="outline">Start Progress</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty-state">Nothing open.</p>
+            {% endif %}
+        </div>
+
+        <div style="flex:1; min-width:260px;">
+            <h3>In Progress</h3>
+            {% if in_progress_requests %}
+                {% for maintenance_request in in_progress_requests %}
+                    <div class="card">
+                        <strong>{{ maintenance_request.title }}</strong>
+                        {% if maintenance_request.location %}<div class="muted">{{ maintenance_request.location }}</div>{% endif %}
+                        {% if maintenance_request.description %}<p>{{ maintenance_request.description }}</p>{% endif %}
+                        {% if can_change %}
+                            <form method="post" action="{% url 'staff_maintenance_update_status' maintenance_request.id %}" style="margin-top:0.5rem;">
+                                {% csrf_token %}
+                                <input type="hidden" name="status" value="done">
+                                <input type="text" name="resolution_notes" placeholder="What was done (optional)">
+                                <button type="submit">Mark Done</button>
+                            </form>
+                            <form method="post" action="{% url 'staff_maintenance_update_status' maintenance_request.id %}" style="margin-top:0.3rem;">
+                                {% csrf_token %}
+                                <input type="hidden" name="status" value="open">
+                                <button type="submit" class="outline">Reopen as Open</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty-state">Nothing in progress.</p>
+            {% endif %}
+        </div>
+
+        <div style="flex:1; min-width:260px;">
+            <h3>Done</h3>
+            {% if done_requests %}
+                {% for maintenance_request in done_requests %}
+                    <div class="card">
+                        <strong>{{ maintenance_request.title }}</strong>
+                        {% if maintenance_request.location %}<div class="muted">{{ maintenance_request.location }}</div>{% endif %}
+                        {% if maintenance_request.resolution_notes %}<p class="muted">{{ maintenance_request.resolution_notes }}</p>{% endif %}
+                        <div class="muted">Resolved {{ maintenance_request.resolved_at|date:"M j, Y" }}</div>
+                        {% if can_change %}
+                            <form method="post" action="{% url 'staff_maintenance_update_status' maintenance_request.id %}" style="margin-top:0.5rem;">
+                                {% csrf_token %}
+                                <input type="hidden" name="status" value="open">
+                                <button type="submit" class="outline">Reopen</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty-state">Nothing resolved yet.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

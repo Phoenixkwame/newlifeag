@@ -1,0 +1,38 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Children's Check-In{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Currently Checked In</h2>
+        <div class="button-row" style="margin:0;">
+            <a class="button outline" href="{% url 'staff_child_list' %}">All Children</a>
+            {% if can_add %}<a class="button accent" href="{% url 'staff_checkin_create' %}">+ Check In a Child</a>{% endif %}
+        </div>
+    </div>
+    <p class="muted">Every child who has been checked in and not yet picked up, across every event and day.</p>
+
+    {% if active_checkins %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for check_in in active_checkins %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <a href="{% url 'staff_child_detail' check_in.child.id %}"><strong>{{ check_in.child }}</strong></a>
+                        <span class="muted">
+                            &middot; dropped off by {{ check_in.guardian_name }} at {{ check_in.checked_in_at|date:"g:i A" }}
+                            {% if check_in.event %} &middot; {{ check_in.event.title }}{% endif %}
+                        </span>
+                    </span>
+                    <span class="button-row" style="margin:0;">
+                        <a class="button outline" href="{% url 'staff_checkin_badge' check_in.id %}">Print Badge</a>
+                        {% if can_check_out %}
+                            <a class="button outline" href="{% url 'staff_checkin_check_out' check_in.id %}">Check Out</a>
+                        {% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No children are currently checked in.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Visitor Info{% endblock %}
+{% block staff_content %}
+    <h2>Visitor Info</h2>
+    <p class="muted">
+        This is what shows on the public <a href="{% url 'visitor_info' %}" target="_blank" rel="noopener">Plan Your
+        Visit</a> page - service times, address, guest wifi, and a short welcome note for a first-time visitor.
+    </p>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

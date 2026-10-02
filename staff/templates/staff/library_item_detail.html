@@ -1,0 +1,69 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ item.title }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_library_list' %}">&larr; Back to library</a></p>
+    <div class="section-title">
+        <h2>{{ item.title }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_library_item_edit' item.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="card">
+        <p>
+            <span class="badge muted">{{ item.get_category_display }}</span>
+            {% if not item.is_active %}<span class="badge muted">Retired</span>{% endif %}
+        </p>
+        {% if item.author %}<p class="muted">Author/Speaker: {{ item.author }}</p>{% endif %}
+        {% if item.notes %}<p>{{ item.notes }}</p>{% endif %}
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Loan Status</h2>
+        {% if item.is_on_loan %}
+            {% with loan=item.current_loan %}
+                <p>
+                    On loan to <strong>{{ loan.borrower|default:"someone" }}</strong> since {{ loan.borrowed_date|date:"M j, Y" }},
+                    due back {{ loan.due_date|date:"M j, Y" }}.
+                    {% if loan.is_overdue %}<span class="badge accent">Overdue</span>{% endif %}
+                </p>
+                {% if loan.notes %}<p class="muted">{{ loan.notes }}</p>{% endif %}
+                {% if can_return %}
+                    <form method="post" action="{% url 'staff_library_return' loan.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Mark Returned</button>
+                    </form>
+                {% endif %}
+            {% endwith %}
+        {% elif can_checkout %}
+            <form method="post" action="{% url 'staff_library_checkout' item.id %}">
+                {% csrf_token %}
+                {{ loan_form.as_p }}
+                <button type="submit">Check Out</button>
+            </form>
+        {% else %}
+            <p class="muted">Not currently on loan.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Loan History</h2>
+        {% if loans %}
+            <ul class="plain">
+            {% for loan in loans %}
+                <li style="padding:0.5rem 0; border-bottom:1px solid var(--border, #eee);">
+                    {{ loan.borrower|default:"Someone" }} &middot; {{ loan.borrowed_date|date:"M j, Y" }} &ndash; due {{ loan.due_date|date:"M j, Y" }}
+                    {% if loan.returned_date %}
+                        &middot; returned {{ loan.returned_date|date:"M j, Y" }}
+                    {% elif loan.is_overdue %}
+                        <span class="badge accent">Overdue</span>
+                    {% else %}
+                        <span class="badge muted">On loan</span>
+                    {% endif %}
+                    {% if loan.notes %}<div class="muted">{{ loan.notes }}</div>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">No loan history yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

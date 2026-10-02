@@ -1,0 +1,27 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Flyers{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Flyers</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_flyer_create' %}">+ Add Flyer</a>{% endif %}
+    </div>
+    <p class="muted">Shown as a scrollable strip near the top of the public homepage - only active flyers appear there, in "order" then newest-first.</p>
+
+    {% if flyers %}
+        <div class="grid">
+            {% for flyer in flyers %}
+                <div class="card">
+                    <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" style="width:100%; border-radius:6px; margin-bottom:0.6rem;">
+                    <strong>{{ flyer.title }}</strong>
+                    <p class="muted" style="margin:0.3rem 0;">
+                        {% if flyer.is_active %}<span class="badge">Active</span>{% else %}<span class="badge muted">Inactive</span>{% endif %}
+                        &middot; Order: {{ flyer.order }}
+                    </p>
+                    {% if can_edit %}<a href="{% url 'staff_flyer_edit' flyer.id %}">Edit</a>{% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">No flyers posted yet.</p>
+    {% endif %}
+{% endblock %}

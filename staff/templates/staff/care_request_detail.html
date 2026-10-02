@@ -1,0 +1,36 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Care Request &ndash; {{ care_request.member }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_care_request_list' %}">&larr; Back to care requests</a></p>
+    <div class="section-title">
+        <h2>{{ care_request.get_request_type_display }} &ndash; {{ care_request.member }}</h2>
+        <span class="badge {% if care_request.status == 'completed' %}accent{% else %}muted{% endif %}">
+            {{ care_request.get_status_display }}
+        </span>
+    </div>
+
+    <div class="card">
+        <p>{{ care_request.details }}</p>
+        {% if care_request.preferred_contact_method %}
+            <p class="muted">Preferred contact: {{ care_request.preferred_contact_method }}</p>
+        {% endif %}
+        <p class="muted" style="margin-bottom:0;">Submitted {{ care_request.created_at|date:"M j, Y g:i A" }}</p>
+    </div>
+
+    {% if can_change %}
+        <div class="card">
+            <h2 style="margin-top:0;">Update</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="card">
+            <p><strong>Assigned to:</strong> {{ care_request.assigned_pastor|default:"Not yet assigned" }}</p>
+            {% if care_request.scheduled_date %}<p><strong>Scheduled for:</strong> {{ care_request.scheduled_date }}</p>{% endif %}
+            {% if care_request.pastor_notes %}<p><strong>Notes:</strong> {{ care_request.pastor_notes }}</p>{% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

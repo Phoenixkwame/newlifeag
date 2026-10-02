@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ survey.title }}{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <h1>{{ survey.title }}</h1>
+    {% if survey.description %}<p class="muted">{{ survey.description }}</p>{% endif %}
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Response</button>
+        </form>
+    </div>
+{% endblock %}

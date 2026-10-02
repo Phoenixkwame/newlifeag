@@ -1,0 +1,28 @@
+{% load i18n static %}
+<section class="home-pastor home-section" id="lead-pastor" aria-labelledby="pastor-title">
+    <figure class="home-pastor-figure">
+        <a href="{% static 'home/lead-pastor-cutout.png' %}" data-photo-open
+           data-photo-title="{% trans 'Our Lead Pastor' %}" data-photo-alt="{% trans 'Newlife AG lead pastor in a white jacket and clerical collar.' %}"
+           aria-label="{% trans 'Enlarge the lead pastor portrait' %}">
+            <img src="{% static 'home/lead-pastor-cutout.png' %}" width="148" height="222"
+                 loading="lazy" decoding="async" alt="{% trans 'Newlife AG lead pastor in a white jacket and clerical collar.' %}">
+        </a>
+        <figcaption>{% trans "Our Lead Pastor" %}<span aria-hidden="true">&nearr;</span></figcaption>
+    </figure>
+    <div class="home-pastor-copy">
+        <p class="home-eyebrow">{% trans "Meet Our Pastor" %}</p>
+        <h2 id="pastor-title">{% trans "Our Lead Pastor" %}</h2>
+        <p class="home-pastor-church">{% trans "Newlife Assemblies of God" %} &middot; {% trans "Tema" %}</p>
+        <p>{% trans "Join us for worship at Newlife AG. To meet with our pastor or learn more about the church, get in touch with the church office." %}</p>
+        <div class="home-actions">
+            <a class="button" href="{% url 'visitor_info' %}">{% trans "Plan Your Visit" %}<span aria-hidden="true">&nearr;</span></a>
+            <a class="home-text-link" href="{% url 'connect_card' %}">{% trans "Get in Touch" %}<span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="home-pastor-photos" aria-label="{% trans 'Lead pastor photographs' %}">
+            <a href="{% static 'home/lead-pastor-portrait.png' %}" data-photo-open data-photo-title="{% trans 'Lead Pastor — Studio Portrait' %}"
+               data-photo-alt="{% trans 'Portrait of the lead pastor in a white jacket against a dark studio background.' %}">{% trans "Studio portrait" %}<span aria-hidden="true">&nearr;</span></a>
+            <a href="{% static 'home/lead-pastor-original.jpg' %}" data-photo-open data-photo-title="{% trans 'Lead Pastor — Original Photograph' %}"
+               data-photo-alt="{% trans 'Original photograph of the lead pastor standing with folded arms against a peach background.' %}">{% trans "Original photograph" %}<span aria-hidden="true">&nearr;</span></a>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,146 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ group }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_group_list' %}">&larr; Back to groups</a></p>
+
+    <div class="section-title">
+        <h2>{{ group }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_group_edit' group.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Details</h2>
+            <ul class="plain">
+                <li><strong>Type:</strong> {{ group.get_group_type_display }}</li>
+                <li>
+                    <strong>Leader:</strong>
+                    {% if group.leader %}
+                        <a href="{% url 'staff_member_detail' group.leader.id %}" style="display:inline-flex; align-items:center; gap:0.4rem;">
+                            {% if group.leader.photo %}
+                                <img src="{{ group.leader.photo.url }}" class="avatar" alt="{{ group.leader }}">
+                            {% else %}
+                                <span class="avatar">{{ group.leader.initials }}</span>
+                            {% endif %}
+                            {{ group.leader }}
+                        </a>
+                    {% else %}—{% endif %}
+                </li>
+                <li>
+                    <strong>Meets:</strong>
+                    {% if group.meeting_day or group.meeting_time or group.meeting_location %}
+                        {{ group.get_meeting_day_display|default:"" }}{% if group.meeting_time %} {{ group.meeting_time|time:"g:i A" }}{% endif %}{% if group.meeting_location %} &middot; {{ group.meeting_location }}{% endif %}
+                    {% else %}—{% endif %}
+                </li>
+                <li><strong>Description:</strong> {{ group.description|default:"—" }}</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>
+                Members ({{ memberships.count }}{% if group.max_members %} of {{ group.max_members }}{% endif %})
+                {% if group.is_full %}<span class="badge">Full</span>{% endif %}
+            </h2>
+            {% if memberships %}
+                <ul class="plain">
+                {% for membership in memberships %}
+                    <li style="display:flex; justify-content:space-between; align-items:center;">
+                        <a href="{% url 'staff_member_detail' membership.member.id %}" style="display:flex; align-items:center; gap:0.5rem;">
+                            {% if membership.member.photo %}
+                                <img src="{{ membership.member.photo.url }}" class="avatar" alt="{{ membership.member }}">
+                            {% else %}
+                                <span class="avatar">{{ membership.member.initials }}</span>
+                            {% endif %}
+                            {{ membership.member }}
+                        </a>
+                        {% if can_remove_member %}
+                            <form method="post" action="{% url 'staff_group_remove_member' group.id membership.member.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="outline">Remove</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No members in this group yet.</p>
+            {% endif %}
+
+            {% if can_add_member %}
+                <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                <form method="post" action="{% url 'staff_group_add_member' group.id %}" style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:flex-end;">
+                    {% csrf_token %}
+                    <div style="flex:1; min-width:180px;">
+                        <label>Add a member</label>
+                        <select name="member_id">
+                            {% for m in other_members %}
+                                <option value="{{ m.id }}">{{ m }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div><button type="submit">Add</button></div>
+                </form>
+            {% endif %}
+        </div>
+
+        {% if attendance_summary is not None %}
+            <div class="card">
+                <h2>Recent Meeting Attendance</h2>
+                <p class="muted">Taken by the group's leader from their own dashboard.</p>
+                {% if attendance_summary %}
+                    <ul class="plain">
+                    {% for row in attendance_summary %}
+                        <li>{{ row.date }} <span class="badge accent">{{ row.present_count }} of {{ row.total_count }} present</span></li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No meeting attendance recorded for this group yet.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if upcoming_serving is not None %}
+            <div class="card">
+                <h2>Upcoming Serving Schedule</h2>
+                <p class="muted">Set by the group's own leader from their dashboard.</p>
+                {% if upcoming_serving %}
+                    <ul class="plain">
+                    {% for assignment in upcoming_serving %}
+                        <li>
+                            <strong>{{ assignment.date }}</strong> &middot; {{ assignment.member }} &middot; {{ assignment.role }}
+                            {% if assignment.confirmation_status == "confirmed" %}
+                                <span class="badge accent">Confirmed</span>
+                            {% elif assignment.confirmation_status == "declined" %}
+                                <span class="badge" style="background:#fbe4e4; color:#a33;">Declined</span>
+                            {% else %}
+                                <span class="badge muted">Awaiting reply</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">Nothing scheduled yet.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if recent_lessons is not None %}
+            <div class="card">
+                <h2>Recent Lessons</h2>
+                <p class="muted">Posted by the group's own leader.</p>
+                {% if recent_lessons %}
+                    <ul class="plain">
+                    {% for lesson in recent_lessons %}
+                        <li>
+                            <strong>{{ lesson.title }}</strong>
+                            <span class="muted">&middot; week of {{ lesson.week_of|date:"M j, Y" }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No lessons posted yet.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}Record a Baptism{% else %}Edit Baptism Record{% endif %}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_baptism_list' %}">&larr; Back to baptisms</a></p>
+    <h2>{% if is_new %}Record a Baptism{% else %}Edit {{ baptism }}{% endif %}</h2>
+    {% if form.non_field_errors %}
+        <ul class="errorlist">
+            {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Save Record{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

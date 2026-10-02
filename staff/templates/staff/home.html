@@ -1,0 +1,188 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Staff Area{% endblock %}
+{% block staff_content %}
+    <div class="stat-row">
+        <div class="stat">
+            <span class="num">{{ stats.active_members }}</span>
+            <span class="label">Active members</span>
+        </div>
+        <div class="stat">
+            <span class="num">{{ stats.upcoming_events }}</span>
+            <span class="label">Upcoming events</span>
+        </div>
+        <div class="stat">
+            <span class="num">{{ stats.today_attendance }}</span>
+            <span class="label">Present today</span>
+        </div>
+        {% if "pending_donations" in stats %}
+            <div class="stat">
+                <span class="num">{{ stats.pending_donations }}</span>
+                <span class="label">Pending gifts</span>
+            </div>
+        {% endif %}
+        {% if "children_checked_in" in stats %}
+            <div class="stat">
+                <span class="num">{{ stats.children_checked_in }}</span>
+                <span class="label">Children checked in</span>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if glance %}
+        <div class="card">
+            <h2 style="margin-top:0;">This Week at a Glance</h2>
+            <ul class="plain">
+                {% if "events_this_week" in glance %}
+                    <li>
+                        <strong>{{ glance.events_this_week|length }}</strong> event{{ glance.events_this_week|length|pluralize }} this week
+                        {% if glance.events_this_week %}
+                            &mdash;
+                            {% for event in glance.events_this_week %}{{ event.title }} ({{ event.start_datetime|date:"D M d" }}){% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% endif %}
+                    </li>
+                    <li>
+                        <strong>{{ glance.volunteer_gaps_this_week|length }}</strong> volunteer slot{{ glance.volunteer_gaps_this_week|length|pluralize }} still open this week
+                    </li>
+                {% endif %}
+                {% if "serving_this_week" in glance %}
+                    <li><strong>{{ glance.serving_this_week|length }}</strong> serving assignment{{ glance.serving_this_week|length|pluralize }} on the schedule this week</li>
+                {% endif %}
+                {% if "pending_care_requests" in glance %}
+                    <li><strong>{{ glance.pending_care_requests|length }}</strong> care request{{ glance.pending_care_requests|length|pluralize }} awaiting a visit</li>
+                {% endif %}
+                {% if "new_followups" in glance %}
+                    <li><strong>{{ glance.new_followups|length }}</strong> new visitor{{ glance.new_followups|length|pluralize }} not yet contacted</li>
+                {% endif %}
+                {% if "absentees" in glance %}
+                    <li><strong>{{ glance.absentees|length }}</strong> member{{ glance.absentees|length|pluralize }} who've gone quiet</li>
+                {% endif %}
+                {% if "lapsed_givers" in glance %}
+                    <li><strong>{{ glance.lapsed_givers|length }}</strong> lapsed recurring giver{{ glance.lapsed_givers|length|pluralize }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="grid">
+        {% if perms.members.view_member %}
+            <a class="card-link" href="{% url 'staff_member_list' %}">
+                <div class="card">
+                    <h2>Members</h2>
+                    <p class="muted">Search, view, and manage member records.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.members.view_household %}
+            <a class="card-link" href="{% url 'staff_household_list' %}">
+                <div class="card">
+                    <h2>Households</h2>
+                    <p class="muted">Group members into families and manage household contact info.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.members.view_group %}
+            <a class="card-link" href="{% url 'staff_group_list' %}">
+                <div class="card">
+                    <h2>Groups</h2>
+                    <p class="muted">Manage ministries, small groups, and committees and their leaders.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.members.view_campus %}
+            <a class="card-link" href="{% url 'staff_campus_list' %}">
+                <div class="card">
+                    <h2>Campuses</h2>
+                    <p class="muted">Manage branch locations, for churches with more than one service site.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.events.view_event %}
+            <a class="card-link" href="{% url 'staff_event_list' %}">
+                <div class="card">
+                    <h2>Events</h2>
+                    <p class="muted">Create events, manage volunteer slots, and see who's RSVP'd.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.members.add_attendance %}
+            <a class="card-link" href="{% url 'mark_attendance' %}">
+                <div class="card">
+                    <h2>Mark Attendance</h2>
+                    <p class="muted">Record who was present for a service or a general day.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if "pending_donations" in stats %}
+            <a class="card-link" href="{% url 'staff_donation_list' %}?status=pending">
+                <div class="card">
+                    <h2>Pending Gifts</h2>
+                    <p class="muted">Reconcile cash/mobile money gifts recorded as pending.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.giving.view_givingcampaign %}
+            <a class="card-link" href="{% url 'staff_campaign_list' %}">
+                <div class="card">
+                    <h2>Giving Campaigns</h2>
+                    <p class="muted">Run building funds and special offerings, and track pledges and progress.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.sermons.view_sermon %}
+            <a class="card-link" href="{% url 'staff_sermon_list' %}">
+                <div class="card">
+                    <h2>Sermons &amp; Devotionals</h2>
+                    <p class="muted">Post new sermons and devotionals for the site.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.prayer.view_prayerrequest %}
+            <a class="card-link" href="{% url 'staff_prayer_list' %}">
+                <div class="card">
+                    <h2>Prayer Requests</h2>
+                    <p class="muted">Review requests members have submitted and mark them prayed for.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.checkin.view_child %}
+            <a class="card-link" href="{% url 'staff_checkin_dashboard' %}">
+                <div class="card">
+                    <h2>Children's Check-In</h2>
+                    <p class="muted">Check kids in and out of children's ministry with a secure pickup code.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.members.view_member %}
+            <a class="card-link" href="{% url 'staff_birthdays' %}">
+                <div class="card">
+                    <h2>Birthdays &amp; Anniversaries</h2>
+                    <p class="muted">See who's celebrating a birthday or wedding anniversary this month.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.followup.view_followup %}
+            <a class="card-link" href="{% url 'staff_followup_list' %}">
+                <div class="card">
+                    <h2>New Member Follow-Up</h2>
+                    <p class="muted">Track first-time visitors from a first hello through to becoming a member.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.announcements.view_announcement %}
+            <a class="card-link" href="{% url 'staff_announcement_list' %}">
+                <div class="card">
+                    <h2>Announcements</h2>
+                    <p class="muted">Send a one-off email/SMS blast to everyone, one campus, or one group.</p>
+                </div>
+            </a>
+        {% endif %}
+        {% if perms.members.view_attendance or perms.giving.view_donation %}
+            <a class="card-link" href="{% url 'staff_reports' %}">
+                <div class="card">
+                    <h2>Reports</h2>
+                    <p class="muted">Attendance trends, giving totals by month/type, and giving by member.</p>
+                </div>
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}

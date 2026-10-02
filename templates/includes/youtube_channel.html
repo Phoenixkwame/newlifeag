@@ -1,0 +1,15 @@
+{% load i18n %}
+<section class="home-video home-section card" aria-labelledby="youtube-channel-title">
+    <div class="home-video-copy">
+        <span class="badge">YouTube</span>
+        <h2 id="youtube-channel-title">{% trans "Worship with Newlife Chapel AG" %}</h2>
+        <p>{% trans "Watch services here, or visit our YouTube channel for more messages and live streams." %}</p>
+        <p><a class="button accent" href="https://www.youtube.com/@newlife-chapelag8034/streams" target="_blank" rel="noopener">{% trans "All YouTube Streams" %} &nearr;</a></p>
+        <p><a href="https://www.youtube.com/watch?v=avfQCAACW7c" target="_blank" rel="noopener">{% trans "Watch on YouTube" %} &nearr;</a></p>
+    </div>
+    <div class="video-embed">
+        <iframe src="https://www.youtube-nocookie.com/embed/avfQCAACW7c?playlist=ybipbArL71U,x6pFb2tPv5c" title="{% trans 'Newlife Chapel AG services on YouTube' %}"
+            loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
+            allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+    </div>
+</section>

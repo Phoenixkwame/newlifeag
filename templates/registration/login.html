@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Member Login" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Member Login" %}</h1>
+    <p>{% trans "Log in to access your personal dashboard, giving history, and member features." %}</p>
+    <p>{% trans "Visiting? No account is needed to explore the church, browse events, or watch services." %}</p>
+    <div class="button-row">
+        <a class="button accent" href="{% url 'visitor_info' %}">{% trans "Plan Your Visit" %}</a>
+        <a class="button outline" href="{% url 'watch_online' %}">{% trans "Watch Online" %}</a>
+    </div>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Log in</button>
+        </form>
+    </div>
+    <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+    <p>{% trans "Accounts are created by the church administrator. Contact the church office if you need access." %}</p>
+{% endblock %}

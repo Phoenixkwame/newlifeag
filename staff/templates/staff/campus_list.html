@@ -1,0 +1,31 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Campuses{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Campuses</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_campus_create' %}">+ Add Campus</a>{% endif %}
+    </div>
+
+    {% if campuses %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for campus in campuses %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_campus_detail' campus.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ campus }}</strong>
+                            {% if campus.address %}<span class="muted"> &middot; {{ campus.address }}</span>{% endif %}
+                        </span>
+                        <span class="badge muted">{{ campus.member_count }} member{{ campus.member_count|pluralize }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">
+            No campuses yet. Most churches only need one, so member/event/giving forms won't show a
+            campus field until you add a second one here.
+        </p>
+    {% endif %}
+{% endblock %}

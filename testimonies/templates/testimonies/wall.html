@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Testimony Wall{% endblock %}
+{% block content %}
+    <h1>Testimony Wall</h1>
+    <p class="muted">
+        Stories of answered prayer and God's work in the lives of our members.
+        Log in and visit your dashboard to share your own.
+    </p>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for testimony in page_obj %}
+                <li style="padding:0.9rem 1.25rem;">
+                    <p style="margin:0 0 0.3rem;">{{ testimony.testimony_text }}</p>
+                    <span class="muted">
+                        {% if testimony.share_name_publicly %}{{ testimony.member }}{% else %}A church member{% endif %}
+                        &middot; {{ testimony.created_at|date:"M j, Y" }}
+                    </span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No approved testimonies right now.</p>
+    {% endif %}
+{% endblock %}

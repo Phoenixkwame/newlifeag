@@ -1,0 +1,27 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Live Stream{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Live Stream</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_livestream_create' %}">+ Post a Stream Link</a>{% endif %}
+    </div>
+    <p><a href="{% url 'watch_online' %}" target="_blank" rel="noopener">View the public "Watch Online" page &rarr;</a></p>
+
+    {% if streams %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for stream in streams %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <strong>{{ stream.title }}</strong>
+                        <span class="muted">{{ stream.scheduled_for|date:"M j, Y, g:i A" }}</span>
+                    </span>
+                    {% if can_edit %}<a href="{% url 'staff_livestream_edit' stream.id %}">Edit</a>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No stream links posted yet.</p>
+    {% endif %}
+{% endblock %}

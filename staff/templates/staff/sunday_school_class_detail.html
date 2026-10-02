@@ -1,0 +1,84 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ sunday_school_class }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_sunday_school_class_list' %}">&larr; Back to Sunday school</a></p>
+
+    <div class="section-title">
+        <h2>{{ sunday_school_class }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_sunday_school_class_edit' sunday_school_class.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Details</h2>
+            <ul class="plain">
+                <li><strong>Teacher:</strong> {% if sunday_school_class.teacher %}<a href="{% url 'staff_member_detail' sunday_school_class.teacher.id %}">{{ sunday_school_class.teacher }}</a>{% else %}—{% endif %}</li>
+                <li><strong>Description:</strong> {{ sunday_school_class.description|default:"—" }}</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Roster ({{ roster.count }})</h2>
+            {% if roster %}
+                <ul class="plain">
+                {% for child in roster %}
+                    <li style="display:flex; justify-content:space-between; align-items:center;">
+                        <a href="{% url 'staff_child_detail' child.id %}">{{ child }}</a>
+                        {% if can_manage_roster %}
+                            <form method="post" action="{% url 'staff_sunday_school_class_remove_child' sunday_school_class.id child.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="outline">Remove</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No children in this class yet.</p>
+            {% endif %}
+
+            {% if can_manage_roster %}
+                <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                <form method="post" action="{% url 'staff_sunday_school_class_add_child' sunday_school_class.id %}" style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:flex-end;">
+                    {% csrf_token %}
+                    <div style="flex:1; min-width:180px;">
+                        <label>Add a child</label>
+                        <select name="child_id">
+                            {% for child in other_children %}
+                                <option value="{{ child.id }}">{{ child }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div><button type="submit">Add</button></div>
+                </form>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Lessons</h2>
+            {% if lessons %}
+                <ul class="plain">
+                {% for lesson in lessons %}
+                    <li style="margin-bottom:0.75rem;">
+                        <strong>{{ lesson.title }}</strong>
+                        <span class="muted">&middot; week of {{ lesson.week_of|date:"M j, Y" }}{% if lesson.scripture_reference %} &middot; {{ lesson.scripture_reference }}{% endif %}</span>
+                        <p style="white-space:pre-line; margin:0.3rem 0 0;">{{ lesson.content }}</p>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No lessons posted yet.</p>
+            {% endif %}
+
+            {% if can_add_lesson %}
+                <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                <h3>Post a Lesson</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ lesson_form.as_p }}
+                    <button type="submit">Post Lesson</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

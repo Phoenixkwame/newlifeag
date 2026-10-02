@@ -1,0 +1,44 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Giving by Member{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_reports' %}">&larr; Back to reports</a></p>
+
+    <div class="section-title">
+        <h2>Giving by Member ({{ year }})</h2>
+    </div>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div>
+            <label>Year</label>
+            <select name="year" onchange="this.form.submit()">
+                {% for y in available_years %}
+                    <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    {% if by_member %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for row in by_member %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <a href="{% url 'staff_member_detail' row.member__id %}">{{ row.member__first_name }} {{ row.member__last_name }}</a>
+                        <strong style="margin-left:0.5rem;">GH&#8373;{{ row.total|floatformat:2 }}</strong>
+                    </span>
+                    <a class="button outline" href="{% url 'staff_annual_giving_statement' row.member__id %}?year={{ year }}">View Statement</a>
+                </li>
+            {% endfor %}
+            {% if anonymous_total %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between;">
+                    <span class="muted">Anonymous gifts</span>
+                    <strong>GH&#8373;{{ anonymous_total|floatformat:2 }}</strong>
+                </li>
+            {% endif %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No completed gifts recorded for {{ year }}.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Groups{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Groups</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_group_create' %}">+ New Group</a>{% endif %}
+    </div>
+
+    <div class="button-row">
+        <a class="button {% if not group_type %}accent{% else %}outline{% endif %}" href="?type=">All</a>
+        <a class="button {% if group_type == 'ministry' %}accent{% else %}outline{% endif %}" href="?type=ministry">Ministries</a>
+        <a class="button {% if group_type == 'small_group' %}accent{% else %}outline{% endif %}" href="?type=small_group">Small Groups</a>
+        <a class="button {% if group_type == 'committee' %}accent{% else %}outline{% endif %}" href="?type=committee">Committees</a>
+    </div>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for group in page_obj %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_group_detail' group.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ group }}</strong>
+                            <span class="muted">
+                                &middot; {{ group.get_group_type_display }}{% if group.leader %} &middot; led by {{ group.leader }}{% endif %}
+                                {% if group.meeting_day or group.meeting_time %} &middot; {{ group.get_meeting_day_display|default:"" }}{% if group.meeting_time %} {{ group.meeting_time|time:"g:i A" }}{% endif %}{% endif %}
+                                {% if group.meeting_location %} &middot; {{ group.meeting_location }}{% endif %}
+                            </span>
+                        </span>
+                        <span class="badge muted">
+                            {{ group.member_count }}{% if group.max_members %} of {{ group.max_members }}{% endif %} member{{ group.member_count|pluralize }}
+                            {% if group.max_members and group.member_count >= group.max_members %} &middot; Full{% endif %}
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No groups match that filter.</p>
+    {% endif %}
+{% endblock %}

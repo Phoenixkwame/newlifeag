@@ -1,0 +1,205 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Reports{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Reports</h2>
+    </div>
+
+    {% if attendance_by_month is None and giving_by_month is None %}
+        <p class="empty-state">Your role doesn't have view access to any of the data these reports cover.</p>
+    {% endif %}
+
+    {% if attendance_by_month is not None %}
+        <div class="card">
+            <h2>Attendance Trend (present, by month)</h2>
+            {% if attendance_by_month %}
+                <div class="bar-chart">
+                    {% for row in attendance_by_month %}
+                        <div class="bar-col">
+                            <span class="bar-value">{{ row.total }}</span>
+                            <div class="bar" style="height: {% widthratio row.total attendance_chart_max_month 100 %}%;"></div>
+                            <span class="bar-label">{{ row.month|date:"M" }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <table style="width:100%; border-collapse:collapse;">
+                    <tr><th style="text-align:left; padding:0.4rem 0;">Month</th><th style="text-align:right; padding:0.4rem 0;">Present</th></tr>
+                    {% for row in attendance_by_month %}
+                        <tr>
+                            <td style="padding:0.4rem 0; border-top:1px solid var(--border);">{{ row.month|date:"F Y" }}</td>
+                            <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">{{ row.total }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-state">No attendance recorded in this period yet.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if attendance_by_week is not None %}
+        <div class="card">
+            <h2>Attendance Trend (present, by week)</h2>
+            {% if attendance_by_week %}
+                <div class="bar-chart">
+                    {% for row in attendance_by_week %}
+                        <div class="bar-col">
+                            <span class="bar-value">{{ row.total }}</span>
+                            <div class="bar" style="height: {% widthratio row.total attendance_chart_max_week 100 %}%;"></div>
+                            <span class="bar-label">{{ row.week|date:"M j" }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">No attendance recorded in this period yet.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if attendance_by_campus is not None %}
+        <div class="card">
+            <h2>Attendance by Campus</h2>
+            <p class="muted">Total present over the same {{ attendance_by_month|length }}-month window as the trend above.</p>
+            {% if attendance_by_campus %}
+                <div class="bar-chart">
+                    {% for row in attendance_by_campus %}
+                        <div class="bar-col">
+                            <span class="bar-value">{{ row.total }}</span>
+                            <div class="bar" style="height: {% widthratio row.total attendance_chart_max_campus 100 %}%;"></div>
+                            <span class="bar-label">{{ row.label }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">No attendance recorded in this period yet.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if giving_by_month is not None %}
+        <div class="card">
+            <h2>Giving (completed gifts, by month)</h2>
+            {% if giving_by_month %}
+                <table style="width:100%; border-collapse:collapse;">
+                    <tr><th style="text-align:left; padding:0.4rem 0;">Month</th><th style="text-align:right; padding:0.4rem 0;">Total</th></tr>
+                    {% for row in giving_by_month %}
+                        <tr>
+                            <td style="padding:0.4rem 0; border-top:1px solid var(--border);">{{ row.month|date:"F Y" }}</td>
+                            <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">GH&#8373;{{ row.total|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-state">No completed gifts in this period yet.</p>
+            {% endif %}
+        </div>
+
+        {% if net_by_month is not None %}
+            <div class="card">
+                <h2>Income vs. expenses, by month</h2>
+                {% if net_by_month %}
+                    <table style="width:100%; border-collapse:collapse;">
+                        <tr>
+                            <th style="text-align:left; padding:0.4rem 0;">Month</th>
+                            <th style="text-align:right; padding:0.4rem 0;">Income</th>
+                            <th style="text-align:right; padding:0.4rem 0;">Expenses</th>
+                            <th style="text-align:right; padding:0.4rem 0;">Net</th>
+                        </tr>
+                        {% for row in net_by_month %}
+                            <tr>
+                                <td style="padding:0.4rem 0; border-top:1px solid var(--border);">{{ row.month|date:"F Y" }}</td>
+                                <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">GH&#8373;{{ row.income|floatformat:2 }}</td>
+                                <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">GH&#8373;{{ row.expenses|floatformat:2 }}</td>
+                                <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">
+                                    <span class="badge {% if row.net >= 0 %}accent{% else %}muted{% endif %}">GH&#8373;{{ row.net|floatformat:2 }}</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p class="empty-state">No giving or expenses recorded in this period yet.</p>
+                {% endif %}
+                <p style="margin-top:1rem;"><a href="{% url 'staff_expense_report' %}">See the full expense report &rarr;</a></p>
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <h2>Giving by type (all time)</h2>
+            {% if giving_by_type %}
+                <table style="width:100%; border-collapse:collapse;">
+                    <tr><th style="text-align:left; padding:0.4rem 0;">Type</th><th style="text-align:right; padding:0.4rem 0;">Total</th></tr>
+                    {% for row in giving_by_type %}
+                        <tr>
+                            <td style="padding:0.4rem 0; border-top:1px solid var(--border);">{{ row.label }}</td>
+                            <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">GH&#8373;{{ row.total|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-state">No completed gifts yet.</p>
+            {% endif %}
+            <p style="margin-top:1rem;"><a href="{% url 'staff_giving_by_member' %}">See giving totals by member &rarr;</a></p>
+        </div>
+
+        {% if giving_by_year_and_month is not None %}
+            <div class="card">
+                <h2>Giving Comparison, Year Over Year</h2>
+                <p class="muted">Completed gifts by month, side by side with the same months in prior years - useful for spotting a seasonal pattern (e.g. a December spike or a mid-year dip) that repeats year after year.</p>
+                <table style="width:100%; border-collapse:collapse;">
+                    <tr>
+                        <th style="text-align:left; padding:0.4rem 0;">Month</th>
+                        {% for year in giving_comparison_years %}
+                            <th style="text-align:right; padding:0.4rem 0;">{{ year }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for row in giving_by_year_and_month %}
+                        <tr>
+                            <td style="padding:0.4rem 0; border-top:1px solid var(--border);">{{ row.month_label }}</td>
+                            {% for cell in row.cells %}
+                                <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">
+                                    {% if cell.total is not None %}GH&#8373;{{ cell.total|floatformat:2 }}{% else %}&mdash;{% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td style="padding:0.4rem 0; border-top:2px solid var(--border); font-weight:600;">Year Total</td>
+                        {% for cell in giving_year_comparison_totals %}
+                            <td style="padding:0.4rem 0; border-top:2px solid var(--border); text-align:right; font-weight:600;">GH&#8373;{{ cell.total|floatformat:2 }}</td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {% if can_backup %}
+        <div class="card">
+            <h2>Annual Statistics</h2>
+            <p class="muted">
+                A year-end summary for reporting up to district or national leadership - baptisms, weddings,
+                funerals, altar call decisions, new members, average attendance, and total giving for one
+                chosen year.
+            </p>
+            <a class="button outline" href="{% url 'staff_annual_statistics' %}">Open Annual Statistics</a>
+        </div>
+
+        <div class="card">
+            <h2>Full Data Backup</h2>
+            <p class="muted">
+                Downloads a single ZIP with CSVs of members, households, attendance, donations, expenses, and
+                events - for keeping an offsite/manual backup of the church's core data.
+            </p>
+            <a class="button outline" href="{% url 'staff_full_backup' %}">Download Full Backup (.zip)</a>
+        </div>
+
+        <div class="card">
+            <h2>Printable Directory Booklet</h2>
+            <p class="muted">
+                A printable page of everyone who's opted into the member directory, grouped by household - print
+                it or save it as a PDF from the browser's print dialog to hand out.
+            </p>
+            <a class="button outline" href="{% url 'staff_directory_booklet' %}">Open Directory Booklet</a>
+        </div>
+    {% endif %}
+{% endblock %}

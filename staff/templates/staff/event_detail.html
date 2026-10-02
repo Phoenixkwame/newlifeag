@@ -1,0 +1,199 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_event_list' %}">&larr; Back to events</a></p>
+
+    <div class="section-title">
+        <h2>{{ event.title }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_event_edit' event.id %}">Edit</a>{% endif %}
+    </div>
+    <p class="muted">
+        {{ event.start_datetime|date:"l, F j, Y - g:i A" }}{% if event.location %} &middot; {{ event.location }}{% endif %}{% if event.campus %} &middot; {{ event.campus }}{% endif %}
+        &middot; <span class="badge muted">{{ event.get_event_type_display }}</span>
+    </p>
+    {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+
+    {% if event.recurrence != "none" %}
+        <p class="muted">
+            &#8635; Repeats {{ event.get_recurrence_display|lower }}
+            {% if event.occurrences.count %} &middot; {{ event.occurrences.count }} more occurrence{{ event.occurrences.count|pluralize }} created{% endif %}
+        </p>
+    {% elif event.series_parent %}
+        <p class="muted">
+            &#8635; Part of a recurring series &middot;
+            <a href="{% url 'staff_event_detail' event.series_parent.id %}">see the first event</a>
+        </p>
+    {% endif %}
+
+    <div class="grid">
+        <div class="card">
+            <h2>RSVPs ({{ rsvps|length }})</h2>
+            {% if rsvps %}
+                <ul class="plain">
+                {% for rsvp in rsvps %}
+                    <li style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="display:flex; align-items:center; gap:0.4rem;">
+                            {% if rsvp.member.photo %}
+                                <img src="{{ rsvp.member.photo.url }}" class="avatar" alt="{{ rsvp.member }}">
+                            {% else %}
+                                <span class="avatar">{{ rsvp.member.initials }}</span>
+                            {% endif %}
+                            {{ rsvp.member }}
+                        </span>
+                        <span>
+                            {% if rsvp.service_time %}<span class="badge muted">{{ rsvp.service_time.label }}</span>{% endif %}
+                            <span class="badge {% if rsvp.status == 'going' %}accent{% else %}muted{% endif %}">{{ rsvp.get_status_display }}</span>
+                        </span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No RSVPs yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>QR Check-In</h2>
+            <p class="muted">
+                Display or print this code at the door - scanning it opens a no-login page where a member types
+                their phone number to check themselves in for this event.
+            </p>
+            <img src="{% url 'event_qr_code' event.id %}" alt="QR code to check in for {{ event.title }}" width="180" height="180" style="display:block; margin:0 auto 0.75rem; border:1px solid var(--border); border-radius:8px;">
+            <p style="text-align:center;"><a href="{% url 'event_qr_checkin' event.id %}" target="_blank" rel="noopener">Open check-in page &rarr;</a></p>
+            <p style="text-align:center;">
+                <a href="{% url 'event_kiosk_checkin' event.id %}" target="_blank" rel="noopener">Open kiosk mode &rarr;</a>
+            </p>
+            <p class="muted" style="text-align:center; margin:0 0 0.5rem;">
+                Kiosk mode is a large-button, no-navigation screen - leave it open on a tablet at the door and
+                anyone can check themselves in without needing help.
+            </p>
+            <p class="muted" style="text-align:center; margin-bottom:0;">{{ qr_checkin_count }} checked in via QR so far</p>
+        </div>
+
+        <div class="card">
+            <div class="section-title" style="margin-top:0;">
+                <h2>Service Times</h2>
+                {% if can_add_service_time %}
+                    <a class="button outline" href="{% url 'staff_event_service_time_create' event.id %}">+ Add Service Time</a>
+                {% endif %}
+            </div>
+            {% if service_times %}
+                <ul class="plain">
+                {% for service_time in service_times %}
+                    <li>
+                        <strong>{{ service_time.label }}</strong>
+                        {% if service_time.start_time %} &middot; {{ service_time.start_time|time:"g:i A" }}{% endif %}
+                        {% if service_time.location %} &middot; {{ service_time.location }}{% endif %}
+                        <div class="muted">
+                            {{ service_time.rsvps.count }} RSVP{{ service_time.rsvps.count|pluralize }} &middot;
+                            {{ service_time.attendance_records.count }} checked in
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">This event runs as a single service - add a service time only if it has more than one (e.g. an 8:00am and a 10:30am service).</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <div class="section-title" style="margin-top:0;">
+                <h2>Volunteer Slots</h2>
+                {% if can_add_slot %}<a class="button outline" href="{% url 'staff_slot_create' event.id %}">+ Add Slot</a>{% endif %}
+            </div>
+            {% if slots %}
+                <ul class="plain">
+                {% for slot in slots %}
+                    <li>
+                        <div class="row" style="justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong>{{ slot.role_needed }}</strong>
+                                <span class="badge {% if slot.spots_remaining <= 0 %}muted{% else %}accent{% endif %}">
+                                    {{ slot.spots_filled }}/{{ slot.capacity }}
+                                </span>
+                            </div>
+                            {% if can_add_slot %}<a href="{% url 'staff_slot_edit' slot.id %}">Edit</a>{% endif %}
+                        </div>
+                        {% if slot.signups.all %}
+                            <p class="muted" style="margin:0.3rem 0 0;">
+                                {% for signup in slot.signups.all %}{{ signup.member }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                            </p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No volunteer slots yet.</p>
+            {% endif %}
+        </div>
+
+        {% if tickets %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Tickets &amp; Registrations</h2>
+                    {% if can_add_ticket %}<a class="button outline" href="{% url 'staff_ticket_create' event.id %}">+ Add Ticket</a>{% endif %}
+                </div>
+                <ul class="plain">
+                {% for ticket in tickets %}
+                    <li>
+                        <div class="row" style="justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong>{{ ticket.name }}</strong> &middot; GH&#8373;{{ ticket.price|floatformat:2 }}
+                                {% if ticket.capacity != None %}
+                                    <span class="badge {% if ticket.is_full %}muted{% else %}accent{% endif %}">
+                                        {{ ticket.registered_count }}/{{ ticket.capacity }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge muted">{{ ticket.registered_count }} registered</span>
+                                {% endif %}
+                            </div>
+                            {% if can_add_ticket %}<a href="{% url 'staff_ticket_edit' ticket.id %}">Edit</a>{% endif %}
+                        </div>
+                        {% if ticket.registrations.all %}
+                            <ul class="plain" style="margin:0.3rem 0 0;">
+                            {% for registration in ticket.registrations.all %}
+                                <li class="muted">
+                                    {{ registration.member }}
+                                    <span class="badge {% if registration.status == 'completed' %}accent{% elif registration.status == 'failed' %}muted{% else %}muted{% endif %}">
+                                        {{ registration.get_status_display }}
+                                    </span>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% elif can_add_ticket %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Tickets &amp; Registrations</h2>
+                    <a class="button outline" href="{% url 'staff_ticket_create' event.id %}">+ Add Ticket</a>
+                </div>
+                <p class="empty-state">No paid ticket types for this event yet.</p>
+            </div>
+        {% endif %}
+
+        {% if resource_bookings is not None %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Resource Bookings</h2>
+                    {% if can_add_booking %}<a class="button outline" href="{% url 'staff_booking_create' %}?event={{ event.id }}">+ Book a Resource</a>{% endif %}
+                </div>
+                {% if resource_bookings %}
+                    <ul class="plain">
+                    {% for booking in resource_bookings %}
+                        <li>
+                            <a href="{% url 'staff_booking_edit' booking.id %}"><strong>{{ booking.resource }}</strong></a>
+                            <div class="muted">{{ booking.start_datetime|date:"M j, Y g:i A" }} &ndash; {{ booking.end_datetime|date:"g:i A" }}</div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No rooms/resources booked for this event yet.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

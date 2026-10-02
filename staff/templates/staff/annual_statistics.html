@@ -1,0 +1,93 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Annual Statistics{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Annual Statistics - {{ stats.year }}</h2>
+        <form method="get" style="display:flex; gap:0.5rem; align-items:center;">
+            <select name="year" onchange="this.form.submit()">
+                {% for y in available_years %}
+                    <option value="{{ y }}" {% if y == stats.year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+            <noscript><button type="submit" class="outline">Go</button></noscript>
+        </form>
+    </div>
+
+    <p class="muted">
+        A year-end summary for reporting up to district or national Assemblies of God leadership - every figure
+        below is pulled from records staff have already entered elsewhere in the app.
+    </p>
+
+    <div class="stat-row">
+        <div class="stat">
+            <span class="num">{{ stats.new_members }}</span>
+            <span class="label">New members</span>
+        </div>
+        <div class="stat">
+            <span class="num">{{ stats.total_decisions }}</span>
+            <span class="label">Altar call decisions</span>
+        </div>
+        <div class="stat">
+            <span class="num">{{ stats.baptisms }}</span>
+            <span class="label">Baptisms</span>
+        </div>
+        <div class="stat">
+            <span class="num">{{ stats.average_attendance }}</span>
+            <span class="label">Average attendance</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Milestones</h2>
+        <table style="width:100%; border-collapse:collapse;">
+            <tr><td style="padding:0.4rem 0;">Baptisms</td><td style="padding:0.4rem 0; text-align:right;">{{ stats.baptisms }}</td></tr>
+            <tr><td style="padding:0.4rem 0; border-top:1px solid var(--border);">Weddings</td><td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">{{ stats.weddings }}</td></tr>
+            <tr><td style="padding:0.4rem 0; border-top:1px solid var(--border);">Baby dedications</td><td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">{{ stats.baby_dedications }}</td></tr>
+            <tr><td style="padding:0.4rem 0; border-top:1px solid var(--border);">Funerals</td><td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">{{ stats.funerals }}</td></tr>
+            <tr><td style="padding:0.4rem 0; border-top:1px solid var(--border);">Transfer letters issued</td><td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">{{ stats.transfer_letters }}</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Altar Call Decisions by Type</h2>
+        {% if stats.decisions_by_type %}
+            <table style="width:100%; border-collapse:collapse;">
+                {% for row in stats.decisions_by_type %}
+                    <tr>
+                        <td style="padding:0.4rem 0; {% if not forloop.first %}border-top:1px solid var(--border);{% endif %}">{{ row.label }}</td>
+                        <td style="padding:0.4rem 0; text-align:right; {% if not forloop.first %}border-top:1px solid var(--border);{% endif %}">{{ row.count }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td style="padding:0.4rem 0; border-top:2px solid var(--border);"><strong>Total</strong></td>
+                    <td style="padding:0.4rem 0; border-top:2px solid var(--border); text-align:right;"><strong>{{ stats.total_decisions }}</strong></td>
+                </tr>
+            </table>
+        {% else %}
+            <p class="empty-state">No decisions recorded for {{ stats.year }}.</p>
+        {% endif %}
+        <p><a href="{% url 'staff_decision_list' %}">View all decisions &rarr;</a></p>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Attendance &amp; Giving</h2>
+        <table style="width:100%; border-collapse:collapse;">
+            <tr>
+                <td style="padding:0.4rem 0;">Average attendance</td>
+                <td style="padding:0.4rem 0; text-align:right;">{{ stats.average_attendance }}</td>
+            </tr>
+            <tr>
+                <td style="padding:0.4rem 0; border-top:1px solid var(--border);">Service dates recorded</td>
+                <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">{{ stats.service_dates_recorded }}</td>
+            </tr>
+            <tr>
+                <td style="padding:0.4rem 0; border-top:1px solid var(--border);">Total giving</td>
+                <td style="padding:0.4rem 0; border-top:1px solid var(--border); text-align:right;">GH&#8373;{{ stats.total_giving|floatformat:2 }}</td>
+            </tr>
+        </table>
+        <p class="muted" style="margin-bottom:0;">
+            Average attendance is taken across however many church-wide service dates were actually recorded
+            this year, not divided by 52 - a week with no attendance taken isn't counted as a zero.
+        </p>
+    </div>
+{% endblock %}

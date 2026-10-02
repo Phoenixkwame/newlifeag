@@ -1,0 +1,440 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+    {% if member %}
+        <div class="row" style="align-items:center; margin-bottom:1rem;">
+            {% if member.photo %}
+                <img src="{{ member.photo.url }}" class="avatar avatar-lg" alt="{{ member }}">
+            {% else %}
+                <span class="avatar avatar-lg">{{ member.initials }}</span>
+            {% endif %}
+            <div>
+                <h1 style="margin:0 0 0.4rem;">Welcome, {{ member }}</h1>
+                <form method="post" action="{% url 'update_photo' %}" enctype="multipart/form-data" style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+                    {% csrf_token %}
+                    <input type="file" name="photo" accept="image/*" style="width:auto; padding:0.3rem;">
+                    <button type="submit" class="outline" style="padding:0.4rem 0.8rem;">
+                        {% if member.photo %}Change photo{% else %}Add a photo{% endif %}
+                    </button>
+                    <a class="button outline" href="{% url 'edit_profile' %}" style="padding:0.4rem 0.8rem;">Edit profile</a>
+                    <a class="button outline" href="{% url 'account_settings' %}" style="padding:0.4rem 0.8rem;">Account settings</a>
+                </form>
+            </div>
+        </div>
+
+        <div class="stat-row">
+            <div class="stat">
+                <span class="num">{{ signups|length }}</span>
+                <span class="label">Volunteer sign-ups</span>
+            </div>
+            <div class="stat">
+                <span class="num">{{ rsvps|length }}</span>
+                <span class="label">Event RSVPs</span>
+            </div>
+            <div class="stat">
+                <span class="num">{{ donations|length }}</span>
+                <span class="label">Recent gifts</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Prayer Requests</h2>
+                <p class="muted">Share something with the pastoral team - privately, or on the public <a href="{% url 'prayer_wall' %}">prayer wall</a>.</p>
+                <form method="post" action="{% url 'submit_prayer_request' %}">
+                    {% csrf_token %}
+                    {{ prayer_form.as_p }}
+                    <button type="submit">Submit Request</button>
+                </form>
+                {% if prayer_requests %}
+                    <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                    <ul class="plain">
+                    {% for prayer_request in prayer_requests %}
+                        <li>
+                            {{ prayer_request.request_text }}
+                            <div class="muted">
+                                {{ prayer_request.created_at|date:"M j, Y" }}
+                                {% if prayer_request.is_public %} &middot; <span class="badge muted">On the wall</span>{% endif %}
+                                {% if prayer_request.prayed_for %} &middot; <span class="badge accent">Prayed for</span>{% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Share a Testimony</h2>
+                <p class="muted">Share how God has worked in your life. Once a pastor approves it, it appears on the public <a href="{% url 'testimony_wall' %}">testimony wall</a>.</p>
+                <form method="post" action="{% url 'submit_testimony' %}">
+                    {% csrf_token %}
+                    {{ testimony_form.as_p }}
+                    <button type="submit">Submit Testimony</button>
+                </form>
+                {% if testimonies %}
+                    <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                    <ul class="plain">
+                    {% for testimony in testimonies %}
+                        <li>
+                            {{ testimony.testimony_text }}
+                            <div class="muted">
+                                {{ testimony.created_at|date:"M j, Y" }}
+                                {% if testimony.is_approved %} &middot; <span class="badge accent">On the wall</span>{% else %} &middot; <span class="badge muted">Pending review</span>{% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Pastoral Care</h2>
+                <p class="muted">Request counseling, a home visit, or a hospital visit - sent privately to the pastoral team only.</p>
+                <form method="post" action="{% url 'submit_care_request' %}">
+                    {% csrf_token %}
+                    {{ care_form.as_p }}
+                    <button type="submit">Send Request</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Report an Issue</h2>
+                <p class="muted">See something broken around the building? Let the facilities team know.</p>
+                <form method="post" action="{% url 'submit_maintenance_request' %}">
+                    {% csrf_token %}
+                    {{ maintenance_form.as_p }}
+                    <button type="submit">Submit Report</button>
+                </form>
+            </div>
+
+            {% if open_surveys %}
+                <div class="card">
+                    <h2>Church Surveys</h2>
+                    <ul class="plain">
+                    {% for survey in open_surveys %}
+                        <li style="display:flex; justify-content:space-between; align-items:center;">
+                            {{ survey.title }}
+                            <a class="button outline" href="{% url 'survey_respond' survey.id %}">Respond</a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="card">
+                <h2>Your Volunteer Sign-ups</h2>
+                {% if signups %}
+                    <ul class="plain">
+                    {% for signup in signups %}
+                        <li style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem;">
+                            <span>
+                                <strong>{{ signup.slot.role_needed }}</strong>
+                                <div class="muted">{{ signup.slot.event }}</div>
+                            </span>
+                            <form method="post" action="{% url 'volunteer_signup_cancel' signup.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="outline">Cancel</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">You haven't signed up to volunteer for anything yet.</p>
+                    <a class="button outline" href="{% url 'upcoming_events' %}">Browse events</a>
+                {% endif %}
+                {% if waitlist_entries %}
+                    <h3 style="margin-bottom:0.5rem;">On the Waitlist</h3>
+                    <ul class="plain">
+                    {% for entry in waitlist_entries %}
+                        <li>
+                            <strong>{{ entry.slot.role_needed }}</strong>
+                            <div class="muted">{{ entry.slot.event }} - we'll notify you if a spot opens up.</div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Your RSVPs</h2>
+                {% if rsvps %}
+                    <ul class="plain">
+                    {% for rsvp in rsvps %}
+                        <li>
+                            <strong>{{ rsvp.event }}</strong>
+                            <span class="badge {% if rsvp.status == 'going' %}accent{% else %}muted{% endif %}">{{ rsvp.get_status_display }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No RSVPs yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Your Groups</h2>
+                {% if my_groups %}
+                    <ul class="plain">
+                    {% for membership in my_groups %}
+                        <li style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong>{{ membership.group }}</strong>
+                                <span class="badge muted">{{ membership.group.get_group_type_display }}</span>
+                                <div class="muted">
+                                    {% if membership.group.leader %}Led by {{ membership.group.leader }}{% endif %}
+                                    {% if membership.group.meeting_day or membership.group.meeting_time %}
+                                        &middot; {{ membership.group.get_meeting_day_display|default:"" }}{% if membership.group.meeting_time %} {{ membership.group.meeting_time|time:"g:i A" }}{% endif %}
+                                    {% endif %}
+                                    {% if membership.group.meeting_location %} &middot; {{ membership.group.meeting_location }}{% endif %}
+                                </div>
+                            </div>
+                            <span style="display:flex; gap:0.5rem;">
+                                <a class="button outline" href="{% url 'group_lessons' membership.group.id %}">Lessons</a>
+                                <a class="button outline" href="{% url 'group_set_list' membership.group.id %}">Set List</a>
+                                <a class="button outline" href="{% url 'group_shoutouts' membership.group.id %}">Shoutouts</a>
+                                <form method="post" action="{% url 'leave_group' membership.group.id %}" style="margin:0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="outline">Leave</button>
+                                </form>
+                            </span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">You're not part of any group yet.</p>
+                {% endif %}
+                <div class="button-row">
+                    <a class="button outline" href="{% url 'browse_groups' %}">Browse Groups</a>
+                    <a class="button outline" href="{% url 'interest_survey' %}">
+                        {% if has_listed_interests %}Update Your Interests{% else %}Not Sure Where to Start?{% endif %}
+                    </a>
+                </div>
+            </div>
+
+            {% if suggested_groups %}
+                <div class="card">
+                    <h2>Suggested For You</h2>
+                    <p class="muted">Based on the interests/skills you've listed.</p>
+                    <ul class="plain">
+                    {% for group in suggested_groups %}
+                        <li style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>
+                                <strong>{{ group }}</strong>
+                                <span class="badge muted">{{ group.get_group_type_display }}</span>
+                            </span>
+                            <form method="post" action="{% url 'join_group' group.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="outline">Join</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    <div class="button-row">
+                        <a class="button outline" href="{% url 'interest_survey' %}">See All Suggestions</a>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if led_groups %}
+                <div class="card">
+                    <h2>Groups You Lead</h2>
+                    <ul class="plain">
+                    {% for led_group in led_groups %}
+                        <li style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                            {{ led_group }}
+                            <span>
+                                <a class="button outline" href="{% url 'group_attendance' led_group.id %}">Take Attendance</a>
+                                <a class="button outline" href="{% url 'serving_schedule' led_group.id %}">Serving Schedule</a>
+                                <a class="button outline" href="{% url 'group_lessons' led_group.id %}">Lessons</a>
+                                <a class="button outline" href="{% url 'group_set_list' led_group.id %}">Set List</a>
+                                <a class="button outline" href="{% url 'group_shoutouts' led_group.id %}">Shoutouts</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="card">
+                <h2>Log Service Hours</h2>
+                <p class="muted">Keep a record of the hours you've volunteered - staff can pull totals for recognition and reporting.</p>
+                {% if total_volunteer_hours > 0 %}
+                    <p class="muted" style="margin-top:-0.5rem;">
+                        {{ total_volunteer_hours }} hour{{ total_volunteer_hours|pluralize }} served overall
+                        {% if volunteer_badge %}<span class="badge accent">{{ volunteer_badge }}</span>{% endif %}
+                    </p>
+                {% endif %}
+                <form method="post" action="{% url 'log_service_hours' %}">
+                    {% csrf_token %}
+                    {{ service_hour_form.as_p }}
+                    <button type="submit">Log Hours</button>
+                </form>
+                {% if service_hour_logs %}
+                    <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                    <ul class="plain">
+                    {% for log in service_hour_logs %}
+                        <li>
+                            <strong>{{ log.hours }}h</strong> &middot; {{ log.role }}
+                            <div class="muted">
+                                {{ log.date }}
+                                {% if log.group %} &middot; {{ log.group }}{% endif %}
+                                {% if log.event %} &middot; {{ log.event }}{% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>You're Serving</h2>
+                {% if serving_assignments %}
+                    <ul class="plain">
+                    {% for assignment in serving_assignments %}
+                        <li>
+                            <strong>{{ assignment.date }}</strong> &middot; {{ assignment.role }}
+                            <div class="muted">{{ assignment.group }}</div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">Nothing scheduled yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Your Attendance</h2>
+                {% if current_streak_weeks > 0 %}
+                    <p class="muted" style="margin-top:-0.5rem;">
+                        &#128293; {{ current_streak_weeks }} week{{ current_streak_weeks|pluralize }} in a row
+                        {% if current_streak_badge %}<span class="badge accent">{{ current_streak_badge }}</span>{% endif %}
+                    </p>
+                {% endif %}
+                {% if attendance_history %}
+                    <ul class="plain">
+                    {% for record in attendance_history %}
+                        <li>
+                            {{ record.date }}
+                            {% if record.event %} &middot; {{ record.event }}{% elif record.group %} &middot; {{ record.group }}{% else %} &middot; General{% endif %}
+                            <span class="badge {% if record.present %}accent{% else %}muted{% endif %}">
+                                {% if record.present %}Present{% else %}Absent{% endif %}
+                            </span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No attendance recorded yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Your Giving History</h2>
+                {% if donations %}
+                    <ul class="plain">
+                    {% for donation in donations %}
+                        <li style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+                            <span>
+                                <strong>GH&#8373;{{ donation.amount|floatformat:2 }}</strong> &middot; {{ donation.get_donation_type_display }}
+                                <div class="muted">
+                                    {{ donation.date|date:"M j, Y" }} &middot;
+                                    <span class="badge {% if donation.status == 'completed' %}accent{% else %}muted{% endif %}">{{ donation.get_status_display }}</span>
+                                    {% if donation.campaign %} &middot; {{ donation.campaign }}{% endif %}
+                                </div>
+                            </span>
+                            {% if donation.status == 'completed' %}
+                                <a class="button outline" href="{% url 'donation_receipt' donation.id %}">Receipt</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No gifts recorded against your account yet.</p>
+                {% endif %}
+                <div class="button-row">
+                    <a class="button outline" href="{% url 'give' %}">Give now</a>
+                    <a class="button outline" href="{% url 'giving_statement' %}">Get a giving statement</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Your Pledges</h2>
+                {% if pledges %}
+                    <ul class="plain">
+                    {% for pledge in pledges %}
+                        <li>
+                            <strong>{{ pledge.campaign }}</strong>
+                            <div class="muted">
+                                Pledged GH&#8373;{{ pledge.amount|floatformat:2 }} &middot; given GH&#8373;{{ pledge.given_toward_pledge|floatformat:2 }} so far
+                            </div>
+                            <a href="{% url 'campaign_detail' pledge.campaign.id %}">View campaign</a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">You haven't pledged toward a giving campaign yet.</p>
+                {% endif %}
+                <div class="button-row">
+                    <a class="button outline" href="{% url 'campaign_list' %}">Browse campaigns</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Your Discipleship Journey</h2>
+                {% if pathway_progress %}
+                    <ul class="plain">
+                    {% for step, progress in pathway_progress %}
+                        <li style="display:flex; justify-content:space-between; align-items:center;">
+                            {{ step.name }}
+                            {% if progress.is_completed %}
+                                <span class="badge accent">Completed {{ progress.completed_date }}</span>
+                            {% else %}
+                                <span class="badge muted">Not yet</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">The church hasn't set up any pathway steps yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Your Recurring Giving</h2>
+                <p class="muted">A reminder to give on a schedule - not an automatic charge; you still give through the ordinary giving page each time.</p>
+                {% if recurring_gifts %}
+                    <ul class="plain">
+                    {% for recurring in recurring_gifts %}
+                        <li>
+                            <strong>GH&#8373;{{ recurring.amount|floatformat:2 }} {{ recurring.get_frequency_display }}</strong>
+                            {% if recurring.campaign %} &middot; {{ recurring.campaign }}{% endif %}
+                            <div class="muted">Next reminder: {{ recurring.next_due_date }}</div>
+                            <div class="button-row">
+                                <a class="button outline" href="{% url 'recurring_giving_edit' recurring.id %}">Edit</a>
+                                <form method="post" action="{% url 'recurring_giving_cancel' recurring.id %}" style="margin:0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="outline">Cancel</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No recurring gift set up yet.</p>
+                {% endif %}
+                <div class="button-row">
+                    <a class="button outline" href="{% url 'recurring_giving_create' %}">Set Up Recurring Giving</a>
+                    <a class="button outline" href="{% url 'recurring_giving_history' %}">View History</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <h1>Welcome</h1>
+        <div class="card">
+            <p>
+                No member profile is linked to your login yet. Ask an admin to open your
+                record in <strong>Members</strong> in the admin panel and set its "User"
+                field to your account.
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

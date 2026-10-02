@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ group }} Set List{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <h1>{{ group }} &ndash; Song Set Lists</h1>
+
+    {% if can_post %}
+        <div class="card">
+            <h2 style="margin-top:0;">Plan a Set List</h2>
+            <p class="muted">One song per line: <code>Title | Key | CCLI number</code> - key and CCLI number are optional.</p>
+            <form method="post">
+                {% csrf_token %}
+                <p>
+                    <label>Service date</label>
+                    <input type="date" name="date" required>
+                </p>
+                <p>
+                    <label>Songs</label>
+                    <textarea name="songs" rows="5" required placeholder="Great Are You Lord | G | 6460220&#10;Way Maker | E"></textarea>
+                </p>
+                <p>
+                    <label>Notes (optional)</label>
+                    <textarea name="notes" rows="2"></textarea>
+                </p>
+                <button type="submit">Save Set List</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if set_lists %}
+        {% for set_list in set_lists %}
+            <div class="card">
+                <h2 style="margin-top:0;">{{ set_list.date|date:"M j, Y" }}</h2>
+                {% if set_list.notes %}<p class="muted">{{ set_list.notes }}</p>{% endif %}
+                <ul class="plain">
+                {% for song in set_list.songs.all %}
+                    <li>
+                        {{ forloop.counter }}. <strong>{{ song.title }}</strong>
+                        {% if song.key %}<span class="muted">&middot; Key of {{ song.key }}</span>{% endif %}
+                        {% if song.ccli_number %}<span class="muted">&middot; CCLI {{ song.ccli_number }}</span>{% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+                {% if set_list.posted_by %}<div class="muted">Posted by {{ set_list.posted_by }}</div>{% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-state">No set lists planned for this group yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Giving Receipt{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; border: none; }
+        }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .receipt-table th, .receipt-table td {
+            text-align: left; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);
+        }
+        .receipt-table th { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; width: 40%; }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="section-title no-print">
+        <h1 style="margin:0;">Giving Receipt</h1>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Newlife AG (Assemblies of God)</h2>
+        <p class="muted" style="margin-top:-0.5rem;">Tema, Ghana</p>
+        <p>
+            <strong>{{ member }}</strong><br>
+            {% if member.email %}{{ member.email }}<br>{% endif %}
+            Receipt for gift #{{ donation.id }}
+        </p>
+
+        <table class="receipt-table">
+            <tbody>
+                <tr><th>Date</th><td>{{ donation.date|date:"F j, Y" }}</td></tr>
+                <tr><th>Type</th><td>{{ donation.get_donation_type_display }}</td></tr>
+                {% if donation.campaign %}<tr><th>Campaign</th><td>{{ donation.campaign }}</td></tr>{% endif %}
+                {% if donation.campus %}<tr><th>Campus</th><td>{{ donation.campus }}</td></tr>{% endif %}
+                <tr><th>Amount</th><td>GH&#8373;{{ donation.amount|floatformat:2 }}</td></tr>
+                {% if donation.payment_reference %}
+                    <tr><th>Reference</th><td>{{ donation.payment_reference }}</td></tr>
+                {% endif %}
+                <tr><th>Status</th><td>{{ donation.get_status_display }}</td></tr>
+            </tbody>
+        </table>
+
+        <p class="muted" style="font-size:0.85rem; margin-top:1.5rem; margin-bottom:0;">
+            This receipt confirms a completed gift, recorded and confirmed by the church. Keep it for your own
+            records. For a summary covering a date range instead, see your
+            <a href="{% url 'giving_statement' %}">giving statement</a>.
+        </p>
+    </div>
+{% endblock %}

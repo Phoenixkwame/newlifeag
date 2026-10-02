@@ -1,0 +1,32 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Wedding Certificate{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; border: none; }
+        }
+        .certificate { text-align: center; padding: 3rem 2rem; border: 3px double var(--primary); }
+        .certificate h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+        .certificate .spouses { font-size: 1.7rem; font-weight: 800; color: var(--primary-dark); margin: 1.2rem 0; }
+    </style>
+{% endblock %}
+{% block staff_content %}
+    <p class="no-print"><a href="{% url 'staff_wedding_list' %}">&larr; Back to weddings</a></p>
+    <div class="section-title no-print">
+        <h2>Wedding Certificate</h2>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card certificate">
+        <h1>Newlife AG (Assemblies of God)</h1>
+        <p class="muted" style="margin-top:-0.5rem;">Tema, Ghana</p>
+        <p style="margin-top:2rem;">This certifies that</p>
+        <div class="spouses">{{ wedding.spouse_one }} &amp; {{ wedding.spouse_two }}</div>
+        <p>were united in marriage on <strong>{{ wedding.wedding_date|date:"F j, Y" }}</strong></p>
+        {% if wedding.location %}<p>at {{ wedding.location }}</p>{% endif %}
+        {% if wedding.officiated_by %}<p>Officiated by {{ wedding.officiated_by }}</p>{% endif %}
+    </div>
+{% endblock %}

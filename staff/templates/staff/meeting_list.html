@@ -1,0 +1,29 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Leadership Meetings{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Leadership Meeting Minutes</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_meeting_create' %}">+ Record a Meeting</a>{% endif %}
+    </div>
+    <p class="muted">Pastor-only - agendas, minutes, and action items from Deacons/Elders board meetings.</p>
+
+    {% if meetings %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for meeting in meetings %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <a href="{% url 'staff_meeting_detail' meeting.id %}"><strong>{{ meeting }}</strong></a>
+                        {% if meeting.open_action_item_count %}
+                            <span class="badge muted">{{ meeting.open_action_item_count }} open action item{{ meeting.open_action_item_count|pluralize }}</span>
+                        {% endif %}
+                    </span>
+                    <span class="muted">{{ meeting.attendees.count }} attendee{{ meeting.attendees.count|pluralize }}</span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No meetings recorded yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+/* Full-screen slideshow matching the supplied reference composition. */
+main.home-page { max-width:none; padding:0 0 3rem; }
+.home-page > :is(.home-section,.home-pathways,.home-giving,.home-next-bar) { width:min(1220px,calc(100% - 3rem)); margin-inline:auto; }
+.home-body > .home-navigation { position:absolute; inset:0 0 auto; background:linear-gradient(#070e1ae6,#070e1a80,transparent); border:0; backdrop-filter:none; padding:1rem 2rem 2rem; color:white; }
+.home-body > .home-navigation :is(.brand,a,summary) { color:white; }
+.home-navigation .nav-more-panel a, .home-navigation .home-mobile-menu-panel :is(a,summary) { color:#173e43; }
+.home-desktop-navigation { gap:1rem; }
+.home-navigation .brand { text-transform:uppercase; letter-spacing:.02em; }
+.church-slideshow { position:relative; background:#101522; color:white; }
+.church-slide { position:relative; min-height:760px; min-height:100svh; padding:160px 8vw 180px; display:flex; align-items:center; justify-content:center; isolation:isolate; }
+.church-slide-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; }
+.church-slide:not(.church-slide-values)::after { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,#07101fc9,#07101f30),linear-gradient(0deg,#07101fbd,transparent 60%); }
+.church-slide-copy { width:min(1200px,100%); }
+.church-slide-copy > p { text-transform:uppercase; letter-spacing:.24em; font-size:.85rem; color:#ffe193; }
+.home-page .church-slide-copy :is(h1,h2) { color:white; font-size:clamp(3rem,6.5vw,7rem); line-height:1.02; letter-spacing:-.04em; margin:1.5rem 0 2rem; }
+.church-slide-copy em { font-family:Georgia,serif; font-weight:400; color:#ffdb6e; }
+.church-slide-copy a { display:inline-block; color:white; border-bottom:1px solid #e5bf58; padding:1rem 0; text-decoration:none; }
+.church-slide-values { flex-direction:column; gap:1rem; padding:140px 5vw 160px; }
+.home-page .church-values-title { color:#ffdb6e; text-align:center; font-size:clamp(1.3rem,2.2vw,2.3rem); margin:0; text-transform:uppercase; letter-spacing:.12em; }
+.church-slide-values > img, .church-slide-art img { width:100%; height:auto; max-height:calc(100svh - 340px); object-fit:contain; }
+.church-slide-art { display:block; width:100%; text-align:center; }
+.church-slide-controls button { border:0; cursor:pointer; color:white; background:#ba242a; min-height:46px; min-width:46px; border-radius:0; }
+.church-slide-prev,.church-slide-next { position:absolute; top:48%; z-index:2; font-size:1.4rem; }
+.church-slide-prev { left:0; }.church-slide-next { right:0; }
+.church-slide-toolbar { position:absolute; bottom:110px; right:2rem; display:flex; align-items:center; gap:1rem; font-size:.8rem; }
+.church-slide-toolbar button { padding:.6rem 1rem; background:#101522d9; border:1px solid #ffffff66; }
+.church-slide-actions { position:absolute; bottom:0; inset-inline:0; min-height:96px; padding:1rem; display:flex; justify-content:center; align-items:center; gap:1rem; background:#10152280; backdrop-filter:blur(12px); }
+.church-slide-actions a { background:#ba242a; color:white; border-radius:5px; text-decoration:none; padding:1.15rem 1.5rem; font-weight:600; }
+.church-slide-actions a:hover { background:#94191e; }
+.home-mobile-actions { display:none; }
+.home-body > footer { margin-bottom:0; }
+@media(max-width:1000px) { .home-body > .home-navigation { padding:1rem; }.church-slide { padding-top:140px; }.home-mobile-menu-panel { background:#faf9f5; } }
+@media(max-width:600px) { .church-slide { min-height:100svh; padding-inline:2.6rem; }.church-slide-copy > p { font-size:.7rem; letter-spacing:.13em; }.home-page .church-slide-copy :is(h1,h2) { font-size:clamp(2.5rem,10vw,4rem); }.church-slide-values { padding-inline:.75rem; }.church-slide-values > img { max-height:65svh; }.church-slide-toolbar { right:1rem; }.church-slide-actions { gap:.6rem; }.church-slide-actions a { padding:1rem;font-size:.85rem; }.church-slide-controls .church-slide-prev,.church-slide-controls .church-slide-next { min-width:36px; } }
+@media(prefers-reduced-motion:no-preference) { .church-slide.is-current { animation:church-fade .7s ease; } @keyframes church-fade { from { opacity:.4; } to { opacity:1; } } }
+
+/* Give artwork the full slide area without cropping its text. */
+.church-slide-values { height:100svh; min-height:600px; padding:100px 0 96px; gap:0; }
+.church-slide-values .church-values-title { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.church-slide-values > img, .church-slide-values .church-slide-art { display:block; width:100%; height:100%; max-height:none; min-height:0; object-fit:contain; }
+.church-slide-values .church-slide-art img { width:100%; height:100%; max-height:none; object-fit:contain; }
+@media(max-width:600px) { .church-slide-values { padding:90px 0 96px; min-height:500px; } }

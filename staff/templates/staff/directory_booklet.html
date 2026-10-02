@@ -1,0 +1,56 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Directory Booklet{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; border: none; break-inside: avoid; }
+        }
+        .booklet-household { margin-bottom: 1.25rem; }
+        .booklet-household h3 { margin: 0 0 0.2rem; }
+        .booklet-member { padding: 0.3rem 0; }
+    </style>
+{% endblock %}
+{% block staff_content %}
+    <p class="no-print"><a href="{% url 'staff_member_list' %}">&larr; Back to members</a></p>
+    <div class="section-title no-print">
+        <h2>Directory Booklet</h2>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+    <p class="muted no-print">
+        Everyone who's opted into the member directory ({{ member_count }} member{{ member_count|pluralize }}),
+        grouped by household - only the phone/email each member separately chose to share is shown, the same
+        privacy rules as the online directory.
+    </p>
+
+    <h1>Newlife AG Member Directory</h1>
+    <p class="muted" style="margin-top:-0.5rem;">Tema, Ghana</p>
+
+    {% if households %}
+        {% for group in households %}
+            <div class="card booklet-household">
+                <h3>{% if group.household %}{{ group.household.name|default:"Household" }}{% else %}No Household on File{% endif %}</h3>
+                {% if group.household and group.household.address %}
+                    <p class="muted" style="margin:0 0 0.5rem;">{{ group.household.address }}</p>
+                {% endif %}
+                <ul class="plain">
+                {% for member in group.members %}
+                    <li class="booklet-member">
+                        <strong>{{ member }}</strong>
+                        {% if member.share_phone_in_directory and member.phone %}
+                            <span class="muted"> &middot; {{ member.phone }}</span>
+                        {% endif %}
+                        {% if member.share_email_in_directory and member.email %}
+                            <span class="muted"> &middot; {{ member.email }}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-state">No members have opted into the directory yet.</p>
+    {% endif %}
+{% endblock %}

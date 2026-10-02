@@ -1,0 +1,41 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ child }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_child_list' %}">&larr; Back to children</a></p>
+
+    <div class="section-title">
+        <h2>{{ child }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_child_edit' child.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Details</h2>
+            <ul class="plain">
+                <li><strong>Household:</strong> {% if child.household %}<a href="{% url 'staff_household_detail' child.household.id %}">{{ child.household }}</a>{% else %}—{% endif %}</li>
+                <li><strong>Date of birth:</strong> {{ child.date_of_birth|default:"—" }}{% if child.age is not None %} (age {{ child.age }}){% endif %}</li>
+                <li><strong>Allergies / medical notes:</strong> {{ child.allergies_or_medical_notes|default:"—" }}</li>
+                <li><strong>Status:</strong> {% if child.is_active %}<span class="badge accent">Active</span>{% else %}<span class="badge muted">Inactive</span>{% endif %}</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Recent Check-Ins</h2>
+            {% if check_ins %}
+                <ul class="plain">
+                {% for check_in in check_ins %}
+                    <li>
+                        {{ check_in.checked_in_at|date:"M j, Y g:i A" }}
+                        <div class="muted">
+                            Dropped off by {{ check_in.guardian_name }}{% if check_in.event %} &middot; {{ check_in.event.title }}{% endif %}
+                            {% if check_in.is_checked_in %} &middot; <span class="badge accent">Still checked in</span>{% else %} &middot; picked up {{ check_in.checked_out_at|date:"g:i A" }}{% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No check-ins recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

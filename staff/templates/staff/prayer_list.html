@@ -1,0 +1,81 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Prayer Requests{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Prayer Requests</h2>
+    </div>
+
+    <div class="button-row">
+        <a class="button {% if not show %}accent{% else %}outline{% endif %}" href="?show=">All</a>
+        <a class="button {% if show == 'pending' %}accent{% else %}outline{% endif %}" href="?show=pending">Not yet prayed for</a>
+        <a class="button {% if show == 'prayed' %}accent{% else %}outline{% endif %}" href="?show=prayed">Prayed for</a>
+        <a class="button {% if show == 'awaiting' %}accent{% else %}outline{% endif %}" href="?show=awaiting">Awaiting wall approval{% if awaiting_count %} ({{ awaiting_count }}){% endif %}</a>
+    </div>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for prayer_request in page_obj %}
+                <li style="padding:0.9rem 1.25rem; display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                    <div>
+                        <strong>{% if prayer_request.member %}{{ prayer_request.member }}{% else %}{{ prayer_request.guest_name|default:"Guest" }} <span class="badge muted">Guest</span>{% endif %}</strong>
+                        {% if prayer_request.is_public %}
+                            {% if prayer_request.approved_for_public %}
+                                <span class="badge">On the public wall</span>
+                            {% else %}
+                                <span class="badge accent">Wants to be on the wall &mdash; awaiting approval</span>
+                            {% endif %}
+                        {% endif %}
+                        {% if not prayer_request.member and prayer_request.guest_email or not prayer_request.member and prayer_request.guest_phone %}
+                            <div class="muted" style="font-size:0.85rem;">{{ prayer_request.guest_email }}{% if prayer_request.guest_email and prayer_request.guest_phone %} &middot; {% endif %}{{ prayer_request.guest_phone }}</div>
+                        {% endif %}
+                        <p style="margin:0.3rem 0 0;">{{ prayer_request.request_text }}</p>
+                        <span class="muted">{{ prayer_request.created_at|date:"M j, Y g:i A" }}</span>
+                        <div class="muted" style="margin-top:0.3rem;">
+                            {% if prayer_request.assigned_pastor %}
+                                Assigned to {{ prayer_request.assigned_pastor.get_full_name|default:prayer_request.assigned_pastor.username }}
+                            {% else %}
+                                Not yet assigned
+                            {% endif %}
+                        </div>
+                        {% if can_change %}
+                            <form method="post" action="{% url 'staff_prayer_assign' prayer_request.id %}" style="margin-top:0.3rem; display:flex; gap:0.4rem; align-items:center;">
+                                {% csrf_token %}
+                                {{ prayer_request.assign_form.assigned_pastor }}
+                                <button type="submit" class="outline">Assign</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    <div style="text-align:right; display:flex; flex-direction:column; gap:0.4rem; align-items:flex-end;">
+                        {% if can_change and prayer_request.is_public %}
+                            <form method="post" action="{% url 'staff_prayer_set_wall_approval' prayer_request.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                {% if prayer_request.approved_for_public %}
+                                    <input type="hidden" name="approve" value="0">
+                                    <button type="submit" class="outline">Remove from Wall</button>
+                                {% else %}
+                                    <input type="hidden" name="approve" value="1">
+                                    <button type="submit" class="accent">Approve for Wall</button>
+                                {% endif %}
+                            </form>
+                        {% endif %}
+                        {% if prayer_request.prayed_for %}
+                            <span class="badge accent">Prayed for</span>
+                        {% elif can_change %}
+                            <form method="post" action="{% url 'staff_prayer_mark_prayed' prayer_request.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit">Mark Prayed For</button>
+                            </form>
+                        {% else %}
+                            <span class="badge muted">Pending</span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No prayer requests match that filter.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,478 @@
+# Twi (Akan) translations for the Newlife AG Church App's public pages.
+#
+# This is a first-pass, best-effort translation of the public-facing
+# navigation/labels covered so far (home, sermons, events, giving) - it was
+# written without a fluent Twi speaker's review, so please have someone
+# from the congregation who speaks Twi check it over before relying on it
+# for a live service. See "Multi-language support (Twi/English)" in
+# README.md for how to add more translated strings or fix any of these.
+msgid ""
+msgstr ""
+"Project-Id-Version: Newlife AG Church App\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-26 03:25+0000\n"
+"PO-Revision-Date: 2026-09-26 03:25+0000\n"
+"Last-Translator: Newlife AG Church App\n"
+"Language: tw\n"
+"Language-Team: tw\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Events"
+msgstr "Dwumadie"
+
+msgid "Sermons"
+msgstr "Asɛnka"
+
+msgid "Devotionals"
+msgstr "Da Biara Asɛm"
+
+msgid "Give"
+msgstr "Ma"
+
+msgid "Campaigns"
+msgstr "Mmɔden"
+
+msgid "Prayer Wall"
+msgstr "Mpaebɔ Ɔfasuo"
+
+msgid "I'm New Here"
+msgstr "Meyɛ Foforɔ Wɔ Ha"
+
+msgid "Staff Area"
+msgstr "Adwumayɛfoɔ Beaeɛ"
+
+msgid "My Dashboard"
+msgstr "Me Dashboard"
+
+msgid "Directory"
+msgstr "Nnipa Nkyerɛwde"
+
+msgid "Log out"
+msgstr "Fi Adi"
+
+msgid "Log in"
+msgstr "Hyɛn Mu"
+
+msgid "Sign up"
+msgstr "Kyerɛw Wo Din"
+
+msgid "Newlife AG (Assemblies of God) · Tema, Ghana"
+msgstr "Newlife AG (Assemblies of God) · Tema, Ghana"
+
+msgid "Home"
+msgstr "Fie"
+
+msgid "Welcome to Newlife AG"
+msgstr "Akwaaba Wɔ Newlife AG"
+
+msgid "An Assemblies of God church in Tema. Join us for a service, catch up on the latest sermon, or give online - all in one place."
+msgstr "Yɛyɛ Assemblies of God asɔre a ɛwɔ Tema. Bɛka yɛn ho wɔ ɔsom mu, tie asɛnka a aba nnansa yi, anaasɛ fa Intanɛt so ma w'akyɛde - biara wɔ ha."
+
+msgid "See Upcoming Events"
+msgstr "Hwɛ Nhyiamu A Ɛreba"
+
+msgid "Give Online"
+msgstr "Fa Intanɛt So Ma"
+
+msgid "Next Event"
+msgstr "Nhyiamu A Edi Hɔ"
+
+msgid "View & RSVP"
+msgstr "Hwɛ & Ka Sɛ Wobɛba"
+
+msgid "Nothing scheduled yet - check back soon."
+msgstr "Biribiara nhyɛɛ da ɛnnɛ - san bra."
+
+msgid "Latest Sermon"
+msgstr "Asɛnka A Aba Nnansa Yi"
+
+msgid "Watch / Listen"
+msgstr "Hwɛ / Tie"
+
+msgid "Read more"
+msgstr "Kenkan Bio"
+
+msgid "No sermons posted yet."
+msgstr "Wɔmfaa asɛnka biara nto so ɛnnɛ."
+
+msgid "Subscribe to Podcast"
+msgstr "Kyerɛw Wo Din Wɔ Podcast So"
+
+msgid "Search by title, speaker, or scripture"
+msgstr "Hwehwɛ Denam Asɛmti, Ɔkasafo, Anaasɛ Kyerɛwsɛm So"
+
+msgid "e.g. Faith"
+msgstr "sɛnea ɛte Gyidie"
+
+msgid "Series"
+msgstr "Nhoma"
+
+msgid "All series"
+msgstr "Nhoma Nyinaa"
+
+msgid "Tag"
+msgstr "Agyiraehyɛde"
+
+msgid "All tags"
+msgstr "Agyiraehyɛde Nyinaa"
+
+msgid "Search"
+msgstr "Hwehwɛ"
+
+msgid "Podcast"
+msgstr "Podcast"
+
+msgid "Study Guide"
+msgstr "Adesua Kwankyerɛ"
+
+msgid "No sermons match that search."
+msgstr "Asɛnka biara nni hɔ a ɛfata saa hwehwɛ no."
+
+msgid "Back to sermons"
+msgstr "San Kɔ Asɛnka Ho"
+
+msgid "Your browser doesn't support inline audio"
+msgstr "Wo browser rentumi mma audio yi nnkasa"
+
+msgid "download the audio"
+msgstr "twe audio no"
+
+msgid "instead."
+msgstr "mmom."
+
+msgid "Download Study Guide"
+msgstr "Twe Adesua Kwankyerɛ"
+
+msgid "Notes"
+msgstr "Nsɛm a Wɔakyerɛw"
+
+msgid "Upcoming Events"
+msgstr "Nhyiamu A Ɛreba"
+
+msgid "Search by title or location"
+msgstr "Hwehwɛ Denam Asɛmti Anaasɛ Beaeɛ So"
+
+msgid "e.g. Youth Camp"
+msgstr "sɛnea ɛte Mmerantewa Nhyiamu"
+
+msgid "Type"
+msgstr "Su"
+
+msgid "All"
+msgstr "Nyinaa"
+
+msgid "Campus"
+msgstr "Campus"
+
+msgid "All campuses"
+msgstr "Campus Nyinaa"
+
+msgid "Filter"
+msgstr "Paw"
+
+msgid "No upcoming events match that search."
+msgstr "Nhyiamu biara nni hɔ a ɛfata saa hwehwɛ no."
+
+msgid "No upcoming events yet."
+msgstr "Nhyiamu biara nni hɔ ɛnnɛ."
+
+msgid "Back to all events"
+msgstr "San Kɔ Nhyiamu Nyinaa Ho"
+
+msgid "RSVP"
+msgstr "Ka Sɛ Wobɛba"
+
+msgid "Volunteer Slots"
+msgstr "Adwumayɛ A Wɔhwehwɛ Adwumayɛfoɔ"
+
+msgid "Full"
+msgstr "Ayɛ Ma"
+
+msgid "No volunteer slots for this event yet."
+msgstr "Adwumayɛ biara nni hɔ ma nhyiamu yi ɛnnɛ."
+
+msgid "All slots are currently full."
+msgstr "Adwumayɛ nyinaa ayɛ ma seesei."
+
+msgid "Register"
+msgstr "Kyerɛw Wo Din"
+
+msgid "Sold out"
+msgstr "Atɔn Nyinaa"
+
+msgid "Reserve your spot"
+msgstr "Si Wo Beaeɛ"
+
+msgid "All ticket types are currently sold out."
+msgstr "Ticket nyinaa atɔn seesei."
+
+msgid "See current giving campaigns"
+msgstr "Hwɛ Akyɛde Mmɔden A Ɛrekɔ So"
+
+msgid "No smartphone or data handy? Text"
+msgstr "Wonni smartphone anaa data? Kyerɛw Text"
+
+msgid "(e.g. \"GIVE 50\") to"
+msgstr "(sɛnea ɛte \"GIVE 50\") kɔ"
+
+msgid "to give by SMS instead."
+msgstr "na fa SMS so ma mmom."
+
+msgid "You'll be redirected to a secure Flutterwave page to complete your gift."
+msgstr "Wɔde wo bɛkɔ Flutterwave krataa a ɛyɛ security ma woawie w'akyɛde no."
+
+msgid "Online payments aren't turned on yet, so this records your gift as"
+msgstr "Wɔmmaa Intanɛt so sika tua kwan so ɛnnɛ, enti eyi bɛkyerɛw w'akyɛde sɛ"
+
+msgid "pending"
+msgstr "ɛrehwɛ hɔ"
+
+msgid "for an admin to follow up on. It will switch to processing real payments automatically once Flutterwave is configured."
+msgstr "ama admin bi ahwɛ mu. Sɛ wɔhyɛ Flutterwave anan a, ɛbɛsesa akɔ sika tua ankasa so."
+
+msgid "More"
+msgstr "Bio"
+
+msgid "Planning a Visit?"
+msgstr "Woredwene Sɛ Wobɛba?"
+
+msgid "What to Expect"
+msgstr "Deɛ Wobɛhunu"
+
+msgid "Current Campaign"
+msgstr "Mmɔden A Ɛrekɔ So Seesei"
+
+msgid "raised of"
+msgstr "a wɔanya afiri"
+
+msgid "goal"
+msgstr "botaeɛ"
+
+msgid "raised so far"
+msgstr "a wɔanya abesi ɛnnɛ"
+
+msgid "Give to this Campaign"
+msgstr "Ma Kɔ Saa Mmɔden Yi So"
+
+msgid "Get Connected"
+msgstr "Ka Wo Ho Bɔ"
+
+msgid "Find a group meeting near you and grow together in community."
+msgstr "Hwehwɛ kuw a ɛbɛn wo na yɛn nyinaa nnyin bom."
+
+msgid "Ask the church to stand with you in prayer, or pray for someone else's request."
+msgstr "Bisa asɔre no sɛ wɔne wo nnyina mpaeɛbɔ mu, anaasɛ bɔ obi foforɔ abisadeɛ ho mpaeɛ."
+
+msgid "Read stories of answered prayer and God's work in our members' lives."
+msgstr "Kenkan nsɛm a ɛfa mpaeɛbɔ a wɔagye so ne Onyankopɔn adwuma a ɔyɛ wɔ yɛn asɔremma nkwa mu ho."
+
+msgid "A church member"
+msgstr "Asɔremma bi"
+
+msgid "Live Now"
+msgstr "Ɛrekɔ So Seesei"
+
+msgid "Live Soon"
+msgstr "Ɛrebɛfiti Nnansa Yi"
+
+msgid "Get to Know Us"
+msgstr "Sua Yɛn Ho"
+
+msgid "Get the Link"
+msgstr "Nya Link No"
+
+msgid "Watch the Replay"
+msgstr "Hwɛ No Bio"
+
+msgid "Watch Now"
+msgstr "Hwɛ Seesei"
+
+
+# --- Giving page redesign & thank-you page (first pass - please have a
+# --- fluent Twi speaker review these too) ---
+
+msgid "Tithes &amp; Offerings"
+msgstr "Ntotosoɔ ne Ayɛyɛdeɛ"
+
+msgid "Give generously, worship joyfully"
+msgstr "Fa ayamye ma, som wɔ anigye mu"
+
+msgid "Your generosity supports our ministries, outreach and the work of the Gospel in Tema and beyond. Thank you for partnering with Newlife AG."
+msgstr "Wo ayamye boa yɛn asɔre dwumadie, nsɛmpa ka ne Asɛmpa adwuma wɔ Tema ne baabi foforɔ. Yɛda wo ase sɛ wo ne Newlife AG yɛ adwuma."
+
+msgid "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver."
+msgstr "Obiara mma sɛdeɛ ɔde n'akoma asi so, ɛnyɛ awerɛhoɔ so anaa ahiadeɛ so, ɛfiri sɛ Onyankopɔn dɔ obi a ɔde anigyeɛ ma."
+
+msgid "God loves a cheerful giver."
+msgstr "Onyankopɔn dɔ obi a ɔde anigyeɛ ma."
+
+msgid "Online payments are not yet active."
+msgstr "Intanɛt so sika tua nnyɛ adwuma seesei."
+
+msgid "Your gift will be recorded as pending and a member of our finance team will follow up with you."
+msgstr "Yɛbɛkyerɛw w'akyɛdeɛ no sɛ ɛretwɛn, na yɛn sikasɛm kuo no mu nipa bi bɛkasa akyerɛ wo."
+
+msgid "Choose an amount"
+msgstr "Paw sika dodoɔ"
+
+msgid "Or enter another amount"
+msgstr "Anaa kyerɛw sika dodoɔ foforɔ"
+
+msgid "What is this gift for?"
+msgstr "Saa akyɛdeɛ yi yɛ deɛn ho?"
+
+msgid "Giving campaign"
+msgstr "Akyɛdeɛ dwumadie"
+
+msgid "Leave as General fund unless you are giving toward a specific project."
+msgstr "Gyae no sɛ General fund gye sɛ woreyi ama adwuma pɔtee bi."
+
+msgid "Your details"
+msgstr "Wo ho nsɛm"
+
+msgid "Give as"
+msgstr "Ma sɛ"
+
+msgid "Choose your name to include this gift on your giving statement, or give anonymously."
+msgstr "Paw wo din na yɛde saa akyɛdeɛ yi aka wo akyɛdeɛ krataa ho, anaa ma a wonnkyerɛ wo din."
+
+msgid "Full name"
+msgstr "Wo din nyinaa"
+
+msgid "Email address"
+msgstr "Email address"
+
+msgid "Phone number"
+msgstr "Fon nɔma"
+
+msgid "optional"
+msgstr "ɛho nhia"
+
+msgid "Used only to confirm your gift. Anonymous gifts are never shown publicly."
+msgstr "Yɛde di dwuma sɛ yɛbɛsi w'akyɛdeɛ no pi nko ara. Yɛnkyerɛ akyɛdeɛ a din nni so wɔ baguam da."
+
+msgid "Continue to secure payment"
+msgstr "Kɔ so kɔtua sika wɔ ahobanbɔ mu"
+
+msgid "Record my gift"
+msgstr "Kyerɛw m'akyɛdeɛ"
+
+msgid "Payments are processed securely by Flutterwave. Card and Mobile Money accepted."
+msgstr "Flutterwave na ɛhwɛ sika tua no so wɔ ahobanbɔ mu. Yɛgye Card ne Mobile Money."
+
+msgid "Other ways to give"
+msgstr "Akwan foforɔ a wobɛfa so ama"
+
+msgid "Text to give"
+msgstr "Fa nkra (SMS) ma"
+
+msgid "Text"
+msgstr "Kyerɛw"
+
+msgid "to"
+msgstr "kɔ"
+
+msgid "&mdash; no data needed."
+msgstr "&mdash; wonhia data."
+
+msgid "Recurring giving"
+msgstr "Akyɛdeɛ a ɛtaa ba"
+
+msgid "Set up a regular gift and we'll remind you when it's due."
+msgstr "Hyehyɛ akyɛdeɛ a wobɛtaa ama na yɛbɛkae wo berɛ a ɛduru."
+
+msgid "Set up recurring giving"
+msgstr "Hyehyɛ akyɛdeɛ a ɛtaa ba"
+
+msgid "Giving campaigns"
+msgstr "Akyɛdeɛ dwumadie ahodoɔ"
+
+msgid "Support a building fund, missions or special project."
+msgstr "Boa adansie sika, asɛmpa ka anaa adwuma soronko bi."
+
+msgid "View current campaigns"
+msgstr "Hwɛ dwumadie a ɛkɔ so seesei"
+
+msgid "Giving statement"
+msgstr "Akyɛdeɛ krataa"
+
+msgid "View, print or email a record of your gifts."
+msgstr "Hwɛ, tintim anaa fa w'akyɛdeɛ nkrataa kɔ email so."
+
+msgid "View my statement"
+msgstr "Hwɛ me krataa"
+
+msgid "Give with confidence"
+msgstr "Fa ahotoso ma"
+
+msgid "We never store your card or Mobile Money details."
+msgstr "Yɛnkora wo card anaa Mobile Money ho nsɛm da."
+
+msgid "Members with an email on file receive a receipt for each completed gift."
+msgstr "Asafomma a wɔn email wɔ yɛn nkyɛn nya rehyit ma akyɛdeɛ biara a ɛwie."
+
+msgid "Questions? Our finance team is happy to help."
+msgstr "Wowɔ asɛmmisa? Yɛn sikasɛm kuo no ani bɛgye sɛ wɔbɛboa wo."
+
+msgid "Contact us"
+msgstr "Kasa kyerɛ yɛn"
+
+msgid "Thank you"
+msgstr "Yɛda wo ase"
+
+msgid "Thank you!"
+msgstr "Yɛda wo ase!"
+
+msgid "Thank you for your gift!"
+msgstr "Yɛda wo ase wɔ w'akyɛdeɛ no ho!"
+
+msgid "Your payment was successful."
+msgstr "Wo sika tua no akɔ yie."
+
+msgid "A confirmation has been sent to your email."
+msgstr "Yɛde nsɛm a ɛsi no pi akɔma wo wɔ wo email so."
+
+msgid "Payment not completed"
+msgstr "Sika tua no nwieeɛ"
+
+msgid "We couldn't confirm this payment. If money left your account, please contact the church office with the reference below."
+msgstr "Yɛantumi ansi saa sika tua yi pi. Sɛ sika firii wo akawnt mu a, yɛsrɛ wo kasa kyerɛ asɔre ofese no na fa reference a ɛwɔ aseɛ ha no ka ho."
+
+msgid "Almost there"
+msgstr "Aka kakra"
+
+msgid "We're waiting for confirmation of your payment. If you paid with Mobile Money, approve the prompt on your phone; your gift will be confirmed automatically."
+msgstr "Yɛretwɛn sɛ wɔbɛsi wo sika tua no pi. Sɛ wode Mobile Money tuaa a, pene nkra a ɛba wo fon so no so; yɛbɛsi w'akyɛdeɛ no pi ankasa."
+
+msgid "Your gift has been recorded and a member of our finance team will follow up with you to complete it."
+msgstr "Yɛakyerɛw w'akyɛdeɛ no, na yɛn sikasɛm kuo no mu nipa bi bɛkasa akyerɛ wo na woawie."
+
+msgid "Gift type"
+msgstr "Akyɛdeɛ su"
+
+msgid "Campaign"
+msgstr "Dwumadie"
+
+msgid "Date"
+msgstr "Da"
+
+msgid "Reference"
+msgstr "Reference"
+
+msgid "Status"
+msgstr "Tebea"
+
+msgid "View receipt"
+msgstr "Hwɛ rehyit"
+
+msgid "Refresh status"
+msgstr "San hwɛ tebea"
+
+msgid "Try again"
+msgstr "San bɔ mmɔden"
+
+msgid "Back to home"
+msgstr "San kɔ fie"

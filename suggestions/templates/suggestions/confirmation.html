@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Thank You{% endblock %}
+{% block content %}
+    <div class="hero">
+        <h1>Thank you!</h1>
+        <p>Your suggestion has been sent to church leadership. We appreciate you taking the time to share it.</p>
+        <div class="actions">
+            <a class="button accent" href="{% url 'home' %}">Back to Home</a>
+        </div>
+    </div>
+{% endblock %}

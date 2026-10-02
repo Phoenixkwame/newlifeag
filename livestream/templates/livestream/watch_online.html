@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Watch Online" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Watch Online" %}</h1>
+
+    {% include "includes/youtube_channel.html" %}
+    <p><a class="button outline" href="{% url 'sermon_list' %}">{% trans "Browse All Recorded Services" %} &rarr;</a></p>
+
+    {% if latest %}
+        <div class="card" style="text-align:center; padding:2.5rem 1.5rem;">
+            <span class="badge {% if latest.is_upcoming %}accent{% endif %}">
+                {% if latest.is_upcoming %}{% trans "Upcoming" %}{% else %}{% trans "Latest Service" %}{% endif %}
+            </span>
+            <h2 style="margin-top:0.6rem;">{{ latest.title }}</h2>
+            <p class="muted">{{ latest.scheduled_for|date:"l, F j, Y \a\t g:i A" }}</p>
+            {% if latest_embed_url %}
+                <div class="video-embed">
+                    <iframe src="{{ latest_embed_url }}" title="{{ latest.title }}" loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                </div>
+            {% endif %}
+            {% if latest.notes %}<p>{{ latest.notes }}</p>{% endif %}
+            <p style="margin-top:1.5rem;">
+                <a class="button accent" href="{{ latest.stream_url }}" target="_blank" rel="noopener">
+                    {% if latest.is_upcoming %}{% trans "Get the Link" %}{% else %}{% trans "Watch the Replay" %}{% endif %}
+                </a>
+            </p>
+        </div>
+    {% else %}
+        <p class="empty-state">{% trans "No live stream has been posted yet - check back soon." %}</p>
+    {% endif %}
+
+    {% if page_obj %}
+        <h2 style="margin-top:2rem;">{% trans "Past Services" %}</h2>
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for stream in page_obj %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <strong>{{ stream.title }}</strong>
+                        <span class="muted">{{ stream.scheduled_for|date:"M j, Y" }}</span>
+                    </span>
+                    <a href="{{ stream.stream_url }}" target="_blank" rel="noopener">{% trans "Watch" %}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% endif %}
+{% endblock %}

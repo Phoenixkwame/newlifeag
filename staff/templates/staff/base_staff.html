@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block main_class %}wide{% endblock %}
+{% block content %}
+    <div class="section-title">
+        <h1 style="margin:0;">Staff Area</h1>
+        <form method="get" action="{% url 'staff_search' %}" style="display:flex; gap:0.4rem;">
+            <input type="text" name="q" placeholder="Search members, events, sermons..." style="min-width:220px;">
+            <button type="submit" class="outline">Search</button>
+        </form>
+    </div>
+    <div class="button-row">
+        <a class="button {% if active_tab == 'overview' %}accent{% else %}outline{% endif %}" href="{% url 'staff_home' %}">Overview</a>
+        {% if perms.members.view_member %}
+            <a class="button {% if active_tab == 'members' %}accent{% else %}outline{% endif %}" href="{% url 'staff_member_list' %}">Members</a>
+        {% endif %}
+        {% if perms.members.view_household %}
+            <a class="button {% if active_tab == 'households' %}accent{% else %}outline{% endif %}" href="{% url 'staff_household_list' %}">Households</a>
+        {% endif %}
+        {% if perms.members.view_group %}
+            <a class="button {% if active_tab == 'groups' %}accent{% else %}outline{% endif %}" href="{% url 'staff_group_list' %}">Groups</a>
+        {% endif %}
+        {% if perms.members.view_campus %}
+            <a class="button {% if active_tab == 'campuses' %}accent{% else %}outline{% endif %}" href="{% url 'staff_campus_list' %}">Campuses</a>
+        {% endif %}
+        {% if perms.events.view_event %}
+            <a class="button {% if active_tab == 'events' %}accent{% else %}outline{% endif %}" href="{% url 'staff_event_list' %}">Events</a>
+        {% endif %}
+        {% if perms.giving.view_donation %}
+            <a class="button {% if active_tab == 'donations' %}accent{% else %}outline{% endif %}" href="{% url 'staff_donation_list' %}">Donations</a>
+        {% endif %}
+        {% if perms.giving.view_givingcampaign %}
+            <a class="button {% if active_tab == 'campaigns_giving' %}accent{% else %}outline{% endif %}" href="{% url 'staff_campaign_list' %}">Campaigns</a>
+        {% endif %}
+        {% if perms.sermons.view_sermon %}
+            <a class="button {% if active_tab == 'sermons' %}accent{% else %}outline{% endif %}" href="{% url 'staff_sermon_list' %}">Sermons</a>
+        {% endif %}
+        {% if perms.livestream.view_livestream %}
+            <a class="button {% if active_tab == 'livestream' %}accent{% else %}outline{% endif %}" href="{% url 'staff_livestream_list' %}">Live Stream</a>
+        {% endif %}
+        {% if perms.flyers.view_flyer %}
+            <a class="button {% if active_tab == 'flyers' %}accent{% else %}outline{% endif %}" href="{% url 'staff_flyer_list' %}">Flyers</a>
+        {% endif %}
+        {% if perms.prayer.view_prayerrequest %}
+            <a class="button {% if active_tab == 'prayer' %}accent{% else %}outline{% endif %}" href="{% url 'staff_prayer_list' %}">Prayer</a>
+        {% endif %}
+        {% if perms.checkin.view_child %}
+            <a class="button {% if active_tab == 'children' %}accent{% else %}outline{% endif %}" href="{% url 'staff_checkin_dashboard' %}">Children</a>
+        {% endif %}
+        {% if perms.checkin.view_sundayschoolclass %}
+            <a class="button {% if active_tab == 'children' %}accent{% else %}outline{% endif %}" href="{% url 'staff_sunday_school_class_list' %}">Sunday School</a>
+        {% endif %}
+        {% if perms.members.view_member %}
+            <a class="button {% if active_tab == 'birthdays' %}accent{% else %}outline{% endif %}" href="{% url 'staff_birthdays' %}">Birthdays</a>
+        {% endif %}
+        {% if perms.followup.view_followup %}
+            <a class="button {% if active_tab == 'followup' %}accent{% else %}outline{% endif %}" href="{% url 'staff_followup_list' %}">Follow-Up</a>
+        {% endif %}
+        {% if perms.decisions.view_decision %}
+            <a class="button {% if active_tab == 'decisions' %}accent{% else %}outline{% endif %}" href="{% url 'staff_decision_list' %}">Decisions</a>
+        {% endif %}
+        {% if perms.followup.change_visitorinfo %}
+            <a class="button {% if active_tab == 'visitor_info' %}accent{% else %}outline{% endif %}" href="{% url 'staff_visitor_info_edit' %}">Visitor Info</a>
+        {% endif %}
+        {% if perms.announcements.view_announcement %}
+            <a class="button {% if active_tab == 'announcements' %}accent{% else %}outline{% endif %}" href="{% url 'staff_announcement_list' %}">Announcements</a>
+        {% endif %}
+        {% if perms.booking.view_resourcebooking %}
+            <a class="button {% if active_tab == 'booking' %}accent{% else %}outline{% endif %}" href="{% url 'staff_booking_list' %}">Bookings</a>
+        {% endif %}
+        {% if perms.care.view_carerequest %}
+            <a class="button {% if active_tab == 'care' %}accent{% else %}outline{% endif %}" href="{% url 'staff_care_request_list' %}">Care Requests</a>
+            <a class="button {% if active_tab == 'activity_log' %}accent{% else %}outline{% endif %}" href="{% url 'staff_activity_log' %}">Activity Log</a>
+        {% endif %}
+        {% if perms.suggestions.view_suggestion %}
+            <a class="button {% if active_tab == 'suggestions' %}accent{% else %}outline{% endif %}" href="{% url 'staff_suggestion_list' %}">Suggestion Box</a>
+        {% endif %}
+        {% if perms.testimonies.view_testimony %}
+            <a class="button {% if active_tab == 'testimonies' %}accent{% else %}outline{% endif %}" href="{% url 'staff_testimony_list' %}">Testimony Wall</a>
+        {% endif %}
+        {% if perms.surveys.view_survey %}
+            <a class="button {% if active_tab == 'surveys' %}accent{% else %}outline{% endif %}" href="{% url 'staff_survey_list' %}">Surveys</a>
+        {% endif %}
+        {% if perms.milestones.view_babydedication or perms.milestones.view_weddingrecord or perms.milestones.view_baptismrecord or perms.milestones.view_funeralrecord or perms.milestones.view_transferletter %}
+            <a class="button {% if active_tab == 'milestones' %}accent{% else %}outline{% endif %}" href="{% url 'staff_dedication_list' %}">Milestones</a>
+        {% endif %}
+        {% if perms.screening.view_backgroundcheck %}
+            <a class="button {% if active_tab == 'screening' %}accent{% else %}outline{% endif %}" href="{% url 'staff_background_check_list' %}">Background Checks</a>
+        {% endif %}
+        {% if perms.screening.view_volunteertraining %}
+            <a class="button {% if active_tab == 'screening' %}accent{% else %}outline{% endif %}" href="{% url 'staff_training_list' %}">Trainings</a>
+        {% endif %}
+        {% if perms.maintenance.view_maintenancerequest %}
+            <a class="button {% if active_tab == 'maintenance' %}accent{% else %}outline{% endif %}" href="{% url 'staff_maintenance_list' %}">Maintenance</a>
+        {% endif %}
+        {% if perms.equipment.view_equipment %}
+            <a class="button {% if active_tab == 'equipment' %}accent{% else %}outline{% endif %}" href="{% url 'staff_equipment_list' %}">Equipment</a>
+        {% endif %}
+        {% if perms.library.view_libraryitem %}
+            <a class="button {% if active_tab == 'library' %}accent{% else %}outline{% endif %}" href="{% url 'staff_library_list' %}">Library</a>
+        {% endif %}
+        {% if perms.servicehours.view_servicehourlog %}
+            <a class="button {% if active_tab == 'service_hours' %}accent{% else %}outline{% endif %}" href="{% url 'staff_service_hour_report' %}">Service Hours</a>
+        {% endif %}
+        {% if perms.expenses.view_expense %}
+            <a class="button {% if active_tab == 'expenses' %}accent{% else %}outline{% endif %}" href="{% url 'staff_expense_report' %}">Expenses</a>
+        {% endif %}
+        {% if perms.governance.view_meeting %}
+            <a class="button {% if active_tab == 'governance' %}accent{% else %}outline{% endif %}" href="{% url 'staff_meeting_list' %}">Meetings</a>
+        {% endif %}
+        {% if perms.members.add_attendance %}
+            <a class="button outline" href="{% url 'mark_attendance' %}">Mark Attendance</a>
+        {% endif %}
+        {% if perms.members.view_attendance %}
+            <a class="button {% if active_tab == 'absentees' %}accent{% else %}outline{% endif %}" href="{% url 'staff_absentee_list' %}">Absentees</a>
+        {% endif %}
+        {% if perms.giving.view_recurringgiving %}
+            <a class="button {% if active_tab == 'lapsed_recurring_givers' %}accent{% else %}outline{% endif %}" href="{% url 'staff_lapsed_recurring_givers_list' %}">Lapsed Givers</a>
+        {% endif %}
+        {% if perms.members.view_attendance or perms.giving.view_donation %}
+            <a class="button {% if active_tab == 'reports' %}accent{% else %}outline{% endif %}" href="{% url 'staff_reports' %}">Reports</a>
+        {% endif %}
+    </div>
+    {% block staff_content %}{% endblock %}
+{% endblock %}

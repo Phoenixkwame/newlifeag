@@ -1,0 +1,61 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Donations{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Donations</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_donation_create' %}">+ Log a Gift</a>{% endif %}
+    </div>
+
+    <div class="button-row">
+        <a class="button {% if not status %}accent{% else %}outline{% endif %}" href="?status=">All</a>
+        <a class="button {% if status == 'pending' %}accent{% else %}outline{% endif %}" href="?status=pending">Pending</a>
+        <a class="button {% if status == 'completed' %}accent{% else %}outline{% endif %}" href="?status=completed">Completed</a>
+        <a class="button {% if status == 'failed' %}accent{% else %}outline{% endif %}" href="?status=failed">Failed</a>
+    </div>
+
+    {% if campuses %}
+        <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+            <input type="hidden" name="status" value="{{ status }}">
+            <div>
+                <label>Campus</label>
+                <select name="campus">
+                    <option value="">All campuses</option>
+                    {% for c in campuses %}
+                        <option value="{{ c.id }}" {% if campus_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div><button type="submit">Filter</button></div>
+        </form>
+    {% endif %}
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for donation in page_obj %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+                    <span>
+                        <strong>GH&#8373;{{ donation.amount|floatformat:2 }}</strong> &middot;
+                        {{ donation.member|default:"Anonymous" }} &middot;
+                        {{ donation.get_donation_type_display }}
+                        {% if donation.campus %} &middot; {{ donation.campus }}{% endif %}
+                        <span class="muted"> &middot; {{ donation.date|date:"M j, Y" }}</span>
+                    </span>
+                    <span style="display:flex; align-items:center; gap:0.6rem;">
+                        <span class="badge {% if donation.status == 'completed' %}accent{% else %}muted{% endif %}">{{ donation.get_status_display }}</span>
+                        {% if can_change and donation.status == 'pending' %}
+                            <form method="post" action="{% url 'staff_donation_complete' donation.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit">Mark Completed</button>
+                            </form>
+                        {% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No donations match that filter.</p>
+    {% endif %}
+{% endblock %}

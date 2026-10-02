@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Sermon Podcast" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Sermon Podcast" %}</h1>
+    {% if page_obj %}
+        <section class="card">
+            <h2>{% trans "Subscribe in your podcast app" %}</h2>
+            <p>{% trans "Copy this feed address and use your podcast app’s Add by URL or Follow by URL option." %}</p>
+            <label for="podcast-feed">{% trans "Podcast feed address" %}</label>
+            <input id="podcast-feed" type="url" value="{{ feed_url }}" readonly>
+            <p><a href="{% url 'sermon_podcast_feed' %}">{% trans "Open RSS feed" %}</a></p>
+        </section>
+        <h2>{% trans "Audio Episodes" %}</h2>
+        {% for sermon in page_obj %}
+            <article class="card">
+                <h3><a href="{% url 'sermon_detail' sermon.id %}">{{ sermon.title }}</a></h3>
+                <p>{{ sermon.date|date:"M j, Y" }}{% if sermon.speaker %} &middot; {{ sermon.speaker }}{% endif %}</p>
+                <audio controls preload="none" style="width:100%;" aria-label="{{ sermon.title }}">
+                    <source src="{{ sermon.audio_file.url }}" type="audio/mpeg">
+                    <a href="{{ sermon.audio_file.url }}">{% trans "Download audio" %}</a>
+                </audio>
+            </article>
+        {% endfor %}
+        {% include "_pagination.html" %}
+    {% else %}
+        <section class="card">
+            <h2>{% trans "Watch our recorded services" %}</h2>
+            <p>{% trans "Our sermons are currently available as YouTube videos. Audio podcast episodes have not been added yet." %}</p>
+            <a class="button accent" href="{% url 'sermon_list' %}">{% trans "Browse Sermons" %}</a>
+            <a class="button outline" href="{% url 'watch_online' %}">{% trans "Watch Online" %}</a>
+        </section>
+    {% endif %}
+{% endblock %}

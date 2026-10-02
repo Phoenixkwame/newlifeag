@@ -1,0 +1,42 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Funerals{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Funeral / Bereavement Records</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_funeral_create' %}">+ Record a Funeral</a>{% endif %}
+    </div>
+    <div class="button-row">
+        <a class="button outline" href="{% url 'staff_dedication_list' %}">Baby Dedications</a>
+        <a class="button outline" href="{% url 'staff_wedding_list' %}">Weddings</a>
+        {% if perms.milestones.view_baptismrecord %}
+            <a class="button outline" href="{% url 'staff_baptism_list' %}">Baptisms</a>
+        {% endif %}
+        {% if perms.milestones.view_transferletter %}
+            <a class="button outline" href="{% url 'staff_transfer_letter_list' %}">Transfer Letters</a>
+        {% endif %}
+    </div>
+
+    {% if funerals %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for funeral in funerals %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <strong>{{ funeral.member }}</strong>
+                        <span class="muted">{{ funeral.service_date|date:"M j, Y" }}</span>
+                        {% if funeral.family_contacts.all %}
+                            <div class="muted">Family: {% for contact in funeral.family_contacts.all %}{{ contact }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                        {% endif %}
+                    </span>
+                    <span>
+                        <a href="{% url 'staff_funeral_program' funeral.id %}">Program</a>
+                        &middot; <a href="{% url 'staff_funeral_edit' funeral.id %}">Edit</a>
+                    </span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No funeral records yet.</p>
+    {% endif %}
+{% endblock %}

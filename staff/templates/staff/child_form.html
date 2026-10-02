@@ -1,0 +1,17 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}Add Child{% else %}Edit Child{% endif %}{% endblock %}
+{% block staff_content %}
+    {% if is_new %}
+        <h2>Add Child</h2>
+    {% else %}
+        <p><a href="{% url 'staff_child_detail' child.id %}">&larr; Back to {{ child }}</a></p>
+        <h2>Edit {{ child }}</h2>
+    {% endif %}
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Add Child{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

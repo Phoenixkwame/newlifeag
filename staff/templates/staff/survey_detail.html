@@ -1,0 +1,88 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ survey.title }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_survey_list' %}">&larr; Back to surveys</a></p>
+    <div class="section-title">
+        <h2>
+            {{ survey.title }}
+            <span class="badge {% if survey.is_open %}accent{% else %}muted{% endif %}">
+                {% if survey.is_open %}Open{% else %}Closed{% endif %}
+            </span>
+        </h2>
+        {% if can_change %}<a class="button outline" href="{% url 'staff_survey_edit' survey.id %}">Edit</a>{% endif %}
+    </div>
+    {% if survey.description %}<p class="muted">{{ survey.description }}</p>{% endif %}
+    <p class="muted">{{ response_count }} response{{ response_count|pluralize }} so far.</p>
+
+    <div class="section-title">
+        <h2>Questions</h2>
+    </div>
+    {% if questions %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for question in questions %}
+                <li style="padding:0.9rem 1.25rem;">
+                    <strong>{{ question.order }}.</strong> {{ question.text }}
+                    <span class="badge muted">{{ question.get_question_type_display }}</span>
+                    {% if question.question_type == 'choice' %}
+                        <ul class="plain" style="margin-top:0.4rem;">
+                        {% for choice in question.choices.all %}
+                            <li style="padding:0.3rem 0;">&bull; {{ choice.text }}</li>
+                        {% endfor %}
+                        </ul>
+                        {% if can_add_choice %}
+                            <form method="post" action="{% url 'staff_survey_choice_add' survey.id question.id %}" style="display:flex; gap:0.5rem; margin-top:0.4rem;">
+                                {% csrf_token %}
+                                <input type="text" name="text" placeholder="Add a choice" required style="max-width:220px;">
+                                <button type="submit" class="outline">Add Choice</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No questions yet.</p>
+    {% endif %}
+
+    {% if can_add_question %}
+        <div class="card">
+            <h2 style="margin-top:0;">Add a Question</h2>
+            <form method="post" action="{% url 'staff_survey_question_add' survey.id %}">
+                {% csrf_token %}
+                {{ question_form.as_p }}
+                <button type="submit">Add Question</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if results %}
+        <div class="section-title">
+            <h2>Results</h2>
+        </div>
+        {% for result in results %}
+            <div class="card">
+                <h2 style="margin-top:0;">{{ result.question.text }}</h2>
+                {% if result.choice_counts %}
+                    <ul class="plain">
+                    {% for choice, count in result.choice_counts %}
+                        <li>{{ choice.text }}: <strong>{{ count }}</strong></li>
+                    {% endfor %}
+                    </ul>
+                {% elif result.text_answers %}
+                    <ul class="plain">
+                    {% for answer in result.text_answers %}
+                        <li>
+                            {{ answer.text_answer }}
+                            <div class="muted">{{ answer.response.member }}</div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No answers yet.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Follow-Up: {{ follow_up.member }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_followup_list' %}">&larr; Back to follow-ups</a></p>
+
+    <div class="section-title">
+        <h2>{{ follow_up.member }}</h2>
+        <a href="{% url 'staff_member_detail' follow_up.member.id %}">View member record &rarr;</a>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Status</h2>
+            <ul class="plain">
+                <li><strong>Stage:</strong> <span class="badge accent">{{ follow_up.get_stage_display }}</span></li>
+                <li><strong>First visit:</strong> {{ follow_up.first_visit_date|date:"M j, Y" }}</li>
+                <li><strong>Assigned to:</strong> {% if follow_up.assigned_to %}{{ follow_up.assigned_to.username }}{% else %}—{% endif %}</li>
+                <li><strong>Last contacted:</strong> {% if follow_up.last_contacted_at %}{{ follow_up.last_contacted_at|date:"M j, Y g:i A" }}{% else %}Never{% endif %}</li>
+                {% if follow_up.notes %}<li><strong>Notes:</strong> {{ follow_up.notes }}</li>{% endif %}
+            </ul>
+
+            {% if can_change %}
+                <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                <form method="post" action="{% url 'staff_followup_update_stage' follow_up.id %}">
+                    {% csrf_token %}
+                    {{ stage_form.as_p }}
+                    <button type="submit">Update</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Contact Log</h2>
+            {% if contact_attempts %}
+                <ul class="plain">
+                {% for attempt in contact_attempts %}
+                    <li>
+                        {{ attempt.contacted_at|date:"M j, Y g:i A" }}
+                        {% if attempt.contacted_by %}<span class="muted"> &middot; {{ attempt.contacted_by.username }}</span>{% endif %}
+                        {% if attempt.note %}<div>{{ attempt.note }}</div>{% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No contact logged yet.</p>
+            {% endif %}
+
+            {% if can_log_contact %}
+                <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                <form method="post" action="{% url 'staff_followup_log_contact' follow_up.id %}">
+                    {% csrf_token %}
+                    {{ note_form.as_p }}
+                    <button type="submit">Log Contact</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

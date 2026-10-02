@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance{% endblock %}
+{% block content %}
+    <h1>Mark Attendance</h1>
+
+    <div class="card">
+        <form method="get" style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+            <div>
+                <label>Event (optional - leave blank for a general attendance record for today):</label><br>
+                <select name="event_id" onchange="this.form.submit()">
+                    <option value="">— General attendance for {{ attendance_date }} —</option>
+                    {% for event in events %}
+                        <option value="{{ event.id }}" {% if selected_event and selected_event.id == event.id %}selected{% endif %}>
+                            {{ event }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if campuses %}
+                <div>
+                    <label>Campus (optional - leave blank to show everyone):</label><br>
+                    <select name="campus_id" onchange="this.form.submit()">
+                        <option value="">— All campuses —</option>
+                        {% for campus in campuses %}
+                            <option value="{{ campus.id }}" {% if selected_campus and selected_campus.id == campus.id %}selected{% endif %}>
+                                {{ campus }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="event_id" value="{{ selected_event.id|default:'' }}">
+            <input type="hidden" name="campus_id" value="{{ selected_campus.id|default:'' }}">
+            <p>
+                Marking attendance for <strong>{{ attendance_date }}</strong>
+                {% if selected_event %} — {{ selected_event }}{% endif %}
+                {% if selected_campus %} — {{ selected_campus }}{% endif %}.
+            </p>
+            {% if members %}
+                <p>
+                    <label style="display:inline-flex; align-items:center; gap:0.4rem; font-weight:500;">
+                        <input type="checkbox" id="select-all"
+                            onclick="document.querySelectorAll('.present-checkbox').forEach(function(cb){cb.checked = this.checked;}, this)">
+                        Mark everyone present
+                    </label>
+                </p>
+                <ul class="plain">
+                {% for member in members %}
+                    <li>
+                        <label style="display:flex; align-items:center; gap:0.5rem; font-weight:400;">
+                            <input type="checkbox" class="present-checkbox" name="present_members" value="{{ member.id }}"
+                                {% if member.id in already_present_ids %}checked{% endif %}>
+                            {{ member }}
+                        </label>
+                    </li>
+                {% endfor %}
+                </ul>
+                <button type="submit" name="submit_attendance" value="1">Save Attendance</button>
+            {% else %}
+                <p class="empty-state">No active members to mark yet.</p>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

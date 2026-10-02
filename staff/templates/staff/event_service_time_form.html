@@ -1,0 +1,13 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}New Service Time{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_event_detail' event.id %}">&larr; Back to {{ event.title }}</a></p>
+    <h2>New Service Time for {{ event.title }}</h2>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Add Service Time</button>
+        </form>
+    </div>
+{% endblock %}

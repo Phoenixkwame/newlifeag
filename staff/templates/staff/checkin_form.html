@@ -1,0 +1,16 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Check In a Child{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_checkin_dashboard' %}">&larr; Back to check-in dashboard</a></p>
+    <h2>Check In a Child</h2>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Check In</button>
+        </form>
+    </div>
+    <p class="muted">
+        Don't see the child in the list? <a href="{% url 'staff_child_create' %}">Add them first</a>, then come back here.
+    </p>
+{% endblock %}

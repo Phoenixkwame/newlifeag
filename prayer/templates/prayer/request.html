@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Request Prayer{% endblock %}
+{% block content %}
+    <h1>Request Prayer</h1>
+    <p>You do not need an account. Share what you would like our pastoral team to pray about.</p>
+    <div class="card">
+        <p>Your request is private by default and visible to authorized church staff. Contact details are optional and are never shown on the public Prayer Wall.</p>
+        <p>If you choose to share your request publicly, it will appear only after staff approval. Please leave other people's private details out of anything you want shared.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Send Prayer Request</button>
+        </form>
+    </div>
+    <p><a href="{% url 'prayer_wall' %}">Visit the Prayer Wall &rarr;</a></p>
+{% endblock %}

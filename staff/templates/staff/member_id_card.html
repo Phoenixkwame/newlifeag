@@ -1,0 +1,45 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ member }} - ID Card{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; border: none; }
+        }
+        .id-card {
+            width: 340px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 1.5rem;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+        }
+        .id-card h1 { font-size: 1rem; margin: 0; }
+        .id-card .member-name { font-size: 1.3rem; font-weight: 800; margin: 0.75rem 0 0.1rem; }
+        .id-card .avatar-lg { width: 88px; height: 88px; font-size: 1.6rem; margin: 0.5rem auto; }
+        .id-card img.qr { width: 120px; height: 120px; margin-top: 0.75rem; }
+    </style>
+{% endblock %}
+{% block staff_content %}
+    <p class="no-print"><a href="{% url 'staff_member_detail' member.id %}">&larr; Back to {{ member }}</a></p>
+    <div class="section-title no-print">
+        <h2>Member ID Card</h2>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card id-card">
+        <h1>Newlife AG (Assemblies of God)</h1>
+        <p class="muted" style="margin-top:0.1rem;">Tema, Ghana</p>
+        {% if member.photo %}
+            <img src="{{ member.photo.url }}" class="avatar avatar-lg" alt="{{ member }}">
+        {% else %}
+            <span class="avatar avatar-lg">{{ member.initials }}</span>
+        {% endif %}
+        <div class="member-name">{{ member }}</div>
+        <p class="muted" style="margin:0;">{{ member.get_role_display }}</p>
+        <p class="muted" style="margin-top:0.5rem;">Member since {{ member.date_joined|date:"F Y" }}</p>
+        <img class="qr" src="{% url 'staff_member_id_card_qr' member.id %}" alt="QR code linking to this member's staff record">
+    </div>
+{% endblock %}

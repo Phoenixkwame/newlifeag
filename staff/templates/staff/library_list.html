@@ -1,0 +1,38 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Library{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Church Library &amp; Resources</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_library_item_create' %}">+ Add Item</a>{% endif %}
+    </div>
+    <p class="muted">Books, DVDs, CDs and curriculum kits the church lends out to members.</p>
+
+    <div class="button-row">
+        <a class="button {% if not show %}accent{% else %}outline{% endif %}" href="?">All</a>
+        <a class="button {% if show == 'on_loan' %}accent{% else %}outline{% endif %}" href="?show=on_loan">On Loan</a>
+        <a class="button {% if show == 'overdue' %}accent{% else %}outline{% endif %}" href="?show=overdue">Overdue</a>
+    </div>
+
+    {% if items %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for item in items %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <strong><a href="{% url 'staff_library_item_detail' item.id %}">{{ item.title }}</a></strong>
+                        {% if item.author %}<span class="muted">&middot; {{ item.author }}</span>{% endif %}
+                        <span class="badge muted">{{ item.get_category_display }}</span>
+                        {% if item.is_on_loan %}
+                            <span class="badge accent">On loan</span>
+                            {% if item.current_loan.is_overdue %}<span class="badge accent">Overdue</span>{% endif %}
+                        {% endif %}
+                    </span>
+                    <a href="{% url 'staff_library_item_detail' item.id %}">View</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No items match that filter.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ campaign.name }}{% endblock %}
+{% block content %}
+    <p><a href="{% url 'campaign_list' %}">&larr; Back to campaigns</a></p>
+    <h1>{{ campaign.name }}</h1>
+    <p class="muted">
+        {{ campaign.start_date|date:"M j, Y" }}{% if campaign.end_date %} &ndash; {{ campaign.end_date|date:"M j, Y" }}{% endif %}
+        {% if campaign.campus %} &middot; {{ campaign.campus }}{% endif %}
+    </p>
+
+    <div class="card">
+        {% if campaign.description %}<p>{{ campaign.description }}</p>{% endif %}
+        {% if campaign.goal_amount %}
+            <div class="progress">
+                <div class="progress-bar {% if campaign.percent_of_goal >= 100 %}full{% endif %}" style="width:{{ campaign.percent_of_goal }}%;"></div>
+            </div>
+            <p class="muted">
+                GH&#8373;{{ campaign.given_total|floatformat:2 }} raised of GH&#8373;{{ campaign.goal_amount|floatformat:2 }} goal ({{ campaign.percent_of_goal }}%)
+                &middot; GH&#8373;{{ campaign.pledged_total|floatformat:2 }} pledged so far
+            </p>
+        {% else %}
+            <p class="muted">GH&#8373;{{ campaign.given_total|floatformat:2 }} raised &middot; GH&#8373;{{ campaign.pledged_total|floatformat:2 }} pledged so far</p>
+        {% endif %}
+        <div class="button-row">
+            <a class="button" href="{% url 'give' %}?campaign={{ campaign.id }}">Give to this campaign</a>
+            {% if user.is_authenticated %}
+                <a class="button outline" href="{% url 'pledge_campaign' campaign.id %}">
+                    {% if my_pledge %}Update your pledge{% else %}Make a pledge{% endif %}
+                </a>
+            {% else %}
+                <a class="button outline" href="{% url 'login' %}?next={% url 'pledge_campaign' campaign.id %}">Log in to pledge</a>
+            {% endif %}
+        </div>
+        {% if my_pledge %}
+            <p class="muted" style="margin-bottom:0;">
+                You've pledged GH&#8373;{{ my_pledge.amount|floatformat:2 }} and given GH&#8373;{{ my_pledge.given_toward_pledge|floatformat:2 }} toward it so far.
+            </p>
+        {% endif %}
+        {% if sms_giving_number and campaign.sms_keyword %}
+            <p class="muted" style="margin-bottom:0;">
+                No smartphone handy? Text <strong>GIVE &lt;amount&gt; {{ campaign.sms_keyword }}</strong> to
+                <strong>{{ sms_giving_number }}</strong> to give to this campaign by SMS.
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

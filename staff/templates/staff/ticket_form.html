@@ -1,0 +1,13 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}New Ticket Type{% else %}Edit Ticket Type{% endif %}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_event_detail' event.id %}">&larr; Back to {{ event.title }}</a></p>
+    <h2>{% if is_new %}New Ticket Type for {{ event.title }}{% else %}Edit {{ ticket.name }}{% endif %}</h2>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Add Ticket{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

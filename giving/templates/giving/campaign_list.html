@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Giving Campaigns{% endblock %}
+{% block content %}
+    <h1>Giving Campaigns</h1>
+    <p class="muted">Special giving pushes the church is running right now - a building fund, a missions offering, or a project with its own goal.</p>
+    {% if campaigns %}
+        <div class="grid">
+        {% for campaign in campaigns %}
+            <a class="card-link" href="{% url 'campaign_detail' campaign.id %}">
+                <div class="card">
+                    <h2 style="margin-top:0;">{{ campaign.name }}</h2>
+                    <p class="muted" style="margin:0 0 0.6rem;">
+                        {{ campaign.start_date|date:"M j, Y" }}{% if campaign.end_date %} &ndash; {{ campaign.end_date|date:"M j, Y" }}{% endif %}
+                        {% if campaign.campus %} &middot; {{ campaign.campus }}{% endif %}
+                    </p>
+                    {% if campaign.goal_amount %}
+                        <div class="progress">
+                            <div class="progress-bar {% if campaign.percent_of_goal >= 100 %}full{% endif %}" style="width:{{ campaign.percent_of_goal }}%;"></div>
+                        </div>
+                        <p class="muted" style="margin:0;">
+                            GH&#8373;{{ campaign.given_total|floatformat:2 }} raised of GH&#8373;{{ campaign.goal_amount|floatformat:2 }} goal ({{ campaign.percent_of_goal }}%)
+                        </p>
+                    {% else %}
+                        <p class="muted" style="margin:0;">GH&#8373;{{ campaign.given_total|floatformat:2 }} raised so far</p>
+                    {% endif %}
+                </div>
+            </a>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">No giving campaigns are running right now.</p>
+    {% endif %}
+{% endblock %}

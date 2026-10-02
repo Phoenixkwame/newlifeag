@@ -1,0 +1,78 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ meeting }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_meeting_list' %}">&larr; Back to meetings</a></p>
+    <div class="section-title">
+        <h2>{{ meeting }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_meeting_edit' meeting.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0;">Attendees</h3>
+        {% if meeting.attendees.all %}
+            <p>{% for member in meeting.attendees.all %}{{ member }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        {% else %}
+            <p class="empty-state">No attendees recorded.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0;">Agenda</h3>
+        {% if meeting.agenda %}
+            <p style="white-space:pre-line;">{{ meeting.agenda }}</p>
+        {% else %}
+            <p class="empty-state">No agenda recorded.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0;">Minutes</h3>
+        {% if meeting.minutes %}
+            <p style="white-space:pre-line;">{{ meeting.minutes }}</p>
+        {% else %}
+            <p class="empty-state">No minutes recorded.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0;">Action Items</h3>
+        {% if action_items %}
+            <ul class="plain">
+            {% for item in action_items %}
+                <li style="padding:0.5rem 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        {{ item.description }}
+                        {% if item.owner %}&middot; {{ item.owner }}{% endif %}
+                        {% if item.due_date %}&middot; due {{ item.due_date|date:"M j, Y" }}{% endif %}
+                        {% if item.is_done %}
+                            <span class="badge accent">Done</span>
+                        {% elif item.is_overdue %}
+                            <span class="badge muted">Overdue</span>
+                        {% endif %}
+                    </span>
+                    {% if can_change_item %}
+                        <form method="post" action="{% url 'staff_action_item_toggle' meeting.id item.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            {% if item.is_done %}
+                                <button type="submit" class="outline">Mark Not Done</button>
+                            {% else %}
+                                <button type="submit">Mark Done</button>
+                            {% endif %}
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">No action items yet.</p>
+        {% endif %}
+
+        {% if can_add_item %}
+            <form method="post" action="{% url 'staff_action_item_create' meeting.id %}" style="margin-top:0.75rem;">
+                {% csrf_token %}
+                {{ item_form.as_p }}
+                <button type="submit">Add Action Item</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

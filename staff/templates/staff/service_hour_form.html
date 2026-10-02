@@ -1,0 +1,13 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}Log Service Hours{% else %}Edit Log{% endif %}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_service_hour_report' %}">&larr; Back to service hours</a></p>
+    <h2>{% if is_new %}Log Service Hours{% else %}Edit Log &ndash; {{ log.member }}{% endif %}</h2>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Log Hours{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Announcements{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Announcements</h2>
+        {% if can_add %}<a class="button" href="{% url 'staff_announcement_create' %}">New Announcement</a>{% endif %}
+    </div>
+
+    {% if announcements %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for announcement in announcements %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <a href="{% url 'staff_announcement_detail' announcement.id %}">{{ announcement.subject }}</a>
+                        <div class="muted">
+                            {{ announcement.get_audience_display }}
+                            {% if announcement.audience == "campus" and announcement.campus %} &middot; {{ announcement.campus }}{% endif %}
+                            {% if announcement.audience == "group" and announcement.group %} &middot; {{ announcement.group }}{% endif %}
+                            &middot; {{ announcement.created_at|date:"M j, Y" }}
+                        </div>
+                    </div>
+                    {% if announcement.is_sent %}
+                        <span class="badge accent">Sent to {{ announcement.email_sent_count }} email(s), {{ announcement.sms_sent_count }} phone(s)</span>
+                    {% else %}
+                        <span class="badge muted">Draft</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No announcements yet.</p>
+    {% endif %}
+{% endblock %}

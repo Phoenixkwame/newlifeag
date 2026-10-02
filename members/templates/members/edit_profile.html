@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <h1>My Profile</h1>
+    <p class="muted">Update your own contact details here. Your role, campus, and household are managed by the church office.</p>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

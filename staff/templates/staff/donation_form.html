@@ -1,0 +1,14 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Log a Gift{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_donation_list' %}">&larr; Back to donations</a></p>
+    <h2>Log a Gift</h2>
+    <p class="muted">For cash or mobile money handed to you in person. It's recorded as pending until you confirm it from the donations list.</p>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Log Gift</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+.devotional-book {
+    display: grid;
+    grid-template-columns: minmax(140px, 190px) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    margin: 2rem 0;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid #dfd5bc;
+    border-radius: 12px;
+    background: #faf6eb;
+    color: #173e43;
+}
+.devotional-book-cover { display: block; max-width: 190px; }
+.devotional-book-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 2px 5px 5px 2px;
+    box-shadow: 5px 10px 22px #34291026;
+}
+.devotional-book-eyebrow { font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; color: #76602d; }
+.devotional-book-copy h2 { margin: .5rem 0; font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.2; }
+.devotional-book-author { font-weight: 600; margin-bottom: .3rem; }
+.devotional-book-edition { font-size: .85rem; color: #5b665e; margin-top: 0; }
+.devotional-book-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.25rem; }
+.devotional-book a:focus-visible { outline: 3px solid #a8741c; outline-offset: 5px; }
+@media (max-width: 540px) {
+    .devotional-book { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+    .devotional-book-cover { width: 150px; margin-inline: auto; }
+}

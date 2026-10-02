@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Recurring Giving History{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to your dashboard</a></p>
+    <h1>Your Recurring Giving History</h1>
+    <p class="muted">
+        Every recurring gift you've ever set up, active or cancelled - reactivate one below instead
+        of setting it up again from scratch.
+    </p>
+
+    {% if recurring_gifts %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for recurring in recurring_gifts %}
+                <li style="padding:0.9rem 1.25rem; display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                    <div>
+                        <strong>GH&#8373;{{ recurring.amount|floatformat:2 }} {{ recurring.get_frequency_display }}</strong>
+                        {% if recurring.campaign %} &middot; {{ recurring.campaign }}{% endif %}
+                        <div class="muted">
+                            {% if recurring.is_active %}
+                                Next reminder: {{ recurring.next_due_date }}
+                            {% else %}
+                                Cancelled
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        {% if recurring.is_active %}
+                            <span class="badge accent">Active</span>
+                            <div class="button-row" style="margin-top:0.4rem;">
+                                <a class="button outline" href="{% url 'recurring_giving_edit' recurring.id %}">Edit</a>
+                                <form method="post" action="{% url 'recurring_giving_cancel' recurring.id %}" style="margin:0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="outline">Cancel</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <span class="badge muted">Cancelled</span>
+                            <div class="button-row" style="margin-top:0.4rem;">
+                                <form method="post" action="{% url 'recurring_giving_reactivate' recurring.id %}" style="margin:0;">
+                                    {% csrf_token %}
+                                    <button type="submit">Reactivate</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">You haven't set up a recurring gift yet.</p>
+    {% endif %}
+
+    <div class="button-row" style="margin-top:1rem;">
+        <a class="button outline" href="{% url 'recurring_giving_create' %}">Set Up a New Recurring Gift</a>
+    </div>
+{% endblock %}

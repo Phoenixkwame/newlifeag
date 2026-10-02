@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Sermons" %}{% endblock %}
+{% block content %}
+    <div class="section-title">
+        <h1 style="margin:0;">{% trans "Sermons" %}</h1>
+        <a href="{% url 'sermon_podcast' %}">{% trans "Podcast" %}</a>
+    </div>
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>{% trans "Search by title, speaker, or scripture" %}</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="{% trans 'e.g. Faith or John 3:16' %}">
+        </div>
+        {% if series_list %}
+            <div style="min-width:180px;">
+                <label>{% trans "Series" %}</label>
+                <select name="series" onchange="this.form.submit()">
+                    <option value="">— {% trans "All series" %} —</option>
+                    {% for series in series_list %}
+                        <option value="{{ series.id }}" {% if selected_series_id == series.id|stringformat:"s" %}selected{% endif %}>{{ series.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        {% if tag_list %}
+            <div style="min-width:150px;">
+                <label>{% trans "Tag" %}</label>
+                <select name="tag" onchange="this.form.submit()">
+                    <option value="">— {% trans "All tags" %} —</option>
+                    {% for tag in tag_list %}
+                        <option value="{{ tag.id }}" {% if selected_tag_id == tag.id|stringformat:"s" %}selected{% endif %}>{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        <div><button type="submit">{% trans "Search" %}</button></div>
+    </form>
+    {% if page_obj %}
+        <div class="grid">
+        {% for sermon in page_obj %}
+            <a class="card-link" href="{% url 'sermon_detail' sermon.id %}">
+                <div class="card">
+                    {% if sermon.video_thumbnail_url %}
+                        <img src="{{ sermon.video_thumbnail_url }}" alt="" width="480" height="360" loading="lazy" style="display:block;width:100%;height:auto;border-radius:6px;margin-bottom:1rem;">
+                        <span class="badge accent">{% trans "Watch Service" %}</span>
+                    {% endif %}
+                    <span class="badge">{{ sermon.date|date:"M j, Y" }}</span>
+                    {% if sermon.audio_file %}<span class="badge accent">{% trans "Podcast" %}</span>{% endif %}
+                    {% if sermon.study_guide %}<span class="badge muted">{% trans "Study Guide" %}</span>{% endif %}
+                    {% if sermon.discussion_guide %}<span class="badge muted">{% trans "Discussion Guide" %}</span>{% endif %}
+                    {% if sermon.series %}<span class="badge muted">{{ sermon.series.name }}</span>{% endif %}
+                    <h2 style="margin-top:0.6rem;">{{ sermon.title }}</h2>
+                    {% if sermon.speaker %}<p class="muted">{{ sermon.speaker }}</p>{% endif %}
+                    {% if sermon.scripture_reference %}<p><span class="badge accent">{{ sermon.scripture_reference }}</span></p>{% endif %}
+                </div>
+            </a>
+        {% endfor %}
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">{% if query %}{% trans "No sermons match that search." %}{% else %}{% trans "No sermons posted yet." %}{% endif %}</p>
+    {% endif %}
+{% endblock %}

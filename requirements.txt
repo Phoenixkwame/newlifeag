@@ -1,0 +1,14 @@
+Django>=5.0,<6.0
+requests>=2.31
+dj-database-url>=2.1
+gunicorn>=21.2
+whitenoise>=6.6
+Pillow>=10.0
+qrcode>=7.4  # generates the event QR check-in codes; uses Pillow above to render the PNG
+reportlab>=4.0  # renders the downloadable giving statement PDF; installs cleanly on Windows, no GTK/Cairo needed
+
+# PostgreSQL driver, used when DATABASE_URL selects PostgreSQL:
+psycopg[binary]>=3.2
+
+# Useful once you wire up more secrets:
+# python-decouple>=3.8

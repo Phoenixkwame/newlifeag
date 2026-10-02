@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Account Settings{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <h1>Account Settings</h1>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Notification Preferences</h2>
+        <p class="muted">Turn off any of these nudges - an immediate confirmation of something you just did (an RSVP, a volunteer sign-up, a ticket registration) is never affected by any of these.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Preferences</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Password</h2>
+        <p class="muted">Change the password you use to sign in.</p>
+        <a class="button outline" href="{% url 'password_change' %}">Change Password</a>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Your Data</h2>
+        <p class="muted">Download a copy of the information this app has on file for you - your profile, giving, attendance, and more.</p>
+        <a class="button outline" href="{% url 'member_data_export' %}">Download My Data</a>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">My Calendar</h2>
+        <p class="muted">
+            Subscribe once from Google Calendar, Apple Calendar, or Outlook to keep your upcoming volunteer
+            sign-ups, serving assignments, and RSVP'd events in your own calendar automatically - no need to
+            check the dashboard.
+        </p>
+        <p><code style="word-break:break-all;">{{ calendar_feed_url }}</code></p>
+        <form method="post" action="{% url 'regenerate_calendar_link' %}" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" class="outline">Reset My Calendar Link</button>
+        </form>
+    </div>
+{% endblock %}

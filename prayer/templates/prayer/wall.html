@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Prayer Wall{% endblock %}
+{% block content %}
+    <h1>Prayer Wall</h1>
+    <p class="muted">
+        Requests shared with permission and approved by our pastoral team.
+    </p>
+    <p><a class="button accent" href="{% url 'public_prayer_request' %}">Request Prayer</a> No account needed.</p>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for prayer_request in page_obj %}
+                <li style="padding:0.9rem 1.25rem;">
+                    <p style="margin:0 0 0.3rem;">{{ prayer_request.request_text }}</p>
+                    <span class="muted">
+                        {% if prayer_request.share_name_publicly %}{{ prayer_request.submitter_name }}{% elif prayer_request.member_id %}A church member{% else %}Anonymous{% endif %}
+                        &middot; {{ prayer_request.created_at|date:"M j, Y" }}
+                        {% if prayer_request.prayed_for %} &middot; <span class="badge accent">Prayed for</span>{% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No public prayer requests right now.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Absentees{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Absentee Members</h2>
+    </div>
+    <p class="muted">Active members who haven't attended a service or a group meeting in at least {{ weeks }} weeks
+        - a good list to work through for a check-in call or visit. A brand new member isn't flagged until they've
+        had at least {{ weeks }} weeks' chance to attend.</p>
+
+    {% if absentees %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for member, last_attended in absentees %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+                    <span>
+                        <strong><a href="{% url 'staff_member_detail' member.id %}">{{ member }}</a></strong>
+                        {% if member.phone %}<span class="muted">&middot; {{ member.phone }}</span>{% endif %}
+                        <div class="muted">
+                            {% if last_attended %}
+                                Last seen {{ last_attended|date:"M j, Y" }}
+                            {% else %}
+                                Never attended
+                            {% endif %}
+                        </div>
+                    </span>
+                    {% if can_follow_up %}
+                        <form method="post" action="{% url 'staff_followup_start' member.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" class="outline">Start Follow-Up</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">Nobody's fallen off the radar right now - great job staying connected.</p>
+    {% endif %}
+{% endblock %}

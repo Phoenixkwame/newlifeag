@@ -1,0 +1,18 @@
+{% load i18n static %}
+<footer class="home-footer">
+    <div class="home-footer-grid">
+        <div class="home-footer-brand">
+            <img class="footer-church-logos" src="{% static 'home/church-logos.png' %}" width="1311" height="586" loading="lazy" alt="{% trans 'Assemblies of God and Newlife Assemblies of God, Ghana logos' %}">
+            <h2>Newlife AG</h2><p>{% trans "A place to belong. A faith to live." %}</p>
+        </div>
+        <div><h3>{% trans "Join Us" %}</h3>
+            {% if visitor_info.service_times %}<p>{{ visitor_info.service_times|linebreaksbr }}</p>{% endif %}
+            <p>{% if visitor_info.address %}{{ visitor_info.address }}{% else %}{% trans "Tema, Ghana" %}{% endif %}</p>
+            {% if visitor_info.address %}<a href="https://www.google.com/maps/search/?api=1&amp;query={{ visitor_info.address|urlencode }}" target="_blank" rel="noopener">{% trans "Get Directions" %} &nearr;</a>{% endif %}
+            <a href="{% url 'visitor_info' %}">{% trans "Plan Your Visit" %} &rarr;</a>
+        </div>
+        <div><h3>{% trans "Explore" %}</h3><a href="{% url 'upcoming_events' %}">{% trans "Upcoming Events" %}</a><a href="{% url 'sermon_list' %}">{% trans "Sermons" %}</a><a href="{% url 'public_group_finder' %}">{% trans "Small Groups" %}</a><a href="{% url 'give' %}">{% trans "Give Online" %}</a></div>
+        <div><h3>{% trans "Stay Connected" %}</h3><a href="{% url 'connect_card' %}">{% trans "Connect With Us" %} &rarr;</a><a href="{% url 'prayer_wall' %}">{% trans "Prayer Wall" %}</a><a href="https://www.facebook.com/newlyfag/" target="_blank" rel="noopener">Facebook &nearr;</a><a href="https://www.youtube.com/@newlife-chapelag8034/streams" target="_blank" rel="noopener">YouTube &nearr;</a></div>
+    </div>
+    <div class="home-footer-bottom"><span>&copy; {% now "Y" %} Newlife AG &middot; {% trans "Assemblies of God, Ghana" %}</span><a href="#welcome-title">{% trans "Back to top" %} &uarr;</a></div>
+</footer>

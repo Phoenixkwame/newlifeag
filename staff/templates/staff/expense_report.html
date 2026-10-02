@@ -1,0 +1,77 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Expenses{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Expenses ({{ year }})</h2>
+        <span class="button-row" style="margin:0;">
+            {% if can_manage_categories %}<a class="button outline" href="{% url 'staff_budget_category_list' %}">Budget Categories</a>{% endif %}
+            {% if can_add %}<a class="button accent" href="{% url 'staff_expense_create' %}">+ Log Expense</a>{% endif %}
+        </span>
+    </div>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div>
+            <label>Year</label>
+            <select name="year" onchange="this.form.submit()">
+                {% for y in available_years %}
+                    <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <div class="stat-row">
+        <div class="stat">
+            <span class="num">GH&#8373;{{ total_spent|floatformat:2 }}</span>
+            <span class="label">Total spent in {{ year }}</span>
+        </div>
+    </div>
+
+    {% if category_rows %}
+        <div class="card">
+            <h2>By Budget Category</h2>
+            <ul class="plain">
+            {% for row in category_rows %}
+                <li style="margin-bottom:0.75rem;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>{{ row.category.name }}</strong>
+                        <span>
+                            GH&#8373;{{ row.spent|floatformat:2 }}{% if row.category.annual_budget %} / GH&#8373;{{ row.category.annual_budget|floatformat:2 }}{% endif %}
+                        </span>
+                    </div>
+                    {% if row.category.annual_budget %}
+                        <div class="progress">
+                            <div class="progress-bar {% if row.percent >= 100 %}full{% endif %}" style="width: {{ row.percent }}%;"></div>
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <h2>Log</h2>
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for expense in page_obj %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <strong>GH&#8373;{{ expense.amount|floatformat:2 }}</strong> &middot; {{ expense.paid_to|default:"—" }}
+                        {% if expense.category %}<span class="badge muted">{{ expense.category }}</span>{% endif %}
+                        {% if expense.receipt %}<span class="badge muted">Receipt</span>{% endif %}
+                        <div class="muted">{{ expense.date }}{% if expense.campus %} &middot; {{ expense.campus }}{% endif %}</div>
+                    </span>
+                    <span>
+                        {% if expense.receipt %}<a href="{{ expense.receipt.url }}" target="_blank">View Receipt</a>{% endif %}
+                        {% if can_change %}{% if expense.receipt %} &middot; {% endif %}<a href="{% url 'staff_expense_edit' expense.id %}">Edit</a>{% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No expenses logged for {{ year }}.</p>
+    {% endif %}
+{% endblock %}

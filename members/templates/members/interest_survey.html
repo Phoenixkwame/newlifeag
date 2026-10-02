@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Interest Survey{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <h1>Tell Us Your Interests</h1>
+    <p class="muted">New here, or not sure where to plug in? Tell us what you're interested in or good at, and
+        we'll suggest a few groups to check out. You can update this any time - it's the same list shown on
+        <a href="{% url 'edit_profile' %}">your profile</a>.</p>
+
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save &amp; See Suggestions</button>
+        </form>
+    </div>
+
+    <h2>Suggested For You</h2>
+    {% if suggested_groups %}
+        <div class="grid">
+            {% for group in suggested_groups %}
+                <div class="card">
+                    <h3 style="margin-top:0;">{{ group }}</h3>
+                    <span class="badge muted">{{ group.get_group_type_display }}</span>
+                    {% if group.meeting_day or group.meeting_time or group.meeting_location %}
+                        <p class="muted">
+                            {{ group.get_meeting_day_display|default:"" }}{% if group.meeting_time %} {{ group.meeting_time|time:"g:i A" }}{% endif %}{% if group.meeting_location %} &middot; {{ group.meeting_location }}{% endif %}
+                        </p>
+                    {% endif %}
+                    <form method="post" action="{% url 'join_group' group.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="submit">Join Group</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif member.skills.exists %}
+        <p class="empty-state">No groups match your interests yet - browse every group at
+            <a href="{% url 'browse_groups' %}">Ministries &amp; Small Groups</a> instead.</p>
+    {% else %}
+        <p class="empty-state">List an interest or skill above to see suggestions here.</p>
+    {% endif %}
+{% endblock %}

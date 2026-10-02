@@ -1,0 +1,55 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Facility Calendar{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Facility Calendar</h2>
+    </div>
+    <div class="button-row">
+        <a class="button outline" href="{% url 'staff_booking_list' %}">List View</a>
+        <a class="button outline" href="{% url 'staff_resource_list' %}">Manage Resources</a>
+    </div>
+
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+        <a class="button outline" href="?week={{ previous_week }}">&larr; Previous Week</a>
+        <div style="text-align:center;">
+            <strong>{{ week_start|date:"M j" }} &ndash; {{ week_end|date:"M j, Y" }}</strong><br>
+            <a href="?week={{ this_week }}" class="muted">This Week</a>
+        </div>
+        <a class="button outline" href="?week={{ next_week }}">Next Week &rarr;</a>
+    </div>
+
+    {% if rows %}
+        <div class="card" style="padding:0.75rem; overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; min-width:800px;">
+                <tr>
+                    <th style="text-align:left; padding:0.4rem;">Resource</th>
+                    {% for day in week_days %}
+                        <th style="text-align:left; padding:0.4rem; {% if day == today %}background:var(--border);{% endif %}">{{ day|date:"D j" }}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in rows %}
+                    <tr>
+                        <td style="padding:0.4rem; border-top:1px solid var(--border); vertical-align:top;">
+                            <strong>{{ row.resource.name }}</strong><br>
+                            <span class="badge muted">{{ row.resource.get_resource_type_display }}</span>
+                        </td>
+                        {% for cell in row.cells %}
+                            <td style="padding:0.4rem; border-top:1px solid var(--border); vertical-align:top; min-width:110px;">
+                                {% for booking in cell %}
+                                    <div style="margin-bottom:0.5rem;">
+                                        <a href="{% url 'staff_booking_edit' booking.id %}">{{ booking.title }}</a><br>
+                                        <span class="muted" style="font-size:0.85em;">{{ booking.start_datetime|date:"g:i A" }}&ndash;{{ booking.end_datetime|date:"g:i A" }}</span>
+                                    </div>
+                                {% empty %}
+                                    <span class="muted" style="font-size:0.85em;">&mdash;</span>
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No active resources yet - <a href="{% url 'staff_resource_create' %}">add one</a> to see it on the calendar.</p>
+    {% endif %}
+{% endblock %}

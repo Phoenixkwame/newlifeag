@@ -1,0 +1,97 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ household }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_household_list' %}">&larr; Back to households</a></p>
+
+    <div class="section-title">
+        <h2>{{ household }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_household_edit' household.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Details</h2>
+            <ul class="plain">
+                <li><strong>Address:</strong> {{ household.address|default:"—" }}</li>
+                <li><strong>Phone:</strong> {{ household.phone|default:"—" }}</li>
+            </ul>
+        </div>
+
+        {% if can_manage_members %}
+            <div class="card">
+                <h2>Bulk Actions</h2>
+                <p class="muted">Apply a change to every member of this household at once.</p>
+
+                <form method="post" action="{% url 'staff_household_bulk_action' household.id %}" style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:0.75rem;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="set_campus">
+                    <div style="flex:1; min-width:180px;">
+                        <label>Move everyone to a campus</label>
+                        <select name="campus_id">
+                            <option value="">— No campus —</option>
+                            {% for campus in campuses %}
+                                <option value="{{ campus.id }}">{{ campus }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div><button type="submit" class="outline">Apply</button></div>
+                </form>
+
+                <form method="post" action="{% url 'staff_household_bulk_action' household.id %}" style="margin-bottom:0.5rem;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="sync_phone">
+                    <button type="submit" class="outline">Copy household phone to members without one</button>
+                </form>
+
+                <form method="post" action="{% url 'staff_household_bulk_action' household.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="set_active">
+                    <button type="submit" class="outline">Mark all active</button>
+                </form>
+                <form method="post" action="{% url 'staff_household_bulk_action' household.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="set_inactive">
+                    <button type="submit" class="outline">Mark all inactive (moved away)</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <h2>Members ({{ members.count }})</h2>
+            {% if members %}
+                <ul class="plain">
+                {% for member in members %}
+                    <li style="display:flex; justify-content:space-between; align-items:center;">
+                        <a href="{% url 'staff_member_detail' member.id %}">{{ member }}</a>
+                        {% if can_manage_members %}
+                            <form method="post" action="{% url 'staff_household_remove_member' household.id member.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="outline">Remove</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No members in this household yet.</p>
+            {% endif %}
+
+            {% if can_manage_members %}
+                <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+                <form method="post" action="{% url 'staff_household_add_member' household.id %}" style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:flex-end;">
+                    {% csrf_token %}
+                    <div style="flex:1; min-width:180px;">
+                        <label>Add an existing member</label>
+                        <select name="member_id">
+                            {% for m in other_members %}
+                                <option value="{{ m.id }}">{{ m }}{% if m.household %} (currently {{ m.household }}){% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div><button type="submit">Add</button></div>
+                </form>
+                <p style="margin-top:0.75rem;"><a href="{% url 'staff_member_create' %}?household={{ household.id }}">+ Add a brand-new member to this household</a></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

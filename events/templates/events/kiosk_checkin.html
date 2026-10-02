@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Check In - {{ event.title }}</title>
+    {% if result %}<meta http-equiv="refresh" content="4;url={% url 'event_kiosk_checkin' event.id %}">{% endif %}
+    <style>
+        :root {
+            --primary: #2c5f6f;
+            --primary-dark: #1e4552;
+            --accent: #c8912b;
+            --bg: #f5f6f5;
+            --surface: #ffffff;
+            --text: #1f2933;
+            --text-muted: #5b6b73;
+            --border: #e1e5e4;
+            --success: #2f7a4d;
+            --error: #a8341c;
+        }
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; height: 100%;
+            font-family: "Segoe UI", -apple-system, Roboto, Arial, sans-serif;
+            background: var(--primary-dark);
+            color: var(--text);
+        }
+        .kiosk {
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        .panel {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 560px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        }
+        h1 { font-size: 1.9rem; margin: 0 0 0.3rem; color: var(--primary-dark); }
+        .subtitle { color: var(--text-muted); font-size: 1.2rem; margin: 0 0 2rem; }
+        input[type="tel"] {
+            width: 100%;
+            font-size: 2.2rem;
+            padding: 1.2rem;
+            text-align: center;
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+        }
+        input[type="tel"]:focus { outline: none; border-color: var(--primary); }
+        select {
+            width: 100%;
+            font-size: 1.4rem;
+            padding: 1rem;
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            background: #fff;
+        }
+        button {
+            width: 100%;
+            font-size: 1.7rem;
+            font-weight: 700;
+            padding: 1.3rem;
+            border: none;
+            border-radius: 16px;
+            background: var(--accent);
+            color: #fff;
+            cursor: pointer;
+        }
+        button:active { opacity: 0.85; }
+        .result-icon { font-size: 5rem; margin-bottom: 0.5rem; }
+        .success { color: var(--success); }
+        .error { color: var(--error); }
+        .result-message { font-size: 1.6rem; font-weight: 700; margin: 0 0 0.5rem; }
+        .result-sub { font-size: 1.1rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="kiosk">
+        <div class="panel">
+            {% if result == "success" %}
+                <div class="result-icon success">&#10003;</div>
+                <p class="result-message success">You're checked in, {{ member_name }}!</p>
+                <p class="result-sub">Welcome to {{ event.title }}. Enjoy the service.</p>
+            {% elif result == "not_found" %}
+                <div class="result-icon error">&#10007;</div>
+                <p class="result-message error">We couldn't find that number.</p>
+                <p class="result-sub">Please see an usher for help checking in.</p>
+            {% else %}
+                <h1>{{ event.title }}</h1>
+                <p class="subtitle">Enter your phone number to check in</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {% if form.service_time %}
+                        <select name="service_time" required>
+                            <option value="">Which service?</option>
+                            {% for choice in form.service_time.field.queryset %}
+                                <option value="{{ choice.id }}">{{ choice.label }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                    <input type="tel" name="phone" inputmode="tel" autofocus placeholder="0244 000 000" autocomplete="off">
+                    <button type="submit">Check In</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    {% if result %}
+        <script>
+            // Belt-and-braces alongside the meta-refresh tag above - either
+            // one resets the kiosk back to a blank form for the next person
+            // with no one needing to touch the screen in between.
+            setTimeout(function () { window.location.href = "{% url 'event_kiosk_checkin' event.id %}"; }, 4000);
+        </script>
+    {% endif %}
+</body>
+</html>

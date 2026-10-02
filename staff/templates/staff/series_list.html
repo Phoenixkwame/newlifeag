@@ -1,0 +1,27 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Sermon Series{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_sermon_list' %}">&larr; Back to sermons</a></p>
+    <div class="section-title">
+        <h2>Sermon Series</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_series_create' %}">+ New Series</a>{% endif %}
+    </div>
+
+    {% if series_list %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for series in series_list %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <strong>{{ series.name }}</strong>
+                        <span class="muted"> &middot; {{ series.sermon_count }} sermon(s)</span>
+                    </span>
+                    <a href="{% url 'staff_series_edit' series.id %}">Edit</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No sermon series yet.</p>
+    {% endif %}
+{% endblock %}

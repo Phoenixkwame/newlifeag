@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Upcoming Events" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Upcoming Events" %}</h1>
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>{% trans "Search by title or location" %}</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="{% trans 'e.g. Youth Camp' %}">
+        </div>
+        <div>
+            <label>{% trans "Type" %}</label>
+            <select name="type">
+                <option value="" {% if not event_type %}selected{% endif %}>{% trans "All" %}</option>
+                {% for value, label in event_types %}
+                    <option value="{{ value }}" {% if event_type == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if campuses %}
+            <div>
+                <label>{% trans "Campus" %}</label>
+                <select name="campus">
+                    <option value="">{% trans "All campuses" %}</option>
+                    {% for c in campuses %}
+                        <option value="{{ c.id }}" {% if campus_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        <div><button type="submit">{% trans "Filter" %}</button></div>
+    </form>
+    {% if page_obj %}
+        <div class="grid">
+        {% for event in page_obj %}
+            <a class="card-link" href="{% url 'event_detail' event.id %}">
+                <div class="card">
+                    <div class="row">
+                        <div class="date-tile">
+                            <span class="day">{{ event.start_datetime|date:"j" }}</span>
+                            <span class="mon">{{ event.start_datetime|date:"M" }}</span>
+                        </div>
+                        <div>
+                            <span class="badge muted">{{ event.get_event_type_display }}</span>
+                            <h2 style="margin:0.3rem 0 0.2rem;">{{ event.title }}</h2>
+                            <p class="muted" style="margin:0;">
+                                {{ event.start_datetime|date:"g:i A" }}{% if event.location %} &middot; {{ event.location }}{% endif %}{% if event.campus %} &middot; {{ event.campus }}{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">{% if query or event_type %}{% trans "No upcoming events match that search." %}{% else %}{% trans "No upcoming events yet." %}{% endif %}</p>
+    {% endif %}
+{% endblock %}

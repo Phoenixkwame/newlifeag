@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ group }} Attendance{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to your dashboard</a></p>
+    <h1>Take Attendance &middot; {{ group }}</h1>
+
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            <p>Marking attendance for <strong>{{ attendance_date }}</strong>.</p>
+            {% if memberships %}
+                <p>
+                    <label style="display:inline-flex; align-items:center; gap:0.4rem; font-weight:500;">
+                        <input type="checkbox" id="select-all"
+                            onclick="document.querySelectorAll('.present-checkbox').forEach(function(cb){cb.checked = this.checked;}, this)">
+                        Mark everyone present
+                    </label>
+                </p>
+                <ul class="plain">
+                {% for membership in memberships %}
+                    <li>
+                        <label style="display:flex; align-items:center; gap:0.5rem; font-weight:400;">
+                            <input type="checkbox" class="present-checkbox" name="present_members" value="{{ membership.member.id }}"
+                                {% if membership.member.id in already_present_ids %}checked{% endif %}>
+                            {{ membership.member }}
+                        </label>
+                    </li>
+                {% endfor %}
+                </ul>
+                <button type="submit" name="submit_attendance" value="1">Save Attendance</button>
+            {% else %}
+                <p class="empty-state">This group has no active members yet.</p>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Log a Maintenance Issue{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_maintenance_list' %}">&larr; Back to maintenance</a></p>
+    <h2>Log a Maintenance Issue</h2>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Log Issue</button>
+        </form>
+    </div>
+{% endblock %}

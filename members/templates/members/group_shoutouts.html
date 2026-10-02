@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ group }} Shoutouts{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <h1>{{ group }} &ndash; Team Shoutouts</h1>
+
+    {% if can_post %}
+        <div class="card">
+            <h2 style="margin-top:0;">Post a Shoutout</h2>
+            <p class="muted">Keep it short - this goes out by email/SMS to every current member of this team.</p>
+            <form method="post">
+                {% csrf_token %}
+                <p>
+                    <label>Message</label>
+                    <textarea name="message" rows="3" required></textarea>
+                </p>
+                <button type="submit">Post &amp; Notify Team</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if shoutouts %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for shoutout in shoutouts %}
+                <li style="padding:0.9rem 1.25rem;">
+                    <p style="margin:0; white-space:pre-line;">{{ shoutout.message }}</p>
+                    <div class="muted" style="margin-top:0.3rem;">
+                        {% if shoutout.posted_by %}{{ shoutout.posted_by }} &middot; {% endif %}{{ shoutout.created_at|date:"M j, Y g:i A" }}
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No shoutouts posted for this team yet.</p>
+    {% endif %}
+{% endblock %}

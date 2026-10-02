@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Suggestion Box{% endblock %}
+{% block content %}
+    <div class="hero">
+        <h1>Suggestion Box</h1>
+        <p>
+            Have feedback or an idea for church leadership? Share it below - this form is completely
+            anonymous, so please don't include your name if you'd rather it stay that way.
+        </p>
+    </div>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+{% endblock %}

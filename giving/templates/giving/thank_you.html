@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Thank you" %}{% endblock %}
+{% block extra_head %}
+<style>
+    .ty-wrap { max-width: 620px; margin: 0 auto; }
+    .ty-card { text-align: center; padding: clamp(1.75rem, 5vw, 2.75rem); }
+    .ty-icon {
+        width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 1.1rem;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .ty-icon svg { width: 30px; height: 30px; }
+    .ty-icon.success { background: #e5f4ea; color: #2f8a4c; }
+    .ty-icon.pending { background: #fff4dc; color: var(--accent-dark); }
+    .ty-card h1 { margin: 0 0 0.5rem; font-size: clamp(1.6rem, 4vw, 2rem); letter-spacing: -0.02em; }
+    .ty-card > p { color: var(--text-muted); max-width: 44ch; margin: 0 auto; }
+    .ty-amount { font-size: 2.2rem; font-weight: 800; color: var(--primary-dark); margin: 1.4rem 0 0.2rem; letter-spacing: -0.02em; }
+    .ty-details { list-style: none; padding: 0; margin: 1.5rem 0 0; text-align: left; border-top: 1px solid var(--border); }
+    .ty-details li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+    .ty-details span:first-child { color: var(--text-muted); }
+    .ty-details span:last-child { font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+    .ty-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 1.75rem; }
+    .ty-verse { text-align: center; font-family: Georgia, "Times New Roman", serif; font-style: italic; color: var(--text-muted); margin-top: 1.5rem; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="ty-wrap">
+    <div class="card ty-card">
+        {% if donation.status == "completed" %}
+            <div class="ty-icon success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h1>{% trans "Thank you for your gift!" %}</h1>
+            <p>{% trans "Your payment was successful." %}{% if donation.member.email or donation.donor_email %} {% trans "A confirmation has been sent to your email." %}{% endif %}</p>
+        {% elif donation.status == "failed" %}
+            <div class="ty-icon pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg></div>
+            <h1>{% trans "Payment not completed" %}</h1>
+            <p>{% trans "We couldn't confirm this payment. If money left your account, please contact the church office with the reference below." %}</p>
+        {% else %}
+            <div class="ty-icon pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            {% if payments_enabled %}
+                <h1>{% trans "Almost there" %}</h1>
+                <p>{% trans "We're waiting for confirmation of your payment. If you paid with Mobile Money, approve the prompt on your phone; your gift will be confirmed automatically." %}</p>
+            {% else %}
+                <h1>{% trans "Thank you!" %}</h1>
+                <p>{% trans "Your gift has been recorded and a member of our finance team will follow up with you to complete it." %}</p>
+            {% endif %}
+        {% endif %}
+
+        <div class="ty-amount">GH&#8373;{{ donation.amount|floatformat:2 }}</div>
+
+        <ul class="ty-details">
+            <li><span>{% trans "Gift type" %}</span><span>{{ donation.get_donation_type_display }}</span></li>
+            {% if donation.campaign %}<li><span>{% trans "Campaign" %}</span><span>{{ donation.campaign }}</span></li>{% endif %}
+            <li><span>{% trans "Date" %}</span><span>{{ donation.date|date:"j M Y, H:i" }}</span></li>
+            <li><span>{% trans "Reference" %}</span><span>{{ short_reference }}</span></li>
+            <li><span>{% trans "Status" %}</span><span>{{ donation.get_status_display }}</span></li>
+        </ul>
+
+        <div class="ty-actions">
+            {% if donation.status == "completed" and donation.member and user.member_profile == donation.member %}
+                <a class="button" href="{% url 'donation_receipt' donation.id %}">{% trans "View receipt" %}</a>
+            {% elif donation.status != "completed" and donation.status != "failed" and payments_enabled %}
+                <a class="button" href="">{% trans "Refresh status" %}</a>
+            {% endif %}
+            {% if donation.status == "failed" %}
+                <a class="button accent" href="{% url 'give' %}">{% trans "Try again" %}</a>
+            {% else %}
+                <a class="button outline" href="{% url 'home' %}">{% trans "Back to home" %}</a>
+            {% endif %}
+        </div>
+    </div>
+    <p class="ty-verse">&ldquo;{% trans "God loves a cheerful giver." %}&rdquo; &mdash; 2 Corinthians 9:7</p>
+</div>
+{% endblock %}

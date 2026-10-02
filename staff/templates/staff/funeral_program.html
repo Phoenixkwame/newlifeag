@@ -1,0 +1,38 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Funeral Program{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; border: none; }
+        }
+        .program { text-align: center; padding: 3rem 2rem; border: 3px double var(--primary); }
+        .program h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+        .program .in-memory { font-size: 1.5rem; font-weight: 800; color: var(--primary-dark); margin: 1.2rem 0; }
+    </style>
+{% endblock %}
+{% block staff_content %}
+    <p class="no-print"><a href="{% url 'staff_funeral_list' %}">&larr; Back to funerals</a></p>
+    <div class="section-title no-print">
+        <h2>Funeral Program</h2>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card program">
+        <h1>Newlife AG (Assemblies of God)</h1>
+        <p class="muted" style="margin-top:-0.5rem;">Tema, Ghana</p>
+        <p style="margin-top:2rem;">In loving memory of</p>
+        <div class="in-memory">{{ funeral.member }}</div>
+        {% if funeral.date_of_death %}<p>{{ funeral.date_of_death|date:"F j, Y" }}</p>{% endif %}
+        <p>Home-going service on <strong>{{ funeral.service_date|date:"F j, Y" }}</strong></p>
+        {% if funeral.location %}<p>at {{ funeral.location }}</p>{% endif %}
+        {% if funeral.officiated_by %}<p>Officiated by {{ funeral.officiated_by }}</p>{% endif %}
+        {% if funeral.family_contacts.all %}
+            <p class="muted" style="margin-top:1.5rem;">
+                Survived by {% for contact in funeral.family_contacts.all %}{{ contact }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

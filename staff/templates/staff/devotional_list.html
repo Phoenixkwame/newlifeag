@@ -1,0 +1,36 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Devotionals{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Devotionals</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_devotional_create' %}">+ New Devotional</a>{% endif %}
+    </div>
+    <p><a href="{% url 'staff_sermon_list' %}">&larr; Back to sermons</a></p>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>Search by title or scripture</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="e.g. Grace">
+        </div>
+        <div><button type="submit">Search</button></div>
+    </form>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for d in page_obj %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span>
+                        <strong>{{ d.title }}</strong>
+                        <span class="muted"> &middot; {{ d.date }} &middot; {{ d.scripture_reference }}</span>
+                    </span>
+                    {% if can_edit %}<a href="{% url 'staff_devotional_edit' d.id %}">Edit</a>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">{% if query %}No devotionals match that search.{% else %}No devotionals posted yet.{% endif %}</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}New Member Follow-Up{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>New Member Follow-Up</h2>
+    </div>
+    <p class="muted">
+        Start following up with someone from their own page in the Members tab.
+    </p>
+
+    <div class="button-row">
+        <a class="button {% if not stage and not show_stale_only %}accent{% else %}outline{% endif %}" href="?stage=">All</a>
+        {% for value, label in stages %}
+            <a class="button {% if stage == value and not show_stale_only %}accent{% else %}outline{% endif %}" href="?stage={{ value }}">{{ label }}</a>
+        {% endfor %}
+        <a class="button {% if show_stale_only %}accent{% else %}outline{% endif %}" href="?stale=1">
+            Stale Only{% if stale_count %} ({{ stale_count }}){% endif %}
+        </a>
+    </div>
+
+    {% if follow_ups %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for follow_up in follow_ups %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_followup_detail' follow_up.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ follow_up.member }}</strong>
+                            <span class="muted">
+                                &middot; first visit {{ follow_up.first_visit_date|date:"M j, Y" }}
+                                {% if follow_up.assigned_to %} &middot; assigned to {{ follow_up.assigned_to.username }}{% endif %}
+                            </span>
+                        </span>
+                        <span>
+                            {% if follow_up.id in stale_ids %}<span class="badge muted">Stale</span>{% endif %}
+                            <span class="badge accent">{{ follow_up.get_stage_display }}</span>
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">
+            {% if show_stale_only %}Nobody's gone quiet right now.{% else %}Nobody matches that filter.{% endif %}
+        </p>
+    {% endif %}
+{% endblock %}

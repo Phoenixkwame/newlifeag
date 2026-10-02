@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load i18n l10n static %}
+{% block title %}{% trans "Home" %} | Newlife AG{% endblock %}
+{% block main_class %}home-page{% endblock %}
+{% block body_class %}home-body{% endblock %}
+{% block navigation %}{% include "includes/home_navigation.html" %}{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'home/devotional-book.css' %}">
+    <link rel="preload" as="image" href="{% static 'home/church-worship.jpg' %}" fetchpriority="high">
+    <link rel="stylesheet" href="{% static 'home/home.css' %}?v=pastor-compact-3">
+    <link rel="stylesheet" href="{% static 'home/slideshow.css' %}">
+    <script src="{% static 'home/slideshow.js' %}" defer></script>
+    <script src="{% static 'home/home.js' %}" defer></script>
+{% endblock %}
+{% block footer %}{% include "includes/home_footer.html" %}{% endblock %}
+{% block content %}
+    <dialog class="home-photo-dialog" data-photo-dialog aria-labelledby="photo-dialog-title">
+        <div class="home-photo-dialog-header"><h2 id="photo-dialog-title">{% trans "From our church's Facebook page" %}</h2><form method="dialog"><button autofocus aria-label="{% trans 'Close photo' %}">&times;</button></form></div>
+        <img src="{% static 'home/newlife-facebook.jpg' %}" width="720" height="720" loading="lazy" alt="{% trans 'Two people pictured in the World Assemblies of God Congress Ghana artwork shared by Newlife AG.' %}">
+    </dialog>
+    {% include "includes/home_slideshow.html" %}
+
+    {% if next_event %}
+        <aside class="home-next-bar" aria-label="{% trans 'Next Event' %}">
+            <div><span class="home-eyebrow"><span class="home-status-dot" aria-hidden="true"></span>{% trans "Coming Up Next" %}</span><a href="{% url 'event_detail' next_event.id %}">{{ next_event.title }} <span aria-hidden="true">&nearr;</span></a><p><time datetime="{{ next_event.start_datetime|date:'c' }}">{{ next_event.start_datetime|date:"l, F j - g:i A" }}</time></p></div>
+            <div class="home-countdown" data-countdown="{{ next_event.start_datetime|date:'c' }}" hidden aria-label="{% trans 'Time until the next event' %}">
+                <span><strong data-unit="days">00</strong><small>{% trans "Days" %}</small></span><span><strong data-unit="hours">00</strong><small>{% trans "Hours" %}</small></span><span><strong data-unit="minutes">00</strong><small>{% trans "Minutes" %}</small></span><span><strong data-unit="seconds">00</strong><small>{% trans "Seconds" %}</small></span>
+            </div>
+            <a class="button outline" href="{% url 'event_detail' next_event.id %}">{% trans "View & RSVP" %}<span aria-hidden="true">&rarr;</span></a>
+        </aside>
+    {% endif %}
+
+    {% include "includes/home_experience.html" %}
+
+    {% include "includes/home_pastor.html" %}
+    {% include "includes/devotional_book.html" with show_devotional_link=True %}
+
+    <section class="home-church-photo home-section" aria-labelledby="church-photo-title">
+        <figure>
+            <a class="home-photo-open" data-photo-open href="{% static 'home/newlife-facebook.jpg' %}" aria-label="{% trans 'Enlarge church photo' %}">
+                <img src="{% static 'home/newlife-facebook.jpg' %}" width="720" height="720" loading="lazy" decoding="async"
+                     alt="{% trans 'Two people pictured in the World Assemblies of God Congress Ghana artwork shared by Newlife AG.' %}">
+            </a>
+            <figcaption>{% trans "From our church's Facebook page" %}</figcaption>
+        </figure>
+        <div class="home-church-photo-copy">
+            <p class="home-eyebrow">{% trans "Our Church Family" %}</p>
+            <h2 id="church-photo-title">{% trans "Faith brings us together." %}<br><em>{% trans "Life keeps us connected." %}</em></h2>
+            <p>{% trans "Get a glimpse of life at Newlife AG. Explore photos, church updates, and shared moments from our community in Tema." %}</p>
+            <a class="button" href="https://www.facebook.com/newlyfag/photos" target="_blank" rel="noopener">{% trans "See More Church Photos" %} <span aria-hidden="true">&nearr;</span></a>
+            <a class="home-text-link" href="https://www.facebook.com/newlyfag/" target="_blank" rel="noopener">{% trans "Visit Newlife AG on Facebook" %} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+    </section>
+
+    {% if flyers %}
+        <section class="home-section" aria-labelledby="flyers-title">
+            <div class="home-section-heading">
+                <div><p class="home-eyebrow">{% trans "Life at Newlife" %}</p><h2 id="flyers-title">{% trans "What's Happening" %}</h2></div>
+                <a class="home-text-link" href="{% url 'upcoming_events' %}">{% trans "See Upcoming Events" %}<span aria-hidden="true">&rarr;</span></a>
+            </div>
+            <div class="home-slider-controls" hidden>
+                <button type="button" data-slide="-1" aria-label="{% trans 'Previous flyers' %}" aria-controls="home-flyers">&larr;</button>
+                <button type="button" data-slide="1" aria-label="{% trans 'Next flyers' %}" aria-controls="home-flyers">&rarr;</button>
+            </div>
+            <div class="flyer-strip" id="home-flyers" tabindex="0" role="region" aria-labelledby="flyers-title">
+                {% for flyer in flyers %}
+                    <article class="flyer-card">
+                        {% if flyer.link_url %}<a class="home-flyer-link" href="{{ flyer.link_url }}" target="_blank" rel="noopener">{% endif %}
+                        <div class="home-flyer-image"><img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" loading="lazy"></div>
+                        <h3 class="flyer-caption">{{ flyer.title }}{% if flyer.link_url %}<span aria-hidden="true">&nearr;</span>{% endif %}</h3>
+                        {% if flyer.link_url %}</a>{% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="home-section" aria-labelledby="latest-title">
+        <div class="home-section-heading"><div><p class="home-eyebrow">{% trans "Keep Growing" %}</p><h2 id="latest-title">{% trans "Your next step starts here." %}</h2></div></div>
+        <div class="home-updates">
+            <article class="home-update home-event">
+                <div class="home-card-top"><span class="home-eyebrow">{% trans "Next Event" %}</span><span class="home-icon" aria-hidden="true">{% include "includes/home_icon.html" with icon="calendar" %}</span></div>
+                {% if next_event %}
+                    <div class="home-event-body">
+                        <div class="home-event-date" aria-hidden="true"><span>{{ next_event.start_datetime|date:"M" }}</span><strong>{{ next_event.start_datetime|date:"d" }}</strong></div>
+                        <div><h3>{{ next_event.title }}</h3><p class="muted"><time datetime="{{ next_event.start_datetime|date:'c' }}">{{ next_event.start_datetime|date:"l, F j - g:i A" }}</time>{% if next_event.location %}<br>{{ next_event.location }}{% endif %}</p></div>
+                    </div>
+                    <a class="home-text-link" href="{% url 'event_detail' next_event.id %}">{% trans "View & RSVP" %}<span aria-hidden="true">&rarr;</span></a>
+                {% else %}
+                    <h3>{% trans "There's a place for you here." %}</h3>
+                    <p class="muted">{% trans "Nothing scheduled yet - check back soon." %}</p>
+                    <a class="home-text-link" href="{% url 'upcoming_events' %}">{% trans "See Upcoming Events" %}<span aria-hidden="true">&rarr;</span></a>
+                {% endif %}
+            </article>
+            <article class="home-update home-sermon">
+                <div class="home-card-top"><span class="home-eyebrow">{% trans "Latest Sermon" %}</span><span class="home-icon" aria-hidden="true">{% include "includes/home_icon.html" with icon="book" %}</span></div>
+                {% if latest_sermon %}
+                    <h3>{{ latest_sermon.title }}</h3>
+                    <p class="muted">{% if latest_sermon.speaker %}{{ latest_sermon.speaker }} &middot; {% endif %}{{ latest_sermon.date }}</p>
+                    {% if latest_sermon.scripture_reference %}<p class="home-scripture">{{ latest_sermon.scripture_reference }}</p>{% endif %}
+                    {% if latest_sermon.audio_file %}<audio controls preload="none" aria-label="{% trans 'Listen to the latest sermon' %}" src="{{ latest_sermon.audio_file.url }}"><a href="{{ latest_sermon.audio_file.url }}">{% trans "Listen" %}</a></audio>{% endif %}
+                    {% if latest_sermon.study_guide %}<a class="home-study-link" href="{{ latest_sermon.study_guide.url }}">{% trans "Download Study Guide" %} <span aria-hidden="true">&darr;</span></a>{% endif %}
+                    {% if latest_sermon.media_url %}
+                        <a class="home-text-link" href="{{ latest_sermon.media_url }}" target="_blank" rel="noopener"><span class="home-play-small" aria-hidden="true">&#9654;</span>{% trans "Watch / Listen" %}<span aria-hidden="true">&nearr;</span></a>
+                    {% else %}<a class="home-text-link" href="{% url 'sermon_detail' latest_sermon.id %}">{% trans "Read more" %}<span aria-hidden="true">&rarr;</span></a>{% endif %}
+                {% else %}
+                    <h3>{% trans "A word for your week." %}</h3><p class="muted">{% trans "No sermons posted yet." %}</p>
+                    <a class="home-text-link" href="{% url 'sermon_list' %}">{% trans "Sermons" %}<span aria-hidden="true">&rarr;</span></a>
+                {% endif %}
+            </article>
+        </div>
+    </section>
+
+    {% include "includes/youtube_channel.html" %}
+
+    {% if homepage_video %}
+        <section class="home-video home-section" aria-labelledby="video-title">
+            <div class="home-video-copy">
+                <span class="badge {% if homepage_video.is_live %}accent{% endif %}">
+                    {% if homepage_video.is_live %}
+                        {% if homepage_video.is_upcoming %}{% trans "Live Soon" %}{% else %}{% trans "Live Now" %}{% endif %}
+                    {% else %}{% trans "Get to Know Us" %}{% endif %}
+                </span>
+                <h2 id="video-title">{{ homepage_video.title }}</h2>
+                <p>{% trans "Wherever you are, you're welcome here." %}</p>
+                <a class="home-text-link" href="{% url 'watch_online' %}">{% trans "Watch Online" %}<span aria-hidden="true">&rarr;</span></a>
+            </div>
+            {% if homepage_video.embed_url %}
+                <div class="video-embed">
+                    <iframe src="{{ homepage_video.embed_url }}" title="{{ homepage_video.title }}" loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            {% else %}
+                <div class="home-video-fallback">
+                    <span class="home-video-play" aria-hidden="true">&#9654;</span>
+                    <a class="button accent" href="{{ homepage_video.url }}" target="_blank" rel="noopener">
+                        {% if homepage_video.is_live %}
+                            {% if homepage_video.is_upcoming %}{% trans "Get the Link" %}{% else %}{% trans "Watch the Replay" %}{% endif %}
+                        {% else %}{% trans "Watch Now" %}{% endif %}<span aria-hidden="true">&nearr;</span>
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+    {% endif %}
+
+    <section class="home-section" aria-labelledby="connect-title">
+        <div class="home-section-heading"><div><p class="home-eyebrow">{% trans "Better Together" %}</p><h2 id="connect-title">{% trans "Get Connected" %}</h2></div><p class="home-section-note">{% trans "Find your people. Share your journey." %}</p></div>
+        <div class="home-community">
+            <a class="home-community-card" href="{% url 'public_group_finder' %}">
+                <span class="home-icon" aria-hidden="true">{% include "includes/home_icon.html" with icon="people" %}</span><h3>{% trans "Small Groups" %}</h3>
+                <p>{% trans "Find a group meeting near you and grow together in community." %}</p><span class="home-community-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+            <a class="home-community-card" href="{% url 'prayer_wall' %}">
+                <span class="home-icon" aria-hidden="true">{% include "includes/home_icon.html" with icon="heart" %}</span><h3>{% trans "Prayer Wall" %}</h3>
+                <p>{% trans "Ask the church to stand with you in prayer, or pray for someone else's request." %}</p><span class="home-community-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+            <a class="home-community-card" href="{% url 'testimony_wall' %}">
+                <span class="home-icon" aria-hidden="true">{% include "includes/home_icon.html" with icon="quote" %}</span><h3>{% trans "Testimonies" %}</h3>
+                {% if latest_testimony %}
+                    <blockquote><p>&ldquo;{{ latest_testimony.testimony_text|truncatewords:20 }}&rdquo;</p><cite>{% if latest_testimony.share_name_publicly %}{{ latest_testimony.member }}{% else %}{% trans "A church member" %}{% endif %}</cite></blockquote>
+                {% else %}<p>{% trans "Read stories of answered prayer and God's work in our members' lives." %}</p>{% endif %}
+                <span class="home-community-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+        </div>
+    </section>
+
+    {% include "includes/home_faq.html" %}
+
+    <section class="home-giving" aria-labelledby="giving-title">
+        <div class="home-giving-copy">
+            <p class="home-eyebrow">{% if featured_campaign %}{% trans "Current Campaign" %}{% else %}{% trans "Make a Difference" %}{% endif %}</p>
+            <h2 id="giving-title">{% if featured_campaign %}{{ featured_campaign.name }}{% else %}{% trans "Generosity makes a difference." %}{% endif %}</h2>
+            {% if featured_campaign %}
+                {% if featured_campaign.goal_amount %}
+                    <div class="home-campaign-progress" aria-hidden="true"><span style="width:clamp(0%, {{ featured_campaign.percent_of_goal|unlocalize }}%, 100%);"></span></div>
+                    <p>GH&#8373;{{ featured_campaign.given_total|floatformat:2 }} {% trans "raised of" %} GH&#8373;{{ featured_campaign.goal_amount|floatformat:2 }} {% trans "goal" %} ({{ featured_campaign.percent_of_goal }}%)</p>
+                {% else %}<p>GH&#8373;{{ featured_campaign.given_total|floatformat:2 }} {% trans "raised so far" %}</p>{% endif %}
+            {% else %}<p>{% trans "Be part of what God is doing in our church and community." %}</p>{% endif %}
+        </div>
+        {% if featured_campaign %}<a class="button accent" href="{% url 'campaign_detail' featured_campaign.id %}">{% trans "Give to this Campaign" %}<span aria-hidden="true">&nearr;</span></a>
+        {% else %}<a class="button accent" href="{% url 'give' %}">{% trans "Give Online" %}<span aria-hidden="true">&nearr;</span></a>{% endif %}
+    </section>
+    <div class="home-mobile-actions" aria-label="{% trans 'Quick links' %}"><a href="{% url 'visitor_info' %}">{% trans "Plan Your Visit" %} <span aria-hidden="true">&nearr;</span></a><a href="{% url 'watch_online' %}">{% trans "Watch Online" %} <span aria-hidden="true">&rarr;</span></a></div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Pastoral Care Requests{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Pastoral Care Requests</h2>
+    </div>
+    <p class="muted">Private to the pastoral team - never shown to Ushers or Treasurers.</p>
+
+    <div class="button-row">
+        <a class="button {% if not show %}accent{% else %}outline{% endif %}" href="?show=">All</a>
+        <a class="button {% if show == 'submitted' %}accent{% else %}outline{% endif %}" href="?show=submitted">Submitted</a>
+        <a class="button {% if show == 'scheduled' %}accent{% else %}outline{% endif %}" href="?show=scheduled">Scheduled</a>
+        <a class="button {% if show == 'completed' %}accent{% else %}outline{% endif %}" href="?show=completed">Completed</a>
+    </div>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for care_request in page_obj %}
+                <li style="padding:0.9rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_care_request_detail' care_request.id %}" style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                        <div>
+                            <strong>{{ care_request.member }}</strong>
+                            <span class="badge muted">{{ care_request.get_request_type_display }}</span>
+                            <p style="margin:0.3rem 0 0;">{{ care_request.details|truncatewords:20 }}</p>
+                            <span class="muted">{{ care_request.created_at|date:"M j, Y g:i A" }}</span>
+                        </div>
+                        <span class="badge {% if care_request.status == 'completed' %}accent{% else %}muted{% endif %}">
+                            {{ care_request.get_status_display }}
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No care requests match that filter.</p>
+    {% endif %}
+{% endblock %}

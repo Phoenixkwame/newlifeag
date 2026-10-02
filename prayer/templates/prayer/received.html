@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Prayer Request Received{% endblock %}
+{% block content %}
+    <div class="card">
+        <h1>Your prayer request has been received</h1>
+        <p>Thank you for sharing with us. Your request is available to our pastoral team for prayer and follow-up.</p>
+        <p>If you asked to share it on the Prayer Wall, it will remain hidden until staff approve it.</p>
+        <a class="button" href="{% url 'home' %}">Back to Home</a>
+        <a href="{% url 'prayer_wall' %}">Prayer Wall</a>
+    </div>
+{% endblock %}

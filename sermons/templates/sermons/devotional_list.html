@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Devotionals{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'home/devotional-book.css' %}">
+{% endblock %}
+{% block content %}
+    <h1>Devotionals</h1>
+    {% include "includes/devotional_book.html" %}
+
+    {% if todays_devotional %}
+        <div class="hero">
+            <span class="badge accent" style="background:rgba(255,255,255,0.2); color:#fff;">Today's Word</span>
+            <h1 style="margin-top:0.6rem;">{{ todays_devotional.title }}</h1>
+            <p style="font-style:italic;">{{ todays_devotional.scripture_reference }}</p>
+            <p>{{ todays_devotional.body }}</p>
+        </div>
+    {% else %}
+        <p class="empty-state">No devotional posted for today yet.</p>
+    {% endif %}
+
+    <div class="section-title"><h2>Past Devotionals</h2></div>
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>Search by title, scripture, or text</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="e.g. Grace or Romans 5:8">
+        </div>
+        <div><button type="submit">Search</button></div>
+    </form>
+    {% if page_obj %}
+        <div class="grid">
+        {% for d in page_obj %}
+            <div class="card">
+                <span class="badge">{{ d.date|date:"M j, Y" }}</span>
+                <h2 style="margin-top:0.6rem;">{{ d.title }}</h2>
+                <p class="muted" style="font-style:italic;">{{ d.scripture_reference }}</p>
+            </div>
+        {% endfor %}
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">{% if query %}No devotionals match that search.{% else %}Nothing else yet.{% endif %}</p>
+    {% endif %}
+{% endblock %}

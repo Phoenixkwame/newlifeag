@@ -1,0 +1,23 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Checked In{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_checkin_dashboard' %}">&larr; Back to check-in dashboard</a></p>
+
+    <div class="card" style="text-align:center;">
+        <h2>{{ check_in.child }} is checked in</h2>
+        <p class="muted">
+            Dropped off by {{ check_in.guardian_name }} at {{ check_in.checked_in_at|date:"g:i A" }}
+            {% if check_in.event %} for {{ check_in.event.title }}{% endif %}
+        </p>
+
+        <p class="muted" style="margin-bottom:0.25rem;">Give this pickup code to the guardian - it will be required at check-out:</p>
+        <p style="font-size:3rem; font-weight:bold; letter-spacing:0.5rem; margin:0.5rem 0;">{{ check_in.pickup_code }}</p>
+        <p class="muted">Print the badge below for the child's tag and the guardian's matching claim ticket.</p>
+    </div>
+
+    <div class="button-row">
+        <a class="button accent" href="{% url 'staff_checkin_badge' check_in.id %}">Print Badge / Claim Ticket</a>
+        <a class="button outline" href="{% url 'staff_checkin_create' %}">Check In Another Child</a>
+        <a class="button outline" href="{% url 'staff_checkin_dashboard' %}">Done</a>
+    </div>
+{% endblock %}

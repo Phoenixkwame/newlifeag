@@ -1,0 +1,52 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Import Members{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_member_list' %}">&larr; Back to members</a></p>
+    <h2>Import Members from CSV</h2>
+
+    <div class="card">
+        <p>
+            Upload a CSV file with a header row. Only <strong>first_name</strong> and
+            <strong>last_name</strong> are required - the rest are optional:
+        </p>
+        <ul>
+            <li><code>first_name</code>, <code>last_name</code> - required</li>
+            <li><code>email</code>, <code>phone</code></li>
+            <li><code>role</code> - <code>member</code>, <code>staff</code>, or <code>admin</code> (defaults to member)</li>
+            <li><code>household</code> - matched by exact existing household name; left blank if no match</li>
+            <li><code>campus</code> - matched by exact existing campus name; left blank if no match</li>
+            <li><code>is_active</code> - <code>yes</code>/<code>no</code> (defaults to yes)</li>
+        </ul>
+        <p class="muted">
+            Every row that's created is a brand-new member - this never updates or merges with existing
+            records, so re-uploading the same file twice will create duplicates.
+        </p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="csv_file" accept=".csv" required>
+            <button type="submit" style="margin-top:0.75rem;">Import</button>
+        </form>
+    </div>
+
+    {% if result %}
+        <div class="card">
+            <h2>Results</h2>
+            <p>{{ result.created|length }} member{{ result.created|length|pluralize }} imported.</p>
+            {% if result.created %}
+                <ul class="plain">
+                {% for member in result.created %}
+                    <li><a href="{% url 'staff_member_detail' member.id %}">{{ member }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% if result.errors %}
+                <h3>Rows skipped</h3>
+                <ul class="errorlist">
+                {% for error in result.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

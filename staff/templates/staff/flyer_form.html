@@ -1,0 +1,16 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}Add Flyer{% else %}Edit Flyer{% endif %}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_flyer_list' %}">&larr; Back to flyers</a></p>
+    <h2>{% if is_new %}Add Flyer{% else %}Edit {{ flyer.title }}{% endif %}</h2>
+    <div class="card">
+        {% if flyer %}
+            <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" style="max-width:220px; border-radius:6px; margin-bottom:1rem;">
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Add Flyer{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

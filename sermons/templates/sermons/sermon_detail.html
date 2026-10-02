@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ sermon.title }}{% endblock %}
+{% block content %}
+    <p><a href="{% url 'sermon_list' %}">&larr; {% trans "Back to sermons" %}</a></p>
+
+    <div class="card">
+        <span class="badge">{{ sermon.date|date:"M j, Y" }}</span>
+        {% if sermon.series %}<a class="badge muted" href="{% url 'sermon_series_detail' sermon.series.id %}">{{ sermon.series.name }}</a>{% endif %}
+        <h1 style="margin-top:0.6rem;">{{ sermon.title }}</h1>
+        {% if sermon.speaker %}<p class="muted">{{ sermon.speaker }}</p>{% endif %}
+        {% if sermon.scripture_reference %}<p><span class="badge accent">{{ sermon.scripture_reference }}</span></p>{% endif %}
+        {% if sermon.tags.all %}
+            <p>
+            {% for tag in sermon.tags.all %}
+                <a class="badge" href="{% url 'sermon_list' %}?tag={{ tag.id }}">{{ tag.name }}</a>
+            {% endfor %}
+            </p>
+        {% endif %}
+
+        {% if signed_in_member %}
+            <form method="post" action="{% url 'sermon_toggle_watched' sermon.id %}" style="margin:0.75rem 0;">
+                {% csrf_token %}
+                {% if is_watched %}
+                    <button type="submit" class="button outline">&#10003; {% trans "Watched - click to unmark" %}</button>
+                {% else %}
+                    <button type="submit" class="button outline">{% trans "Mark as Watched" %}</button>
+                {% endif %}
+            </form>
+        {% endif %}
+
+        {% if sermon.audio_file %}
+            <audio controls style="width:100%; margin:0.75rem 0;">
+                <source src="{{ sermon.audio_file.url }}" type="audio/mpeg">
+                {% trans "Your browser doesn't support inline audio" %} - <a href="{{ sermon.audio_file.url }}">{% trans "download the audio" %}</a> {% trans "instead." %}
+            </audio>
+        {% endif %}
+
+        {% if sermon.media_url %}
+            {% if sermon.video_embed_url %}
+                <div class="video-embed">
+                    <iframe src="{{ sermon.video_embed_url }}" title="{{ sermon.title }}" loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                </div>
+            {% endif %}
+            <p><a class="button outline" href="{{ sermon.media_url }}" target="_blank" rel="noopener">{% trans "Watch / Listen" %}</a></p>
+        {% endif %}
+
+        {% if sermon.study_guide %}
+            <p><a class="button outline" href="{{ sermon.study_guide.url }}" target="_blank" rel="noopener">{% trans "Download Study Guide" %}</a></p>
+        {% endif %}
+
+        {% if sermon.discussion_guide %}
+            <p><a class="button outline" href="{{ sermon.discussion_guide.url }}" target="_blank" rel="noopener">{% trans "Download Small Group Discussion Guide" %}</a></p>
+        {% endif %}
+
+        {% if sermon.notes %}
+            <h2>{% trans "Notes" %}</h2>
+            <p>{{ sermon.notes|linebreaksbr }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

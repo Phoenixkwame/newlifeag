@@ -1,0 +1,10 @@
+{% load i18n static %}
+<a class="home-skip-link" href="#welcome-title">{% trans "Skip to content" %}</a>
+<nav class="home-navigation" aria-label="{% trans 'Main navigation' %}">
+    <a class="brand" href="{% url 'home' %}"><img class="brand-logo" src="{% static 'home/church-logos.png' %}" width="1311" height="586" alt=""> Newlife AG</a>
+    <div class="home-desktop-navigation">{% include "includes/home_navigation_links.html" %}</div>
+    <details class="home-mobile-menu">
+        <summary>{% trans "Menu" %}<span aria-hidden="true">&#9776;</span></summary>
+        <div class="home-mobile-menu-panel">{% include "includes/home_navigation_links.html" %}</div>
+    </details>
+</nav>

@@ -1,0 +1,28 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Sunday School{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Sunday School Classes</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_sunday_school_class_create' %}">+ New Class</a>{% endif %}
+    </div>
+
+    {% if classes %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for sunday_school_class in classes %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_sunday_school_class_detail' sunday_school_class.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ sunday_school_class.name }}</strong>
+                            {% if sunday_school_class.teacher %}<span class="muted"> &middot; taught by {{ sunday_school_class.teacher }}</span>{% endif %}
+                        </span>
+                        <span class="badge muted">{{ sunday_school_class.children.count }} child{{ sunday_school_class.children.count|pluralize:",ren" }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No Sunday school classes set up yet.</p>
+    {% endif %}
+{% endblock %}

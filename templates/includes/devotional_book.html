@@ -1,0 +1,17 @@
+{% load i18n static %}
+<section class="devotional-book" aria-labelledby="devotional-book-title">
+    <a class="devotional-book-cover" href="https://www.amazon.com/dp/B0DVX9FV2Z" target="_blank" rel="noopener" aria-label="{% trans 'View God’s Word for You on Amazon (opens in a new tab)' %}">
+        <img src="{% static 'home/pastor-devotional-cover.jpg' %}" width="338" height="500" loading="lazy" decoding="async" alt="{% trans 'Cover of God’s Word for You by Rev. Dr. Moses Kofi Gyesi, Second Edition, January–March' %}">
+    </a>
+    <div class="devotional-book-copy">
+        <p class="devotional-book-eyebrow">{% trans "From Our Lead Pastor" %}</p>
+        <h2 id="devotional-book-title">God’s Word for You</h2>
+        <p class="devotional-book-author">Rev. Dr. Moses Kofi Gyesi</p>
+        <p class="devotional-book-edition">{% trans "Second Edition · January–March" %}</p>
+        <p>{% trans "Explore our lead pastor’s devotional and make time for God’s Word in your day." %}</p>
+        <div class="devotional-book-actions">
+            <a class="button accent" href="https://www.amazon.com/dp/B0DVX9FV2Z" target="_blank" rel="noopener">{% trans "View on Amazon" %} <span aria-hidden="true">&nearr;</span></a>
+            {% if show_devotional_link %}<a href="{% url 'devotional_list' %}">{% trans "Read Our Devotionals" %} <span aria-hidden="true">&rarr;</span></a>{% endif %}
+        </div>
+    </div>
+</section>

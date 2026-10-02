@@ -1,0 +1,80 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Members{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Members</h2>
+        <div class="button-row" style="margin:0;">
+            <a class="button outline" href="{% url 'staff_member_export' %}?q={{ query }}&status={{ status }}&campus={{ campus_id }}">Export CSV</a>
+            {% if can_add %}<a class="button outline" href="{% url 'staff_member_import' %}">Import CSV</a>{% endif %}
+            {% if perms.care.view_carerequest %}<a class="button outline" href="{% url 'staff_directory_booklet' %}">Directory Booklet</a>{% endif %}
+            {% if can_add %}<a class="button accent" href="{% url 'staff_member_create' %}">+ Add Member</a>{% endif %}
+        </div>
+    </div>
+    {% if perms.pathway.view_pathwaystep %}
+        <p><a href="{% url 'staff_pathway_step_list' %}">Manage discipleship pathway steps &rarr;</a></p>
+    {% endif %}
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>Search by name</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="e.g. Ama">
+        </div>
+        <div style="flex:1; min-width:200px;">
+            <label>Skill / spiritual gift</label>
+            <input type="text" name="skill" value="{{ skill_query }}" placeholder="e.g. Music">
+        </div>
+        <div>
+            <label>Status</label>
+            <select name="status">
+                <option value="" {% if not status %}selected{% endif %}>All</option>
+                <option value="active" {% if status == "active" %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if status == "inactive" %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+        {% if campuses %}
+            <div>
+                <label>Campus</label>
+                <select name="campus">
+                    <option value="">All campuses</option>
+                    {% for c in campuses %}
+                        <option value="{{ c.id }}" {% if campus_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        <div><button type="submit">Filter</button></div>
+    </form>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for member in page_obj %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_member_detail' member.id %}" style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
+                        <span style="display:flex; align-items:center; gap:0.75rem;">
+                            {% if member.photo %}
+                                <img src="{{ member.photo.url }}" class="avatar" alt="{{ member }}">
+                            {% else %}
+                                <span class="avatar">{{ member.initials }}</span>
+                            {% endif %}
+                            <span>
+                                <strong>{{ member }}</strong>
+                                {% if member.household %}<span class="muted"> &middot; {{ member.household }}</span>{% endif %}
+                                {% if member.campus %}<span class="muted"> &middot; {{ member.campus }}</span>{% endif %}
+                                {% for skill in member.skills.all %}<span class="badge muted">{{ skill.name }}</span> {% endfor %}
+                            </span>
+                        </span>
+                        <span>
+                            <span class="badge muted">{{ member.get_role_display }}</span>
+                            {% if not member.is_active %}<span class="badge muted">Inactive</span>{% endif %}
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No members match that search.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Transfer Letter{% endblock %}
+{% block extra_head %}
+    <style>
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            main { max-width: none; padding: 0; margin: 0; }
+            body { background: #fff; }
+            .card { box-shadow: none; border: none; }
+        }
+        .letter { padding: 2.5rem 2rem; }
+        .letter p { line-height: 1.7; }
+    </style>
+{% endblock %}
+{% block staff_content %}
+    <p class="no-print"><a href="{% url 'staff_transfer_letter_list' %}">&larr; Back to transfer letters</a></p>
+    <div class="section-title no-print">
+        <h2>Transfer Letter</h2>
+        <button type="button" class="outline" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card letter">
+        <p><strong>Newlife AG (Assemblies of God)</strong><br>Tema, Ghana</p>
+        <p>{{ transfer_letter.transfer_date|date:"F j, Y" }}</p>
+        <p>
+            To the Pastor / Church Office<br>
+            {{ transfer_letter.destination_church }}{% if transfer_letter.destination_location %}<br>{{ transfer_letter.destination_location }}{% endif %}
+        </p>
+        <p>Dear Brother/Sister in Christ,</p>
+        <p>
+            This is to certify that <strong>{{ transfer_letter.member }}</strong> has been a member in good
+            standing at Newlife AG (Assemblies of God), Tema, Ghana, and is transferring their membership to
+            your congregation effective <strong>{{ transfer_letter.transfer_date|date:"F j, Y" }}</strong>.
+        </p>
+        <p>
+            We commend {{ transfer_letter.member }} to your fellowship and pastoral care, and pray God's
+            continued blessing on their walk with Him in their new church home.
+        </p>
+        {% if transfer_letter.notes %}<p>{{ transfer_letter.notes }}</p>{% endif %}
+        <p style="margin-top:2.5rem;">In Christ,</p>
+        <p>
+            {% if transfer_letter.issued_by %}{{ transfer_letter.issued_by }}<br>{% endif %}
+            Newlife AG (Assemblies of God), Tema
+        </p>
+    </div>
+{% endblock %}

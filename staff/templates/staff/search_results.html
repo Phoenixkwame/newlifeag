@@ -1,0 +1,217 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Search{% endblock %}
+{% block staff_content %}
+    <h2>Search results for "{{ query }}"</h2>
+
+    {% if not query %}
+        <p class="empty-state">Type something into the search box above.</p>
+    {% else %}
+        {% if "members" in results %}
+            <div class="section-title"><h2>Members</h2></div>
+            {% if results.members %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for member in results.members %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_member_detail' member.id %}">{{ member }}</a>
+                            {% if member.household %}<span class="muted"> &middot; {{ member.household }}</span>{% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching members.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "households" in results %}
+            <div class="section-title"><h2>Households</h2></div>
+            {% if results.households %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for household in results.households %}
+                        <li style="padding:0.75rem 1.25rem;"><a href="{% url 'staff_household_detail' household.id %}">{{ household }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching households.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "campuses" in results %}
+            <div class="section-title"><h2>Campuses</h2></div>
+            {% if results.campuses %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for campus in results.campuses %}
+                        <li style="padding:0.75rem 1.25rem;"><a href="{% url 'staff_campus_detail' campus.id %}">{{ campus }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching campuses.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "groups" in results %}
+            <div class="section-title"><h2>Groups</h2></div>
+            {% if results.groups %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for group in results.groups %}
+                        <li style="padding:0.75rem 1.25rem;"><a href="{% url 'staff_group_detail' group.id %}">{{ group }}</a> <span class="muted"> &middot; {{ group.get_group_type_display }}</span></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching groups.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "campaigns" in results %}
+            <div class="section-title"><h2>Giving Campaigns</h2></div>
+            {% if results.campaigns %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for campaign in results.campaigns %}
+                        <li style="padding:0.75rem 1.25rem;"><a href="{% url 'staff_campaign_detail' campaign.id %}">{{ campaign.name }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching campaigns.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "events" in results %}
+            <div class="section-title"><h2>Events</h2></div>
+            {% if results.events %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for event in results.events %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_event_detail' event.id %}">{{ event.title }}</a>
+                            <span class="muted"> &middot; {{ event.start_datetime|date:"M j, Y" }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching events.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "donations" in results %}
+            <div class="section-title"><h2>Donations</h2></div>
+            {% if results.donations %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for donation in results.donations %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_donation_list' %}?status={{ donation.status }}">GH&#8373;{{ donation.amount|floatformat:2 }} &middot; {{ donation.member|default:"Anonymous" }}</a>
+                            <span class="muted"> &middot; {{ donation.date|date:"M j, Y" }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching donations.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "sermons" in results %}
+            <div class="section-title"><h2>Sermons</h2></div>
+            {% if results.sermons %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for sermon in results.sermons %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_sermon_edit' sermon.id %}">{{ sermon.title }}</a>
+                            <span class="muted"> &middot; {{ sermon.date|date:"M j, Y" }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching sermons.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "devotionals" in results %}
+            <div class="section-title"><h2>Devotionals</h2></div>
+            {% if results.devotionals %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for devotional in results.devotionals %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_devotional_edit' devotional.id %}">{{ devotional.title }}</a>
+                            <span class="muted"> &middot; {{ devotional.date|date:"M j, Y" }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching devotionals.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "children" in results %}
+            <div class="section-title"><h2>Children</h2></div>
+            {% if results.children %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for child in results.children %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_child_detail' child.id %}">{{ child }}</a>
+                            {% if child.household %}<span class="muted"> &middot; {{ child.household }}</span>{% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching children.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "followups" in results %}
+            <div class="section-title"><h2>Follow-Ups</h2></div>
+            {% if results.followups %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for follow_up in results.followups %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_followup_detail' follow_up.id %}">{{ follow_up.member }}</a>
+                            <span class="muted"> &middot; {{ follow_up.get_stage_display }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching follow-ups.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "announcements" in results %}
+            <div class="section-title"><h2>Announcements</h2></div>
+            {% if results.announcements %}
+                <div class="card" style="padding:0;">
+                    <ul class="plain">
+                    {% for announcement in results.announcements %}
+                        <li style="padding:0.75rem 1.25rem;">
+                            <a href="{% url 'staff_announcement_detail' announcement.id %}">{{ announcement.subject }}</a>
+                            <span class="muted"> &middot; {{ announcement.created_at|date:"M j, Y" }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="empty-state">No matching announcements.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if not results %}
+            <p class="empty-state">Nothing to search - your role doesn't have view access to any of the searchable areas.</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

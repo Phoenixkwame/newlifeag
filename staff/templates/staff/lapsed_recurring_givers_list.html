@@ -1,0 +1,34 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Lapsed Recurring Givers{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Lapsed Recurring Givers</h2>
+    </div>
+    <p class="muted">
+        Members with an active recurring giving commitment who've been reminded at least twice with no
+        completed gift recorded since they set it up - a quiet sign the payment method or habit lapsed.
+        Worth a gentle personal check-in rather than just another automated reminder.
+    </p>
+
+    {% if lapsed_gifts %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for recurring in lapsed_gifts %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+                    <span>
+                        <strong><a href="{% url 'staff_member_detail' recurring.member.id %}">{{ recurring.member }}</a></strong>
+                        <span class="muted">&middot; GH&#8373;{{ recurring.amount|floatformat:2 }} {{ recurring.get_frequency_display }}</span>
+                        {% if recurring.campaign %}<span class="muted">&middot; {{ recurring.campaign }}</span>{% endif %}
+                        <div class="muted">
+                            Reminded {{ recurring.reminder_count }} time{{ recurring.reminder_count|pluralize }},
+                            last on {{ recurring.last_reminder_sent|date:"M j, Y" }}
+                        </div>
+                    </span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No recurring givers have lapsed right now.</p>
+    {% endif %}
+{% endblock %}

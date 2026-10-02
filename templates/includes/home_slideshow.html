@@ -1,0 +1,21 @@
+{% load i18n static %}
+<section class="church-slideshow" data-slideshow aria-label="{% trans 'Newlife AG highlights' %}" aria-roledescription="carousel">
+    <article class="church-slide" data-slide>
+        <img class="church-slide-photo" src="{% static 'home/church-worship.jpg' %}" alt="{% trans 'Our church community worshipping together at Newlife AG.' %}" fetchpriority="high">
+        <div class="church-slide-copy"><p>{% trans "Welcome to Newlife AG" %}</p><h1 id="welcome-title" tabindex="-1">{% trans "A place to belong." %}<br><em>{% trans "A faith to live." %}</em></h1><a href="{% url 'connect_card' %}">{% trans "I'm New Here" %} &nearr;</a></div>
+    </article>
+    <article class="church-slide church-slide-values" data-slide>
+        <h2 class="church-values-title">{% trans "Our Core Values" %}</h2>
+        <img src="{% static 'home/core-values.png' %}" alt="{% trans 'We are a loving church. We are a giving church. We are a committed church. We are growing together. We love excellence.' %}" loading="lazy">
+    </article>
+    <article class="church-slide" data-slide>
+        <img class="church-slide-photo" src="{% static 'home/church-congregation.jpg' %}" alt="{% trans 'The congregation gathered for worship at Newlife AG.' %}" loading="lazy">
+        <div class="church-slide-copy"><p>{% trans "Our Core Values" %}</p><h2>{% trans "We are growing" %}<br><em>{% trans "together." %}</em></h2><a href="{% url 'public_group_finder' %}">{% trans "Find Your Community" %} &nearr;</a></div>
+    </article>
+    {% for flyer in flyers %}<article class="church-slide church-slide-values" data-slide aria-label="{{ flyer.title }}"><h2 class="church-values-title">{{ flyer.title }}</h2>{% if flyer.link_url %}<a class="church-slide-art" href="{{ flyer.link_url }}" target="_blank" rel="noopener">{% endif %}<img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" loading="lazy">{% if flyer.link_url %}</a>{% endif %}</article>{% endfor %}
+    <div class="church-slide-controls" hidden>
+        <button class="church-slide-prev" data-prev aria-label="{% trans 'Previous slide' %}">&#10094;</button><button class="church-slide-next" data-next aria-label="{% trans 'Next slide' %}">&#10095;</button>
+        <div class="church-slide-toolbar"><span data-position aria-live="off"></span><button data-pause data-pause-label="{% trans 'Pause slideshow' %}" data-play-label="{% trans 'Play slideshow' %}">{% trans "Pause slideshow" %}</button></div>
+    </div>
+    <div class="church-slide-actions"><a href="{% url 'prayer_wall' %}">{% trans "Prayer Request" %}</a><a href="{% url 'visitor_info' %}">{% trans "Plan Your Visit" %}</a></div>
+</section>

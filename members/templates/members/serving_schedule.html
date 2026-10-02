@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ group }} Serving Schedule{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to your dashboard</a></p>
+    <h1>Serving Schedule &middot; {{ group }}</h1>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Schedule someone to serve</h2>
+        {% if roster %}
+            <form method="post">
+                {% csrf_token %}
+                <p>
+                    <label>Member</label>
+                    <select name="member_id" required>
+                        {% for roster_member in roster %}
+                            <option value="{{ roster_member.id }}">{{ roster_member }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <p>
+                    <label>Role</label>
+                    <input type="text" name="role" placeholder="e.g. Vocals, Sound, Usher" required>
+                </p>
+                <p>
+                    <label>Date</label>
+                    <input type="date" name="date" required>
+                </p>
+                <p>
+                    <label>Notes (optional)</label>
+                    <textarea name="notes" rows="2"></textarea>
+                </p>
+                <button type="submit">Schedule</button>
+            </form>
+        {% else %}
+            <p class="empty-state">This group has no active members yet - add some to its roster first.</p>
+        {% endif %}
+    </div>
+
+    <div class="section-title">
+        <h2>Upcoming</h2>
+    </div>
+    {% if upcoming %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for assignment in upcoming %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <strong>{{ assignment.date }}</strong> &middot; {{ assignment.member }} &middot; {{ assignment.role }}
+                    {% if assignment.confirmation_status == "confirmed" %}
+                        <span class="badge accent">Confirmed</span>
+                    {% elif assignment.confirmation_status == "declined" %}
+                        <span class="badge" style="background:#fbe4e4; color:#a33;">Declined</span>
+                    {% else %}
+                        <span class="badge muted">Awaiting reply</span>
+                    {% endif %}
+                    {% if assignment.notes %}<div class="muted">{{ assignment.notes }}</div>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">Nothing scheduled yet.</p>
+    {% endif %}
+{% endblock %}

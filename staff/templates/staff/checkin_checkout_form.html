@@ -1,0 +1,23 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Check Out {{ check_in.child }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_checkin_dashboard' %}">&larr; Back to check-in dashboard</a></p>
+    <h2>Check Out {{ check_in.child }}</h2>
+    <p class="muted">
+        Checked in by {{ check_in.guardian_name }} at {{ check_in.checked_in_at|date:"g:i A" }}
+        {% if check_in.event %} for {{ check_in.event.title }}{% endif %}.
+        Ask whoever is picking {{ check_in.child.first_name }} up for the pickup code given at drop-off.
+    </p>
+
+    {% if error %}
+        <ul class="messages"><li class="error">{{ error }}</li></ul>
+    {% endif %}
+
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Check Out</button>
+        </form>
+    </div>
+{% endblock %}

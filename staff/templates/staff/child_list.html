@@ -1,0 +1,43 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Children{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Children</h2>
+        <div class="button-row" style="margin:0;">
+            <a class="button outline" href="{% url 'staff_checkin_dashboard' %}">Check-In Dashboard</a>
+            {% if can_add %}<a class="button accent" href="{% url 'staff_child_create' %}">+ Add Child</a>{% endif %}
+        </div>
+    </div>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:1; min-width:200px;">
+            <label>Search by name</label>
+            <input type="text" name="q" value="{{ query }}" placeholder="e.g. Kwame">
+        </div>
+        <div><button type="submit">Filter</button></div>
+    </form>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for child in page_obj %}
+                <li style="padding:0.75rem 1.25rem;">
+                    <a class="card-link" href="{% url 'staff_child_detail' child.id %}" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <strong>{{ child }}</strong>
+                            <span class="muted">
+                                {% if child.age is not None %} &middot; age {{ child.age }}{% endif %}
+                                {% if child.household %} &middot; {{ child.household }}{% endif %}
+                            </span>
+                        </span>
+                        {% if not child.is_active %}<span class="badge muted">Inactive</span>{% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No children match that search.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,460 @@
+Found 1216 test(s).
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+........C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1612: RuntimeWarning: DateTimeField Donation.date received a naive datetime (2026-09-28 00:00:00) while time zone support is active.
+  warnings.warn(
+......................C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\core\handlers\base.py:61: UserWarning: No directory at: C:\Users\ofosu\Downloads\churchapp_project\staticfiles\
+  mw_instance = middleware(adapted_handler)
+.........................................................................Failed to send SMS to 0244000000
+Traceback (most recent call last):
+  File "C:\Users\ofosu\Downloads\churchapp_project\churchapp\sms.py", line 44, in send_sms
+    response = requests.get(
+        HUBTEL_SEND_URL,
+    ...<7 lines>...
+        timeout=REQUEST_TIMEOUT,
+    )
+  File "C:\Python314\Lib\unittest\mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\unittest\mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\unittest\mock.py", line 1241, in _execute_mock_call
+    raise effect
+requests.exceptions.RequestException: down
+.......................................................................................................Sent 1 volunteer reminder(s).
+.Sent 1 volunteer reminder(s).
+.Sent 0 volunteer reminder(s).
+.Sent 0 volunteer reminder(s).
+.Sent 1 volunteer reminder(s).
+.Sent 1 volunteer reminder(s).
+.Sent 1 volunteer reminder(s).
+Sent 0 volunteer reminder(s).
+..............................................................................................................................Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.................Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+..........................Sent 1 giving statement(s) for 2025.
+.Sent 1 giving statement(s) for 2026.
+.Sent 0 giving statement(s) for 2026. Skipped 1 member(s) with no email on file.
+......Sent 0 recurring-giving reminder(s).
+.Sent 1 recurring-giving reminder(s).
+Sent 0 recurring-giving reminder(s).
+.Sent 1 recurring-giving reminder(s).
+.Sent 0 recurring-giving reminder(s).
+....Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+..............................................................................................................................................................................................................Sent 1 birthday greeting(s) and 0 anniversary greeting(s).
+.Sent 0 birthday greeting(s) and 0 anniversary greeting(s).
+.Sent 0 birthday greeting(s) and 0 anniversary greeting(s).
+.Sent 1 birthday greeting(s) and 0 anniversary greeting(s).
+Sent 0 birthday greeting(s) and 0 anniversary greeting(s).
+.Sent 1 birthday greeting(s) and 0 anniversary greeting(s).
+.Sent 0 birthday greeting(s) and 1 anniversary greeting(s).
+....Sent 0 serving reminder(s).
+.Sent 1 serving reminder(s).
+Sent 0 serving reminder(s).
+.Sent 1 serving reminder(s).
+...........Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+..Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+............Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.................................................................Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+..............................................................................C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1612: RuntimeWarning: DateTimeField Donation.date received a naive datetime (2026-03-01 00:00:00) while time zone support is active.
+  warnings.warn(
+C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1612: RuntimeWarning: DateTimeField Donation.date received a naive datetime (2025-03-01 00:00:00) while time zone support is active.
+  warnings.warn(
+.............Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1612: RuntimeWarning: DateTimeField Donation.date received a naive datetime (2026-04-04 00:00:00) while time zone support is active.
+  warnings.warn(
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.................Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+Weekly digest not sent - no Pastors with an email on file yet.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+Weekly digest not sent - no Pastors with an email on file yet.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+Weekly digest sent to 1 Pastor(s).
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+Weekly digest sent to 1 Pastor(s).
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1671: RuntimeWarning: DateTimeField LiveStream.scheduled_for received a naive datetime (2027-06-01 09:00:00) while time zone support is active.
+  warnings.warn(
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1612: RuntimeWarning: DateTimeField Donation.date received a naive datetime (2021-06-01 00:00:00) while time zone support is active.
+  warnings.warn(
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1612: RuntimeWarning: DateTimeField Donation.date received a naive datetime (2026-01-15 00:00:00) while time zone support is active.
+  warnings.warn(
+C:\Users\ofosu\Downloads\churchapp_project\venv\Lib\site-packages\django\db\models\fields\__init__.py:1612: RuntimeWarning: DateTimeField Donation.date received a naive datetime (2025-01-15 00:00:00) while time zone support is active.
+  warnings.warn(
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+.Groups created/updated: Ushers, Treasurers, Pastors, Children's Ministry.
+..............................
+----------------------------------------------------------------------
+Ran 1216 tests in 83.393s
+
+OK
+Destroying test database for alias 'default'...

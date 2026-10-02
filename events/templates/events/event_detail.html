@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block content %}
+    <p><a href="{% url 'upcoming_events' %}">&larr; {% trans "Back to all events" %}</a></p>
+
+    <div class="hero">
+        <span class="badge accent" style="background:rgba(255,255,255,0.2); color:#fff;">{{ event.get_event_type_display }}</span>
+        <h1 style="margin-top:0.6rem;">{{ event.title }}</h1>
+        <p>
+            {{ event.start_datetime|date:"l, F j, Y - g:i A" }}
+            {% if event.location %} &middot; {{ event.location }}{% endif %}
+            {% if event.campus %} &middot; {{ event.campus }}{% endif %}
+        </p>
+        {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+        {% if event.recurrence != "none" %}
+            <p style="margin-bottom:0;">&#8635; Repeats {{ event.get_recurrence_display|lower }}</p>
+        {% endif %}
+    </div>
+
+    {% if not can_register %}
+        <p>{% if not user.is_authenticated %}<a href="{% url 'login' %}?next={{ request.path|urlencode }}">Sign in to RSVP, volunteer, or reserve a ticket.</a>{% else %}An active member profile is needed to sign up. Please contact the church office.{% endif %}</p>
+    {% endif %}
+    <div class="grid">
+        <div class="card">
+            <h2>{% trans "RSVP" %}</h2>
+            {% if can_register %}<form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="rsvp">
+                {{ rsvp_form.as_p }}
+                <button type="submit">{% trans "RSVP" %}</button>
+            </form>{% endif %}
+        </div>
+
+        <div class="card">
+            <h2>{% trans "Volunteer Slots" %}</h2>
+            {% if slots %}
+                <ul class="plain">
+                {% for slot in slots %}
+                    <li>
+                        <div class="row" style="justify-content:space-between; align-items:center;">
+                            <strong>{{ slot.role_needed }}</strong>
+                            <span class="badge {% if slot.spots_remaining <= 0 %}muted{% else %}accent{% endif %}">
+                                {{ slot.spots_filled }}/{{ slot.capacity }}{% if slot.spots_remaining <= 0 %} &middot; {% trans "Full" %}{% endif %}
+                            </span>
+                        </div>
+                        {% if slot.capacity %}
+                            <div class="progress">
+                                <div class="progress-bar {% if slot.spots_remaining <= 0 %}full{% endif %}"
+                                     style="width: {% widthratio slot.spots_filled slot.capacity 100 %}%;"></div>
+                            </div>
+                        {% endif %}
+                        {% if slot.spots_remaining <= 0 and slot.waitlist_entries.count %}
+                            <p class="muted" style="margin:0.25rem 0 0;">
+                                {{ slot.waitlist_entries.count }} on the waitlist - signing up now adds you to it, and
+                                you'll be notified automatically if a spot opens up.
+                            </p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">{% trans "No volunteer slots for this event yet." %}</p>
+            {% endif %}
+
+            {% if can_register and volunteer_form.fields.slot.queryset.exists %}
+                <h3>{% trans "Sign up or join the waitlist" %}</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="volunteer">
+                    {{ volunteer_form.as_p }}
+                    <button type="submit">{% trans "Sign up" %}</button>
+                </form>
+            {% else %}
+                <p class="empty-state">{% trans "Sign in with an active member profile to volunteer." %}</p>
+            {% endif %}
+        </div>
+
+        {% if tickets %}
+            <div class="card">
+                <h2>{% trans "Register" %}</h2>
+                <ul class="plain">
+                {% for ticket in tickets %}
+                    <li>
+                        <div class="row" style="justify-content:space-between; align-items:center;">
+                            <strong>{{ ticket.name }} - GH&#8373;{{ ticket.price|floatformat:2 }}</strong>
+                            {% if ticket.capacity != None %}
+                                <span class="badge {% if ticket.is_full %}muted{% else %}accent{% endif %}">
+                                    {{ ticket.registered_count }}/{{ ticket.capacity }}{% if ticket.is_full %} &middot; {% trans "Sold out" %}{% endif %}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+
+                {% if can_register and registration_form.fields.ticket.queryset.exists %}
+                    <h3>{% trans "Reserve your spot" %}</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="register">
+                        {{ registration_form.as_p }}
+                        <button type="submit">{% trans "Register" %}</button>
+                    </form>
+                {% else %}
+                    <p class="empty-state">{% trans "Sign in with an active member profile to register." %}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

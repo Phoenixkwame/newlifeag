@@ -1,0 +1,13 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}New Series{% else %}Edit Series{% endif %}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_series_list' %}">&larr; Back to sermon series</a></p>
+    <h2>{% if is_new %}New Series{% else %}Edit {{ series.name }}{% endif %}</h2>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Create Series{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

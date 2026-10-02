@@ -1,0 +1,311 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ member }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_member_list' %}">&larr; Back to members</a></p>
+
+    <div class="section-title">
+        <h2>{{ member }}</h2>
+        <span>
+            <a class="button outline" href="{% url 'staff_member_id_card' member.id %}">ID Card</a>
+            <a class="button outline" href="{% url 'staff_membership_certificate_pdf' member.id %}">Membership Certificate</a>
+            {% if can_edit %}<a class="button outline" href="{% url 'staff_member_edit' member.id %}">Edit</a>{% endif %}
+        </span>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="row" style="align-items:center; margin-bottom:0.75rem;">
+                {% if member.photo %}
+                    <img src="{{ member.photo.url }}" class="avatar avatar-lg" alt="{{ member }}">
+                {% else %}
+                    <span class="avatar avatar-lg">{{ member.initials }}</span>
+                {% endif %}
+                <div>
+                    <h2 style="margin:0;">Details</h2>
+                    <span class="badge muted">{{ member.get_role_display }}</span> {% if not member.is_active %}<span class="badge muted">Inactive</span>{% endif %}
+                </div>
+            </div>
+            <ul class="plain">
+                <li><strong>Email:</strong> {{ member.email|default:"—" }}</li>
+                <li><strong>Phone:</strong> {{ member.phone|default:"—" }}</li>
+                <li><strong>Household:</strong>
+                    {% if member.household %}
+                        {% if perms.members.view_household %}<a href="{% url 'staff_household_detail' member.household.id %}">{{ member.household }}</a>{% else %}{{ member.household }}{% endif %}
+                    {% else %}—{% endif %}
+                </li>
+                {% if member.campus %}
+                    <li><strong>Campus:</strong>
+                        {% if perms.members.view_campus %}<a href="{% url 'staff_campus_detail' member.campus.id %}">{{ member.campus }}</a>{% else %}{{ member.campus }}{% endif %}
+                    </li>
+                {% endif %}
+                <li><strong>Birthday:</strong> {% if member.date_of_birth %}{{ member.date_of_birth|date:"F j" }}{% else %}—{% endif %}</li>
+                <li><strong>Anniversary:</strong> {% if member.anniversary_date %}{{ member.anniversary_date|date:"F j" }}{% else %}—{% endif %}</li>
+                <li><strong>Joined:</strong> {{ member.date_joined }}</li>
+                <li><strong>Login account:</strong> {% if member.user %}{{ member.user.username }}{% else %}Not linked{% endif %}</li>
+                <li><strong>Skills / gifts:</strong>
+                    {% if member.skills.all %}
+                        {% for skill in member.skills.all %}<span class="badge muted">{{ skill.name }}</span> {% endfor %}
+                    {% else %}—{% endif %}
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Recent Attendance</h2>
+            {% if attendance_records %}
+                <ul class="plain">
+                {% for record in attendance_records %}
+                    <li>
+                        {{ record.date }}{% if record.event %} &middot; {{ record.event }}{% elif record.group %} &middot; {{ record.group }} (group){% endif %}
+                        <span class="badge {% if record.present %}accent{% else %}muted{% endif %}">
+                            {% if record.present %}Present{% else %}Absent{% endif %}
+                        </span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No attendance recorded yet.</p>
+            {% endif %}
+        </div>
+
+        {% if perms.followup.view_followup %}
+            <div class="card">
+                <h2>Follow-Up</h2>
+                {% if follow_up %}
+                    <p>
+                        <span class="badge accent">{{ follow_up.get_stage_display }}</span>
+                        {% if follow_up.assigned_to %}<span class="muted"> &middot; assigned to {{ follow_up.assigned_to.username }}</span>{% endif %}
+                    </p>
+                    <p><a href="{% url 'staff_followup_detail' follow_up.id %}">View follow-up details &rarr;</a></p>
+                {% elif can_start_follow_up %}
+                    <p class="muted">Not currently being followed up with.</p>
+                    <form method="post" action="{% url 'staff_followup_start' member.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="outline">Start Follow-Up</button>
+                    </form>
+                {% else %}
+                    <p class="empty-state">Not currently being followed up with.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if member_decisions is not None %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Altar Call Decisions</h2>
+                    {% if perms.decisions.view_decision %}<a href="{% url 'staff_decision_list' %}">All decisions &rarr;</a>{% endif %}
+                </div>
+                {% if member_decisions %}
+                    <ul class="plain">
+                    {% for decision in member_decisions %}
+                        <li>
+                            <span class="badge accent">{{ decision.get_decision_type_display }}</span>
+                            <span class="muted">{{ decision.date|date:"M j, Y" }}{% if decision.event %} &middot; {{ decision.event }}{% endif %}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No decisions recorded yet.</p>
+                {% endif %}
+                {% if can_add_decision %}
+                    <p><a href="{% url 'staff_decision_create' %}?member={{ member.id }}">+ Record a Decision</a></p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if pathway_progress is not None %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Discipleship Pathway</h2>
+                    {% if perms.pathway.view_pathwaystep %}<a href="{% url 'staff_pathway_step_list' %}">Manage steps &rarr;</a>{% endif %}
+                </div>
+                {% if pathway_progress %}
+                    <ul class="plain">
+                    {% for step, progress in pathway_progress %}
+                        <li style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                            <span>
+                                {{ step.name }}
+                                {% if progress.is_completed %}
+                                    <span class="badge accent">Completed {{ progress.completed_date }}</span>
+                                {% else %}
+                                    <span class="badge muted">Not yet completed</span>
+                                {% endif %}
+                            </span>
+                            {% if can_change_pathway %}
+                                <form method="post" action="{% url 'staff_mark_pathway_step' member.id step.id %}" style="margin:0;">
+                                    {% csrf_token %}
+                                    {% if progress.is_completed %}
+                                        <input type="hidden" name="action" value="incomplete">
+                                        <button type="submit" class="outline">Mark Not Completed</button>
+                                    {% else %}
+                                        <button type="submit">Mark Completed</button>
+                                    {% endif %}
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No pathway steps have been set up yet.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if care_requests is not None %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Pastoral Care Requests</h2>
+                    <a href="{% url 'staff_care_request_list' %}">All requests &rarr;</a>
+                </div>
+                {% if care_requests %}
+                    <ul class="plain">
+                    {% for care_request in care_requests %}
+                        <li>
+                            <a href="{% url 'staff_care_request_detail' care_request.id %}">{{ care_request.get_request_type_display }}</a>
+                            <span class="badge {% if care_request.status == 'completed' %}accent{% else %}muted{% endif %}">{{ care_request.get_status_display }}</span>
+                            <div class="muted">{{ care_request.created_at|date:"M j, Y" }}</div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No care requests from this member.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if member_notes is not None %}
+            <div class="card">
+                <h2 style="margin-top:0;">Staff Notes</h2>
+                <p class="muted">Private - only staff with access to this section can see these, never the member themselves.</p>
+                {% if member_notes %}
+                    <ul class="plain">
+                    {% for note in member_notes %}
+                        <li style="padding:0.5rem 0; border-bottom:1px solid var(--border);">
+                            <p style="margin:0; white-space:pre-line;">{{ note.note }}</p>
+                            <div class="muted">
+                                {{ note.created_at|date:"M j, Y g:i A" }}
+                                {% if note.author %} &middot; {{ note.author.get_full_name|default:note.author.username }}{% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No notes yet.</p>
+                {% endif %}
+                {% if can_add_note %}
+                    <form method="post" action="{% url 'staff_member_note_create' member.id %}" style="margin-top:0.75rem;">
+                        {% csrf_token %}
+                        {{ note_form.note }}
+                        <button type="submit" style="margin-top:0.5rem;">Add Note</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if background_checks is not None %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Background Checks</h2>
+                    <span>
+                        {% if can_add_background_check %}<a href="{% url 'staff_background_check_create' %}?member={{ member.id }}">Add &rarr;</a>{% endif %}
+                        <a href="{% url 'staff_background_check_list' %}">All checks &rarr;</a>
+                    </span>
+                </div>
+                {% if background_checks %}
+                    <ul class="plain">
+                    {% for check in background_checks %}
+                        <li>
+                            <span class="badge {% if check.status == 'cleared' %}accent{% else %}muted{% endif %}">{{ check.get_status_display }}</span>
+                            {% if check.is_expired %}<span class="badge muted">Expired</span>{% elif check.is_expiring_soon %}<span class="badge muted">Expiring soon</span>{% endif %}
+                            {% if check.expiry_date %}<span class="muted"> &middot; expires {{ check.expiry_date|date:"M j, Y" }}</span>{% endif %}
+                            {% if perms.screening.change_backgroundcheck %}
+                                <div><a href="{% url 'staff_background_check_edit' check.id %}">Edit</a></div>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No background checks on file for this member.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if trainings is not None %}
+            <div class="card">
+                <div class="section-title" style="margin-top:0;">
+                    <h2>Trainings</h2>
+                    <span>
+                        {% if can_add_training %}<a href="{% url 'staff_training_create' %}?member={{ member.id }}">Add &rarr;</a>{% endif %}
+                        <a href="{% url 'staff_training_list' %}">All trainings &rarr;</a>
+                    </span>
+                </div>
+                {% if trainings %}
+                    <ul class="plain">
+                    {% for training in trainings %}
+                        <li>
+                            {{ training.training_name }}
+                            <span class="badge {% if training.status == 'completed' %}accent{% else %}muted{% endif %}">{{ training.get_status_display }}</span>
+                            {% if training.is_expired %}<span class="badge muted">Expired</span>{% elif training.is_expiring_soon %}<span class="badge muted">Expiring soon</span>{% endif %}
+                            {% if training.expiry_date %}<span class="muted"> &middot; expires {{ training.expiry_date|date:"M j, Y" }}</span>{% endif %}
+                            {% if perms.screening.change_volunteertraining %}
+                                <div><a href="{% url 'staff_training_edit' training.id %}">Edit</a></div>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No trainings on file for this member.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if dedications is not None or weddings is not None or baptisms is not None or transfer_letters is not None or can_view_funeral_record %}
+            <div class="card">
+                <h2>Milestones</h2>
+                {% if dedications or weddings or baptisms or transfer_letters or funeral_record %}
+                    <ul class="plain">
+                    {% for dedication in dedications %}
+                        <li>Baby dedication for <strong>{{ dedication.child_name }}</strong> &middot; {{ dedication.dedication_date|date:"M j, Y" }}</li>
+                    {% endfor %}
+                    {% for wedding in weddings %}
+                        <li>Wedding to <strong>{% if wedding.spouse_one_id == member.id %}{{ wedding.spouse_two }}{% else %}{{ wedding.spouse_one }}{% endif %}</strong> &middot; {{ wedding.wedding_date|date:"M j, Y" }}</li>
+                    {% endfor %}
+                    {% for baptism in baptisms %}
+                        <li>
+                            Baptism &middot; {{ baptism.baptism_date|date:"M j, Y" }}
+                            &middot; <a href="{% url 'staff_baptism_certificate' baptism.id %}">Certificate</a>
+                        </li>
+                    {% endfor %}
+                    {% if funeral_record %}
+                        <li>
+                            Funeral service &middot; {{ funeral_record.service_date|date:"M j, Y" }}
+                            &middot; <a href="{% url 'staff_funeral_program' funeral_record.id %}">Program</a>
+                        </li>
+                    {% endif %}
+                    {% for transfer_letter in transfer_letters %}
+                        <li>
+                            Transfer to <strong>{{ transfer_letter.destination_church }}</strong> &middot; {{ transfer_letter.transfer_date|date:"M j, Y" }}
+                            &middot; <a href="{% url 'staff_transfer_letter_view' transfer_letter.id %}">View Letter</a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No dedications, weddings, baptisms, transfer letters, or funeral records on file for this member.</p>
+                {% endif %}
+                {% if can_add_baptism_record %}
+                    <a href="{% url 'staff_baptism_create' %}?member={{ member.id }}">+ Record a Baptism</a>
+                {% endif %}
+                {% if can_add_baptism_record and can_add_funeral_record and not funeral_record %} &middot; {% endif %}
+                {% if can_add_funeral_record and not funeral_record %}
+                    <a href="{% url 'staff_funeral_create' %}?member={{ member.id }}">+ Record a Funeral</a>
+                {% endif %}
+                {% if can_add_transfer_letter %}
+                    {% if can_add_baptism_record or can_add_funeral_record and not funeral_record %} &middot; {% endif %}
+                {% endif %}
+                {% if can_add_transfer_letter %}
+                    <a href="{% url 'staff_transfer_letter_create' %}?member={{ member.id }}">+ Issue a Transfer Letter</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

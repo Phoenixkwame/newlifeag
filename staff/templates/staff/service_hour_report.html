@@ -1,0 +1,80 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Service Hours{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Volunteer Service Hours ({{ year }})</h2>
+        {% if can_add %}<a class="button accent" href="{% url 'staff_service_hour_create' %}">+ Log Hours</a>{% endif %}
+    </div>
+
+    <form method="get" class="card" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+        <div>
+            <label>Year</label>
+            <select name="year" onchange="this.form.submit()">
+                {% for y in available_years %}
+                    <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Totals by Member</h2>
+            {% if by_member %}
+                <ul class="plain">
+                {% for row in by_member %}
+                    <li style="display:flex; justify-content:space-between; align-items:center;">
+                        <a href="{% url 'staff_member_detail' row.member__id %}">{{ row.member__first_name }} {{ row.member__last_name }}</a>
+                        <span>
+                            <strong>{{ row.total_hours|floatformat:2 }}h</strong>
+                            <a class="button outline" href="{% url 'staff_service_hour_certificate_pdf' row.member__id year %}">Certificate</a>
+                        </span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No hours logged for {{ year }}.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Totals by Group</h2>
+            {% if by_group %}
+                <ul class="plain">
+                {% for row in by_group %}
+                    <li style="display:flex; justify-content:space-between;">
+                        {{ row.group__name }}
+                        <strong>{{ row.total_hours|floatformat:2 }}h</strong>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No group-tagged hours logged for {{ year }}.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2>Log</h2>
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for log in page_obj %}
+                <li style="padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>
+                        <strong>{{ log.member }}</strong> &middot; {{ log.hours }}h &middot; {{ log.role }}
+                        <div class="muted">
+                            {{ log.date }}
+                            {% if log.group %} &middot; {{ log.group }}{% endif %}
+                            {% if log.event %} &middot; {{ log.event }}{% endif %}
+                        </div>
+                    </span>
+                    {% if can_change %}<a href="{% url 'staff_service_hour_edit' log.id %}">Edit</a>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No hours logged for {{ year }}.</p>
+    {% endif %}
+{% endblock %}

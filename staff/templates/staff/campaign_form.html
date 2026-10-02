@@ -1,0 +1,17 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}New Campaign{% else %}Edit Campaign{% endif %}{% endblock %}
+{% block staff_content %}
+    {% if is_new %}
+        <h2>New Giving Campaign</h2>
+    {% else %}
+        <p><a href="{% url 'staff_campaign_detail' campaign.id %}">&larr; Back to {{ campaign.name }}</a></p>
+        <h2>Edit {{ campaign.name }}</h2>
+    {% endif %}
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if is_new %}Create Campaign{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

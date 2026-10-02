@@ -1,0 +1,15 @@
+{% if page_obj.has_other_pages %}
+    {% comment %}
+    Preserves any other query params (search text, filters) across page
+    links, so filtering by name/status/upcoming-vs-past survives paging.
+    {% endcomment %}
+    <div class="button-row" style="justify-content:center; align-items:center;">
+        {% if page_obj.has_previous %}
+            <a class="button outline" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key|urlencode }}={{ value|urlencode }}{% endif %}{% endfor %}">&laquo; Previous</a>
+        {% endif %}
+        <span class="muted" style="align-self:center;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a class="button outline" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key|urlencode }}={{ value|urlencode }}{% endif %}{% endfor %}">Next &raquo;</a>
+        {% endif %}
+    </div>
+{% endif %}

@@ -1,0 +1,45 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Activity Log{% endblock %}
+{% block staff_content %}
+    <div class="section-title">
+        <h2>Activity Log</h2>
+    </div>
+    <p class="muted">
+        A chronological record of who did what across the whole system - every add, change, and delete made
+        through /admin/, plus a growing set of actions taken from the staff area itself (starting follow-ups,
+        equipment checkouts/check-ins, and more over time).
+    </p>
+
+    {% if page_obj %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for entry in page_obj %}
+                <li style="padding:0.9rem 1.25rem; display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                    <div>
+                        <strong>{{ entry.user.get_full_name|default:entry.user.username }}</strong>
+                        {% if entry.is_addition %}
+                            <span class="badge accent">Added</span>
+                        {% elif entry.is_change %}
+                            <span class="badge muted">Changed</span>
+                        {% elif entry.is_deletion %}
+                            <span class="badge">Deleted</span>
+                        {% endif %}
+                        <p style="margin:0.3rem 0 0;">
+                            {{ entry.content_type.name|capfirst }}: {{ entry.object_repr }}
+                        </p>
+                        {% if entry.change_message %}
+                            <span class="muted">{{ entry.change_message }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="muted" style="text-align:right; white-space:nowrap;">
+                        {{ entry.action_time|date:"M j, Y g:i A" }}
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% include "_pagination.html" %}
+    {% else %}
+        <p class="empty-state">No activity has been recorded yet.</p>
+    {% endif %}
+{% endblock %}

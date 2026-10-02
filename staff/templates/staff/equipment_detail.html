@@ -1,0 +1,84 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{{ item.name }}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_equipment_list' %}">&larr; Back to equipment</a></p>
+    <div class="section-title">
+        <h2>{{ item.name }}</h2>
+        {% if can_edit %}<a class="button outline" href="{% url 'staff_equipment_edit' item.id %}">Edit</a>{% endif %}
+    </div>
+
+    <div class="card">
+        <p>
+            <span class="badge muted">{{ item.get_category_display }}</span>
+            <span class="badge {% if item.condition == 'needs_repair' %}accent{% else %}muted{% endif %}">
+                {{ item.get_condition_display }}
+            </span>
+            {% if not item.is_active %}<span class="badge muted">Retired</span>{% endif %}
+        </p>
+        {% if item.serial_number %}<p class="muted">Serial #: {{ item.serial_number }}</p>{% endif %}
+        {% if item.campus %}<p class="muted">Campus: {{ item.campus }}</p>{% endif %}
+        {% if item.notes %}<p>{{ item.notes }}</p>{% endif %}
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Checkout Status</h2>
+        {% if item.is_checked_out %}
+            {% with checkout=item.current_checkout %}
+                <p>Checked out to <strong>{{ checkout.checked_out_to|default:"someone" }}</strong> on {{ checkout.checked_out_at|date:"M j, Y" }}.</p>
+                {% if checkout.notes %}<p class="muted">{{ checkout.notes }}</p>{% endif %}
+                {% if can_checkin %}
+                    <form method="post" action="{% url 'staff_equipment_checkin' checkout.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Check In</button>
+                    </form>
+                {% endif %}
+            {% endwith %}
+        {% elif can_checkout %}
+            <form method="post" action="{% url 'staff_equipment_checkout' item.id %}">
+                {% csrf_token %}
+                {{ checkout_form.as_p }}
+                <button type="submit">Check Out</button>
+            </form>
+        {% else %}
+            <p class="muted">Not currently checked out.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Checkout History</h2>
+        {% if checkouts %}
+            <ul class="plain">
+            {% for checkout in checkouts %}
+                <li style="padding:0.5rem 0; border-bottom:1px solid var(--border, #eee);">
+                    {{ checkout.checked_out_to|default:"Someone" }} &middot; {{ checkout.checked_out_at|date:"M j, Y" }}
+                    {% if checkout.checked_in_at %}
+                        &ndash; returned {{ checkout.checked_in_at|date:"M j, Y" }}
+                    {% else %}
+                        <span class="badge accent">Still out</span>
+                    {% endif %}
+                    {% if checkout.notes %}<div class="muted">{{ checkout.notes }}</div>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">No checkout history yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;">Maintenance History</h2>
+        {% if maintenance_requests %}
+            <ul class="plain">
+            {% for maintenance_request in maintenance_requests %}
+                <li style="padding:0.5rem 0; border-bottom:1px solid var(--border, #eee);">
+                    <strong>{{ maintenance_request.title }}</strong>
+                    <span class="badge muted">{{ maintenance_request.get_status_display }}</span>
+                    <div class="muted">{{ maintenance_request.created_at|date:"M j, Y" }}</div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">No maintenance issues reported for this item.</p>
+        {% endif %}
+    </div>
+{% endblock %}

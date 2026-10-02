@@ -1,0 +1,14 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}{% if is_new %}Log Expense{% else %}Edit Expense{% endif %}{% endblock %}
+{% block staff_content %}
+    <p><a href="{% url 'staff_expense_report' %}">&larr; Back to expenses</a></p>
+    <h2>{% if is_new %}Log Expense{% else %}Edit Expense{% endif %}</h2>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% if expense.receipt %}<p class="muted">Current receipt: <a href="{{ expense.receipt.url }}" target="_blank">{{ expense.receipt.name }}</a></p>{% endif %}
+            <button type="submit">{% if is_new %}Log Expense{% else %}Save Changes{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

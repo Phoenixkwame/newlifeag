@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ group }} Lessons{% endblock %}
+{% block content %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to dashboard</a></p>
+    <h1>{{ group }} &ndash; Weekly Lessons</h1>
+
+    {% if latest_discussion_guide_sermon %}
+        <div class="card">
+            <p class="muted" style="margin:0;">This week's message: <strong>{{ latest_discussion_guide_sermon.title }}</strong></p>
+            <p style="margin:0.5rem 0 0;">
+                <a class="button outline" href="{{ latest_discussion_guide_sermon.discussion_guide.url }}" target="_blank" rel="noopener">
+                    Download Small Group Discussion Guide
+                </a>
+            </p>
+        </div>
+    {% endif %}
+
+    {% if can_post %}
+        <div class="card">
+            <h2 style="margin-top:0;">Post This Week's Lesson</h2>
+            <form method="post">
+                {% csrf_token %}
+                <p>
+                    <label>Title</label>
+                    <input type="text" name="title" required>
+                </p>
+                <p>
+                    <label>Week of</label>
+                    <input type="date" name="week_of" required>
+                </p>
+                <p>
+                    <label>Lesson notes / discussion questions</label>
+                    <textarea name="content" rows="5" required></textarea>
+                </p>
+                <button type="submit">Post Lesson</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if lessons %}
+        <div class="card" style="padding:0;">
+            <ul class="plain">
+            {% for lesson in lessons %}
+                <li style="padding:0.9rem 1.25rem;">
+                    <strong>{{ lesson.title }}</strong>
+                    <span class="muted">&middot; week of {{ lesson.week_of|date:"M j, Y" }}</span>
+                    <p style="margin:0.4rem 0 0; white-space:pre-line;">{{ lesson.content }}</p>
+                    {% if lesson.posted_by %}<div class="muted">Posted by {{ lesson.posted_by }}</div>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="empty-state">No lessons posted for this group yet.</p>
+    {% endif %}
+{% endblock %}

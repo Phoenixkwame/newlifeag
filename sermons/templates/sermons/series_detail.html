@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ series.name }}{% endblock %}
+{% block content %}
+    <p><a href="{% url 'sermon_list' %}">&larr; Back to sermons</a></p>
+    <h1>{{ series.name }}</h1>
+    {% if series.description %}<p class="muted">{{ series.description }}</p>{% endif %}
+
+    {% if signed_in_member and total_count %}
+        <div class="card">
+            <h2 style="margin-top:0;">Your Progress</h2>
+            <div class="progress">
+                <div class="progress-bar {% if progress_percent >= 100 %}full{% endif %}" style="width:{{ progress_percent }}%;"></div>
+            </div>
+            <p class="muted">{{ watched_count }} of {{ total_count }} watched ({{ progress_percent }}%)</p>
+        </div>
+    {% endif %}
+
+    {% if sermons %}
+        <div class="grid">
+        {% for sermon in sermons %}
+            <a class="card-link" href="{% url 'sermon_detail' sermon.id %}">
+                <div class="card">
+                    <span class="badge">{{ sermon.date|date:"M j, Y" }}</span>
+                    {% if sermon.audio_file %}<span class="badge accent">Podcast</span>{% endif %}
+                    {% if sermon.id in watched_sermon_ids %}<span class="badge accent">&#10003; Watched</span>{% endif %}
+                    <h2 style="margin-top:0.6rem;">{{ sermon.title }}</h2>
+                    {% if sermon.speaker %}<p class="muted">{{ sermon.speaker }}</p>{% endif %}
+                </div>
+            </a>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">No sermons in this series yet.</p>
+    {% endif %}
+{% endblock %}
